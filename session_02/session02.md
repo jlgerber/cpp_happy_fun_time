@@ -215,6 +215,23 @@ In c++, you can create a reference or alias to a variable by using the `&`. This
 Note :
     The ampersand has a second use, which is to take the address of a variable. We will go over this soon when we cover pointers...
     
+The syntax for declaring a reference to a variable looks like this:
+
+```
+<type>& <name>;
+
+int bar = 1;
+int &foo = bar;
+```
+
+The syntax for declaring a reference parameter in a function looks like this:
+
+```
+<return type> <name>( <type>& <name>,...);
+
+void foo(string& name);
+int add2(int &a); 
+```
 Here is a simple main function:
 ```
 using namespace std;
@@ -261,7 +278,7 @@ cout << foo << endl;
 ```
 ### const keyword
 
-In c++, we have a *const* keyword which can appear in function parameter lists, return declarations, and after method names to signify the fact that the user won't be mutating said data.
+In c++, we have a *const* keyword which can appear in function parameter lists, return declarations, and after method names to signify the fact that the user won't be mutating said data. 
 
 example
 
@@ -276,5 +293,25 @@ error
 ```
 void printfoo(const std::string& foo) {
     foo = "bla";
+}
+```
+
+One of the many reasons why this is important, is that it is common in c and c++ to use mutable parameters to make state changes to variables, rather than returning new variables, especially when the function needs to return multiple variables.
+
+eg
+
+```
+void updateName(string& first, string& last) {
+    first = "Mr." + first;
+    last = last + " Sr.";
+}
+
+int main() {
+    string first{"Fred"};
+    string last{"Flinstone"};
+    updateName(first, last);
+    cout << first << " " << last << endl;
+    
+    return 0;
 }
 ```

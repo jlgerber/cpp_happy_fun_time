@@ -137,11 +137,10 @@ Assigning an initial value to a variable.
 example of declaration and initialization
 ```
 int foo = 0;
+int bar{22}; // uniform initialization
+string name("fred");
 ```
 
-### Definition 
-
-In the case of functions, classes, and structs, we can differentiate between declaration and definition. If you provide a definition for your function, class, struct, you are providing an implementation...
 
 ### Assignment
 
@@ -152,6 +151,10 @@ int foo;
 foo = 7;
 foo = 12
 ```
+
+### Definition 
+
+In the case of functions, classes, and structs, we can differentiate between declaration and definition. If you provide a definition for your function, class, struct, you are providing an implementation...
 
 ## Functions
 
@@ -164,7 +167,7 @@ def foo(bar):
     """
 ```
 
-C++ has no such keyword. Instead, the compiler recognizes functions by their *shape".
+C++ has no such keyword. Instead, the compiler recognizes functions by their *shape". Additionally, when you define a function in C++, you are responsible for defining the explicit type, if any, that the function returns, as well as the types of all of the parameters, if any.
 
 ### Basic Function Declaration
 
@@ -183,10 +186,48 @@ int addtwo(int);
 
 So why would you split up the declaration and the definition? There are a couple of more advanced topics where this comes into play. Without going into two much detail:
  
- (2) It is common practice to split up work into header files (.h or .hpp) which contain declarations for data structures, and implementation files (.cpp) which contain implementations. It allows you as an author to expose an interface to a client but keep the implementation hidden. We will look at this later.
+ (1) It is common practice to split up work into header files (.h or .hpp) which contain declarations for data structures, and implementation files (.cpp) which contain implementations. It allows you as an author to expose an interface to a client but keep the implementation hidden. We will look at this later.
  
- (1) You sometimes have to make the compiler aware of the shape of a function, class, or struct, in a different location from its implementation, so that other components may reference it.
+ (2) You sometimes have to make the compiler aware of the shape of a function, class, or struct, in a different location from its implementation, so that other components may reference it.
+ 
+ Example foo.cpp 
+ 
+ ```
+ #include <iostream>
+ 
+ using namespace std;
+ 
+ int main() {
+    foo();
+    return 0;
+ }
+ 
+ void foo() {
+    cout << "FOOOOOOO" << endl;
+ }
+ ```
 
+If you try and compile foo.cpp, you might be surprised, based on your python experience, to learn that the compiler cannot find foo. I mean its right there in the same file, but the compiler is too dumb to find it.
+
+You have to perform something called *forward declaration* in order to get this to work:
+
+```
+#include <iostream>
+ 
+ using namespace std;
+ 
+ // forward declare foo
+ void foo();
+ 
+ int main() {
+    foo();
+    return 0;
+ }
+ 
+ void foo() {
+    cout << "FOOOOOOO" << endl;
+ }
+```
 ### Function definition
 
 If you go a step farther and provide an implementation, you would simply be adding the guts of the code to the end.
@@ -276,6 +317,92 @@ int& foo = bar;
 
 cout << foo << endl;
 ```
+
+### Pointers - part 1
+
+Lets talk about pointers. Python doesn't have an analog. This is new stuff. The concept is pretty simple though, even if the syntax is weird in some situations. 
+
+Recall for a moment the idea of a type. A type has a size and a meaning. The size is the size in bytes that the type takes up, and the meaning is the representation of those bytes.
+
+So we know how large a variable of a particular type is, but *where* is it? We talked previously about the heap and the stack - two different areas of memory, but we didnt talk about how we find individual variables.
+
+#### Addresses
+
+That is where the address comes in. The address of a variable is roughly the bit that it starts at, when counting from zero all the way up to the largest bit of memory physically crammed into the computer you are sitting at. 
+
+Now, truthfully, this is not quite accurate. There is a level of indirection or two between the physical location in memory and the logical location you deal with when writing a program. However, suffice it to say, as far as you are concerned, every variable you define lives at a particular memory address provided to you by the operating system. 
+
+So really, you can think of variable names as convenient labels for memory addresses. Each variable represents a memory address. Thankfully.
+
+##### Amppersand
+And you can actually ask for that address by using our new friend the ampersand. Unlucky for you, the ampersand is overloaded to represent a reference in some contexts, and an address in others.
+
+```
+int foo = 1;
+// we all know by know what this will print out
+cout << "foo " << foo << endl; 
+
+// to print the address of foo
+cout << "foo address " << &foo << endl;
+```
+If you prefix a variable with an ampersand operator, it will return the address of the variable in question. Beware, this is distinct from using the ampersand as part of a declaration. In that case, the ampersand means reference!
+
+##### asterisk
+
+The ampersand is only have the story when it comes to pointers. You know how to retrieve an address from a variable, but how do you hold on to an address to a variable? 
+
+In comes the asterisk. In a declaration, if you prefix the variable name with an asterisk, that means pointer.
+
+```
+int foo = 1;
+int *bar = &foo;
+```
+
+In the preceding example, we first declare foo as an int and initialize it to the value 1. We then declare bar to be a *pointer to int* and initialize it with the address of foo. By the way, it makes no difference whether the asterisk is glommed onto the end of the type or the beginning of the variable name; folks roll both ways. 
+ 
+ ```
+ int* foo;
+ int *bar;
+ ```
+ 
+ So know you know how to define a pointer and initialize it ( and set it for that matter ). If you print foo from the example above, what do you think you get?
+ 
+ ```
+ int foo = 1;
+ int *bar = &foo;
+ cout << "what does bar look like? " << bar << endl;
+ ```
+ 
+ That gobblygook is an address. Addresses are awfully important, but you rarely want to display them. You are usually interested in the data living at the address you have. So, how do you get at that data? Our friend the asterisk...
+ 
+ ```
+ int foo = 1;
+ int *bar = &foo;
+ cout << "foo is " << *bar << endl;
+ ```
+ 
+ Recall that I said a variable is a name for a memory address, and that a type is both an indication of size ( number of bytes ) and meaning for a variable. ( for example `char foo` tells the compiler that there is a thing called foo which will be 1 byte long and named foo. When you use foo, the compiler knows to go to that address, take the bit pattern starting at the address it gave foo, and ending 1 byte past that, and interpret that as a character.)
+ 
+ Rather than a string or a number, a pointer variable's contents is an address. And an asterisk in front of a variable in an expression is basically saying:
+ 
+ Go to this address and peak inside. You will find another address. Go to that address, and use its contents. 
+ 
+ Get it?
+ 
+ By the way, we are not limited to having a single indirection. We can have a pointer to a pointer, and a pointer to a pointer to a pointer. Why would we want to do that? There are reasons but they are relatively rare.
+ 
+ ```
+ int bar = 2;
+ int *foo = &bar;
+ int **foof = &foo;
+ 
+ cout << **foof << endl;
+ ```
+ 
+ ### Why all this pointer stuff?
+ 
+ Remember when I told you (like a few sentences ago) that a variable is just a nice name for a memory address? Not all memory address have names. That is the idea behind dynamic memory allocation. You can ask the computer for a certain amound of memory and it will return a starting address to that memory. You store it with a pointer. And, when you are done with it, you tell the computer to clean it up. More on that later....
+
 ### const keyword
 
 In c++, we have a *const* keyword which can appear in function parameter lists, return declarations, and after method names to signify the fact that the user won't be mutating said data. 

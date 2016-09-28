@@ -423,7 +423,7 @@ void printfoo(const std::string& foo) {
 }
 ```
 
-One of the many reasons why this is important, is that it is common in c and c++ to use mutable parameters to make state changes to variables, rather than returning new variables, especially when the function needs to return multiple variables.
+One of the many reasons why this is important, is that it is common in c and c++ to use mutable parameters to change the states of variables, rather than returning new variables, especially when the function needs to return multiple variables.
 
 eg
 

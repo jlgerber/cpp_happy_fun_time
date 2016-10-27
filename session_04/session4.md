@@ -4,7 +4,21 @@ Today we are going to take a break from studying classes and structs to talk abo
 
 Ok, so first, make sure that you have cmake. If you don't, jump on the interwebs and download the sucker.
 
-Done? Good. If you are running os x, you are going to have to create an alias in your bashrc file, because we are using the terminal. If you are on windows, well, find a bash shell ( I hear that git ships with one ), or hit google, because I don't use windows. I do know that cmake works with windows, but....
+Done? Good. If you are running Mac Os (formerly known as OS X), you are going to have to create an alias in your bashrc file, because we are using the terminal. On Mac Os, the actual cmake executable is here:
+ 
+ ```
+ /Applications/CMake.app/Contents/bin/cmake
+ ```
+ 
+ In your .bashrc file, add a line like so:
+ 
+ ```
+ alias cmake="/Applications/CMake.app/Contents/bin/cmake"
+ ```
+ 
+ Open a new shell and type `cmake`. That should work.
+ 
+ If you are on windows, well, find a bash shell ( I hear that git ships with one ), or hit google, because I don't use windows. I do know that cmake works with windows, but....
 
 ## Our simple main.cpp file
 
@@ -34,7 +48,7 @@ First, we need to set the minimum version for cmake. we do it like so:
 ```
 cmake_minimum_required(VERSION 3.6)
 ```
-Now, I don't know what version of cmake you are using. Actually, we will be able to get away with specifying an earlier version if you only have an earlier verison; nothing we are going to do really leverages any new cmake features, but this should be fine assuming you have just downloaded cmake. Otherwise, specify 3.0 or 2.8 or whatever you have.
+Now, I don't know what version of cmake you are using. Actually, we will be able to get away with specifying an earlier version if you only have an earlier version; nothing we are going to do really leverages any new cmake features, but this should be fine assuming you have just downloaded cmake. Otherwise, specify 3.0 or 2.8 or whatever you have.
 
 Next, we need to give our project a name. This doesn't have to be the same name as the parent directory by the way.
 

@@ -18,7 +18,7 @@ Cd into the directory and create a main.cpp file. It should look something like 
 using std::cout; using std::endl;
 
 int main() {
-    cout<< "Hello. Bet you didn't think you would still be writing hello world programs." << endl;
+    cout<< "Hello World...Again...sigh..." << endl;
     return 0;
 }
 ```
@@ -26,7 +26,7 @@ Ok. That should have been a big time review. simple. Laughably simple. That isn'
 
 ## Our first CMakeList.txt file
 
-So lets do this... Cmake uses a file with a very specific name and capitalizaiton to work. So, create a file in the same directory and call it *CMakeLists.txt*. Notice the capitalization; you need to copy this exactly.
+So lets do this... Cmake uses a file with a very specific name and capitalizaiton to work. So, create a file in the same directory and call it *CMakeLists.txt*. Notice the capitalization; you need to copy this exactly; cmakelists.txt wont do.
 
 Now lets fill it out.
 
@@ -47,10 +47,10 @@ Next we are going to update the compile flags to include the c++ll flag. We are 
 ```
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ```
-This line should make sense if you have done any shell scripting. We are basically assigning the existing value of CMAKE_CXX_FLAGS plus -std=c++11 vack to CMAKE_CXX_FLAGS. The name following *set(* is the variable name being set, and the following quoted string is the value being set. Since the value contains a dereference of the variable name, as well as a new flag, it looks itself up and adds the additional flag on the end.
+This line should make sense if you have done any shell scripting. We are basically assigning the existing value of CMAKE_CXX_FLAGS plus -std=c++11 back to CMAKE_CXX_FLAGS. The argument directly after *set(* is the variable name being set, and the following quoted string is the value being set. Since the value contains a dereference of the variable name ( the ${} ), as well as a new flag, it takes whatever value it is currently storing and adds the additional flag on the end.
  
  
-Next, we need are going to create a new variable to keep track of our source files. (well file, we only have a single file right now).
+Next, we need to create a new variable to keep track of our source files. (well file, we only have a single file right now).
  
 ```
 set(SOURCE_CPPS main.cpp)

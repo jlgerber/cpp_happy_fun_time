@@ -10,23 +10,23 @@ So, on with it.
 
  Since this is a class for folks who are python savvy, let's compare c++ classes to python classes.
  
- #### class Keyword
+### class Keyword
  
  Like in python, in c++, a class is defined using the class keyword:
  
- ##### Python
+#### Python
  
  ```
  # python
  class Person(object):
  ```
- ##### C++
+#### C++
  ```
  class Person {
  };
  ```
  
-#### Self Reference
+### Self Reference
 
 In python, each instance method has an explicit reference to itself, commonly spelled out as *self*, which all instance methods are passed explicitly as their first parameter.
 
@@ -49,7 +49,7 @@ void greet(const std::string& other) {
 }
 ```
 
-#### Access Specifiers - Private, Public, Protected 
+### Access Specifiers - Private, Public, Protected 
 
 One thing you might have fussed with in python a bit is the notion of privacy. You probably have prefixed variables with an underscore as a way of telling the rest of the world that a variable is part of an implementation, and shouldn't be mucked with. You might have even gone so far as to use two underscores in order to invoke name mangling. Well, no offense to python, but its implementation of privacy is second rate and you can get around it. Privacy is kind of like what sexist dinosaurs would have referred to as a "gentlemen's agreement". Phoey!
 
@@ -118,7 +118,7 @@ int main() {
 };
 ```
 
-#### Constructor
+### Constructor
 
 Python has the initializer, otherwise known to true geeks as the dunderinit (__init__). Technically, this is an initializer, not a constructor, but lets gloss over that.
 
@@ -142,7 +142,7 @@ somefunction() : <intializier list> {}
 ```
 The initializer list is a comma separated list of data members which may be initialized form the parameter list of the function, or any constants, using method or uniform initialization notation (assuming you are compiling with c++11 support). 
 
-#### Copy Constructor
+### Copy Constructor
 
 One special form of constructor is the copy constructor. The copy constructor is engaged when you initialize a new instance variable from an existing instance variable. For example:
 
@@ -171,7 +171,7 @@ It takes a const reference to a variable of the same type. Its job is to initial
 Person(const Person& p) : first_name(p.first_name), last_name(p.last_name) {};
 ```
 
-#### Assignment Operator 
+### Assignment Operator 
 
 The assignment operator is the kissing cousin of the Copy Constructor. It's job is to make a copy of the a variable and assign it to an existing variable of the same type. Catch that? its a subtle distinction. In the copy constructor's case, we are initializing a new variable. In the assignment operator's case, we are assigning the value of an existing variable to another existing variable. Because the variable on the left hand side of the equation already exists, in cases where we have pointer variables, with owned memory, we may need to dispose of existing memory before allocating new memory and copying values. This probably makes no sense at this point, because we have not gotten into dynamic memory allocaiton. So just take it on faith that there is a reason for all of this. Anyway, the assignment operator takes the following form:
 

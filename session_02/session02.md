@@ -1,32 +1,37 @@
-# Session 02
+# Session 2
 ## Review
-### Main
-Every executable has an entrant function called main, which is invoked when executing the program. It has two valid signatures:
+### main function
+Every executable has an entrant function called main, which is invoked when executing the program. It has two valid forms. The first form is:
 
 ```c++
 int main() {
     // bla bla bla
-
     return 0; // 0 indicates that everything is peachy
 }
 ```
 
-The second version takes two arguments:
-- int : the number of arguments that the executable is called with
-- char* argv[] : an array of c style strings representing those arguments. ( you might also see the second argument written as `char** arvg`. Its effectively the same thing and we will get into that when we discuss pointers...)
+And the second form is:
 
 ```c++
 int main(int argc, char* argv[] ) {
-    \\ bla bla bla 
+    // bla bla bla 
     return 0;
 }
 ```
 
+In the second form, as you can see, the main function takes two arguments. They are:
+- int argc: the number of arguments that the executable is called with.
+- char* argv[] : an array of c style strings representing those arguments. ( you might also see the second argument written as `char** arvg`. Its effectively the same thing and we will get into that when we discuss pointers...)
+
+By the way, the type signatures are required, but the names of the two arguments can be anything. By convention, they are *argc* and *argv*. You should probably stick to this naming, because that is what people expect. 
+
+You can use either of the two forms for main, although I recommend using the former, simpler one, unless you need to access the calling parameters.
+
 ## Data Types
 
-C++ is a strongly typed language. All variables have an explicit type which cannot be changed at runtime, unlike python. 
+C++ is a strongly typed language. All variables have an explicit type which cannot be changed at runtime, unlike python. When you declare a variable, you prefix it with its type name. And it *never ever changes*. That is a big change from Python, so soak it in. 
 
-The atomic datatypes are ( off the top of my head):
+The atomic data types are ( off the top of my head):
 
 * bool
 * char
@@ -38,9 +43,9 @@ The atomic datatypes are ( off the top of my head):
 * float
 * double
 
-for each of the int types , there exists an unsigned type, which does not allow for negative numbers.
+For each of the int types , there exists an unsigned type, which does not allow for negative numbers.
 
-short, int,  int, long, and long long all belong to the family of integers. They differ in terms of the range of integers which they represent/can hold. They can each be spelled explicitly (ie short int, long int)
+short int, int, long, and long long all belong to the family of integers. They differ in terms of the range of integers which they represent/can hold. They can each be spelled explicitly (ie short int, long int)
 
 float, double belong to the family of real numbers. They too differ in terms of the range that each can hold.
 
@@ -80,13 +85,13 @@ You can also either selectively import a symbol into the current namespace:
 using foo::bar;
 bar();
 ```
-or import everything in a namespace into the current namespace:
+Or import everything in a namespace into the current namespace:
 ```
 using namespace foo;
 bar();
 ```
 
-Why am i telling you this now? There are many useful libraries which live in the `std` namespace. We will now look at a couple of them.
+Why am i telling you this now? There are many useful libraries which live in the `std` namespace. We will take a look at a couple of them, but first we need to learn how to include them in our code.
 
 ## CPP Preprocessor: including other code
 
@@ -98,24 +103,56 @@ There are two forms which we are interested in:
 #include "myHeader.h"
 ```
 
-The former is used to include headers for compiled libraries and the latter is used to include non-precompiled headers, generally in your own project.
+The former is used to include headers for compiled libraries and the latter is used to include non-precompiled headers, generally in your own project. The former searches in predefined locations, as well as locations explicitly specified via compiler flags. The latter ("") first searches in the directory in which the directive appears, and then degrades to the former (<>) behavior, in the event that the header file is not found.
+
+## Useful Libraries
 
 There are a ton of useful libraries which ship with c++. Lets look at two of them in an example:
 
-iostream and string.
+### iostream and string.
 
+iostream includes a number of useful operators for reading and writing streams. Three common operators are:
+- cout : pronounced, see-out, this operator works in conjunction with the << operator to print streams to stdout. 
+- endl : pronounced just like it looks, this operator is just an os agnostic newline.
+- cin : pronounced see-in, this operator works in conjunction with the >> operator to pipe data from stdin to a variable.
+
+All of these operators live in the `std` namespace, so you need to prefix them with `std::` when using them.
 
 ```
 #include <iostream>
-#include <string>
 
+int main() {
+    //print hello world to standard out followed by a newline
+    std::cout << "hello world" << std::endl;
+    
+    std::cout << "how many donuts do you want? ";
+    int donut_cnt;
+    cin >> donut_cnt;
+    std::cout << "you wnat "<< donut_cnt << " donuts " << std::endl;
+    
+    return 0;
+}
+```
+
+Next up is the string class. You are in luck, because it works a lot like python's string class. Furthermore, it exists, which is a bonus, because it didn't in c. Thanks c++. 
+```
+#include <iostream>
+#include <string>
+#include <algorithm>
 
 int main() {
     std::string name{"Freddy"};
     std::cout << "hello " << name << std::endl;
+    std::cout << "I am "<< name.size()<<" characters long" << std::endl;
+    
+    // if you have c++11, it is easy enough to do things like capitalize 
+    for (std::string& c: str) c = toupper(c)
+    
     return 0;
 }
 ```
+
+For more on std::string, (click here)[http://en.cppreference.com/w/cpp/string/basic_string]
 
 ## Declaration, Initialization, Definition, and Assignment
 
@@ -123,9 +160,10 @@ Lets talk about terminology, because its fun.
 
 ### Declaration
 
-when you name a variable and define its type, that is a declaration. 
+When you name a variable and define its type, that is a declaration. 
 
-example 
+#### Example 
+
 ```
 int foo;
 ```
@@ -134,17 +172,17 @@ int foo;
 
 Assigning an initial value to a variable.
 
-example of declaration and initialization
+#### Example of Declaration and Initialization
+
 ```
 int foo = 0;
 int bar{22}; // uniform initialization
 string name("fred");
 ```
 
-
 ### Assignment
 
-Assigning a new value to a variable
+Assigning a new value to a variable is achieved thusly:
 
 ```
 int foo;
@@ -177,7 +215,7 @@ All function declarations look like this:
 <return type> <function name> ( <parameters>);
 ```
 
-examples
+#### Examples
 
 ```
 void greet(std::string);
@@ -190,7 +228,7 @@ So why would you split up the declaration and the definition? There are a couple
  
  (2) You sometimes have to make the compiler aware of the shape of a function, class, or struct, in a different location from its implementation, so that other components may reference it.
  
- Example foo.cpp 
+ Example foo.cpp: 
  
  ```
  #include <iostream>
@@ -237,7 +275,7 @@ If you go a step farther and provide an implementation, you would simply be addi
 <return type> <function name> ( <parameters>){ <implementation> };
 ```
 
-examples
+#### Examples
 ```
 void greet(std::string name) {
     std::cout << " Hello " << name << std::endl;
@@ -286,14 +324,16 @@ return 0;
 }
 ```
 
-observe the difference between this:
+Observe the difference between this:
+
 ```
 void foo(string name) {
     name = "foo";
 }
 ```
 
-and this:
+And this:
+
 ```
 void foo(string &name) {
     name = foo;
@@ -309,7 +349,7 @@ int foo = &bar;
 cout << foo << endl;;
 ```
 
-but this is
+But this is:
 
 ```
 int bar = 1;
@@ -335,6 +375,7 @@ Now, truthfully, this is not quite accurate. There is a level of indirection or 
 So really, you can think of variable names as convenient labels for memory addresses. Each variable represents a memory address. Thankfully.
 
 ##### Ampersand
+
 And you can actually ask for that address by using our new friend the ampersand. Unlucky for you, the ampersand is overloaded to represent a reference in some contexts, and an address in others.
 
 ```
@@ -345,9 +386,10 @@ cout << "foo " << foo << endl;
 // to print the address of foo
 cout << "foo address " << &foo << endl;
 ```
+
 If you prefix a variable with an ampersand operator, it will return the address of the variable in question. Beware, this is distinct from using the ampersand as part of a declaration. In that case, the ampersand means reference!
 
-##### asterisk
+##### Asterisk
 
 The ampersand is only have the story when it comes to pointers. You know how to retrieve an address from a variable, but how do you hold on to an address to a variable? 
 
@@ -358,7 +400,7 @@ int foo = 1;
 int *bar = &foo;
 ```
 
-In the preceding example, we first declare foo as an int and initialize it to the value 1. We then declare bar to be a *pointer to int* and initialize it with the address of foo. By the way, it makes no difference whether the asterisk is glommed onto the end of the type or the beginning of the variable name; folks roll both ways. 
+In the preceding example, we first declare foo as an int and initialize it to the value 1. We then declare bar to be a *pointer to int* and initialize it with the address of foo. By the way, it makes no difference whether the asterisk is glombed onto the end of the type or the beginning of the variable name; folks roll both ways. 
  
  ```
  int* foo;
@@ -399,7 +441,7 @@ In the preceding example, we first declare foo as an int and initialize it to th
  cout << **foof << endl;
  ```
  
- ### Why all this pointer stuff?
+### Why all this pointer stuff?
  
  Remember when I told you (like a few sentences ago) that a variable is just a nice name for a memory address? Not all memory address have names. That is the idea behind dynamic memory allocation. You can ask the computer for a certain amound of memory and it will return a starting address to that memory. You store it with a pointer. And, when you are done with it, you tell the computer to clean it up. More on that later....
 
@@ -407,16 +449,15 @@ In the preceding example, we first declare foo as an int and initialize it to th
 
 In c++, we have a *const* keyword which can appear in function parameter lists, return declarations, and after method names to signify the fact that the user won't be mutating said data. 
 
-example
-
-compiles
+The following compiles:
 ```
 void printfoo(const std::string& foo) {
     cout << foo << endl;
 }
 ```
 
-error
+But this errors, because we attempt to set foo after declaring it as *const*.
+
 ```
 void printfoo(const std::string& foo) {
     foo = "bla";

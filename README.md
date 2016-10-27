@@ -1,0 +1,3 @@
+# cpp_happy_fun_time
+
+Notes from our lunchtime c++ exploration. I have generated pdfs, which are probably what you want... 

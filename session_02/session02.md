@@ -107,7 +107,7 @@ The former is used to include headers for compiled libraries and the latter is u
 
 ## Useful Libraries
 
-There are a ton of useful libraries which ship with c++. Lets look at two of them in an example:
+There are a ton of useful libraries which ship with c++. Let's look at two of them in an example:
 
 ### iostream and string.
 
@@ -156,7 +156,7 @@ For more on std::string, (click here)[http://en.cppreference.com/w/cpp/string/ba
 
 ## Declaration, Initialization, Definition, and Assignment
 
-Lets talk about terminology, because its fun.
+Let's talk about terminology, because its fun.
 
 ### Declaration
 
@@ -360,7 +360,7 @@ cout << foo << endl;
 
 ### Pointers - part 1
 
-Lets talk about pointers. Python doesn't have an analog. This is new stuff. The concept is pretty simple though, even if the syntax is weird in some situations. 
+Let's talk about pointers. Python doesn't have an analog. This is new stuff. The concept is pretty simple though, even if the syntax is weird in some situations. 
 
 Recall for a moment the idea of a type. A type has a size and a meaning. The size is the size in bytes that the type takes up, and the meaning is the representation of those bytes.
 

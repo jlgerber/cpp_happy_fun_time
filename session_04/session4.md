@@ -22,7 +22,7 @@ Done? Good. If you are running Mac Os (formerly known as OS X), you are going to
 
 ## Our simple main.cpp file
 
-Ok, lets get going. Create a root project directory. I am calling mine hellocmake. you can call yours whatever.
+Ok, let's get going. Create a root project directory. I am calling mine hellocmake. you can call yours whatever.
 
 Cd into the directory and create a main.cpp file. It should look something like the following:
 
@@ -40,9 +40,9 @@ Ok. That should have been a big time review. simple. Laughably simple. That isn'
 
 ## Our first CMakeList.txt file
 
-So lets do this... Cmake uses a file with a very specific name and capitalizaiton to work. So, create a file in the same directory and call it *CMakeLists.txt*. Notice the capitalization; you need to copy this exactly; cmakelists.txt wont do.
+So let's do this... Cmake uses a file with a very specific name and capitalizaiton to work. So, create a file in the same directory and call it *CMakeLists.txt*. Notice the capitalization; you need to copy this exactly; cmakelists.txt wont do.
 
-Now lets fill it out.
+Now let's fill it out.
 
 First, we need to set the minimum version for cmake. we do it like so:
 ```
@@ -72,7 +72,7 @@ set(SOURCE_CPPS main.cpp)
  
  This command works just like before. It takes a space separated list of values. The first value is the variable, and subsequent values are assigned to the variable. If we had more cpp files, we would tack them on to the end.
  
- Ok. Now the last thing we need to do is tell cmake what we want to generate. In this case, we want to create an executable. By the way, we can also generate a static or dynamic library. But for now, lets just create the executable.
+ Ok. Now the last thing we need to do is tell cmake what we want to generate. In this case, we want to create an executable. By the way, we can also generate a static or dynamic library. But for now, let's just create the executable.
  
 ```
 add_executable( hello ${SOURCE_CPPS} )
@@ -125,7 +125,7 @@ cmake ..
 make
 ```
 
-Why would we want to do this? Well, because that simple g++ command gets a whole lot more difficult as we start adding libraries, files, etc. It can quickly get out of hand. Lets add a class into the mix. 
+Why would we want to do this? Well, because that simple g++ command gets a whole lot more difficult as we start adding libraries, files, etc. It can quickly get out of hand. Let's add a class into the mix, to increase the complexity a bit. 
  
 ## Adding a Person Class 
  
@@ -133,7 +133,7 @@ Why would we want to do this? Well, because that simple g++ command gets a whole
  - Person.h
  - Person.cpp 
  
- Lets start with the header file (Person.h). The first thing we need to do is add what is called a guard. A guard is a preprocess instruction which prevents the header file from being included multiple times into the same compilation unit during compilation. 
+ Let's start with the header file (Person.h). The first thing we need to do is add what is called a guard. A guard is a preprocess instruction which prevents the header file from being included multiple times into the same compilation unit during compilation. 
  
  TD;LR. When you compile your code, the first step your compiler takes is to expand all of the preprocessor commands. All of the #include directives in each of the cpp files gets replaced by the text from the files they refer to. A compilation unit is basically a cpp file with all of its #includes replaced by their values, along with all of the rest of the preprocessor junk. This expansion is recursive, as the header files you include may well have includes of their own. The guards exist to prevent the preprocessor from copying the same code in multiple times.
  
@@ -159,7 +159,7 @@ class Person {
  
 Pretty simple. Two private variables (first_name, last_name), and two methods - a constructor, and a greet function. Notice anything odd? The method declarations only contain type information. They don't even have parameter names. You can declare them with names, but you don't have to.
  
-Allright. Lets jump over to Person.cpp and actually implement these two functions.
+Allright. Let's jump over to Person.cpp and actually implement these two functions.
  
 ```
 #include "Person.h"
@@ -186,7 +186,7 @@ Main take aways:
  
 ## Updating main 
  
-Lets update main to use Person.
+Let's update main to use Person.
  
 ```
 #include <iostream>

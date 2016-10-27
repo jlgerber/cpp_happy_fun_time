@@ -3,7 +3,7 @@ C++ is a strongly typed, compiled, high performance language, which evolved from
 
 # structure of a c++ program
 
-Like a python program, a C++ program can consist of many files. And like a python program, a c++ executable ultimately has a single entry point. In C++'s case that entry point is the **main function**. So lets write our first c++ program. Create a file called *hello.cpp* with the following in it:
+Like a python program, a C++ program can consist of many files. And like a python program, a c++ executable ultimately has a single entry point. In C++'s case that entry point is the **main function**. So let's write our first c++ program. Create a file called *hello.cpp* with the following in it:
 
 ```
 #include <iostream> 
@@ -20,7 +20,7 @@ And compile it on the command line:
 g++ hello.cpp -o hello
 ```
 
-Tada, you should have an executable called hello, which will greet the world when run. Even in this trivial program, we have a lot to talk about. So lets get at it.
+Tada, you should have an executable called hello, which will greet the world when run. Even in this trivial program, we have a lot to talk about. So let's get at it.
 
 # includes, the modules of the python world
 

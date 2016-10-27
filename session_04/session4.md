@@ -227,7 +227,7 @@ add_exectuble(hello ${SOURCE_CPPS} ${SOURCE_HEADERS})
 
 Once that is done, we cd back into our build directory (```cd build```), and remove everything (```rm -rf *```). Then we ```cmake ..``` . finally, we type make.
  
- 
+From now on, we are going to be using **cmake** to set up our builds...
  
  
  

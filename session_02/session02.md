@@ -1,6 +1,6 @@
 # Session 02
 ## Review
-### main
+### Main
 Every executable has an entrant function called main, which is invoked when executing the program. It has two valid signatures:
 
 ```c++
@@ -22,7 +22,7 @@ int main(int argc, char* argv[] ) {
 }
 ```
 
-## data types
+## Data Types
 
 C++ is a strongly typed language. All variables have an explicit type which cannot be changed at runtime, unlike python. 
 
@@ -44,7 +44,7 @@ short, int,  int, long, and long long all belong to the family of integers. They
 
 float, double belong to the family of real numbers. They too differ in terms of the range that each can hold.
 
-## namespaces
+## Namespaces
 C ++ allows you to wrap code in a namespace in order to organize and protect symbols. Namespaces are roughly equivalent to python's nested module definitions.
 
 ```python
@@ -228,7 +228,7 @@ You have to perform something called *forward declaration* in order to get this 
     cout << "FOOOOOOO" << endl;
  }
 ```
-### Function definition
+### Function Definition
 
 If you go a step farther and provide an implementation, you would simply be adding the guts of the code to the end.
 
@@ -247,7 +247,7 @@ int addtwo( int num ) {
     return num + 2;
 }
 ```
-### references - part 1
+### References - part 1
 
 In c++, you can create a reference or alias to a variable by using the `&`. This is commonly used in function declarations for two reasons:
 (1) avoid making a copy of a variable because it is large
@@ -334,7 +334,7 @@ Now, truthfully, this is not quite accurate. There is a level of indirection or 
 
 So really, you can think of variable names as convenient labels for memory addresses. Each variable represents a memory address. Thankfully.
 
-##### Amppersand
+##### Ampersand
 And you can actually ask for that address by using our new friend the ampersand. Unlucky for you, the ampersand is overloaded to represent a reference in some contexts, and an address in others.
 
 ```
@@ -442,3 +442,10 @@ int main() {
     return 0;
 }
 ```
+
+For the most part, const is pretty simple. However, when it comes to pointers, things can get a bit hairy. That's because you can declare a const pointer, a pointer to const, or a const pointer to const. WTF????
+
+1. const pointer - the const appears after the asterisk. It denotes the fact that the pointer's address may not change. EG `int * const foo;`
+2. pointer to const - the const appears before the asterisk. It denotes the fact that the variable's value pointed at via the pointer may not change. EG `const int* foo;` or `int const *foo;`
+3. const pointer to const - the const appears both before and after the asterisk. This pointer cannot be repointed and the value pointed at cannot change. EGs `const int * const foo;` or  `int const * const bar;`
+        

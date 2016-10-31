@@ -4,7 +4,15 @@ C++ has two data structures that resemble python classes. They are structs and c
 
 They are so similar that, rather than talk about them separately, I will discuss classes and then come back and talk about the trivial differences between classes and structs.
 
-So, on with it.
+Before we delve into the guts of c++ classes, we should probably talk about what they are about. The goal of the Class construct is to allow a developer to  model a user defined type which behaves like a built in type. In order to achieve this goal, C++ and Python both provide a rich set of operators which may be specialized to achieve parity between custom and built in types. 
+
+In Python, you can implement a wide variety of [dunder methods](shttp://infohost.nmt.edu/tcc/help/pubs/python/web/special-methods.html) to customize mathematical operations, comparison, and more. (by dunder methods, I mean double underscore methods. `__add__ __sub__ __setattr__` etc)
+
+In C++, you can customize all of the mathematical operations ( `+ - * / += -= *= /= ++ --`), comparison ( `== < > <= >= !=` ), assignment ( `=` ), and more.
+ 
+Both languages provide these facilities so that you may create data types for yourself which behave just like the built in ones.
+
+Great. Lets get going....
 
 ## Classes 
 
@@ -142,48 +150,52 @@ somefunction() : <intializier list> {}
 ```
 The initializer list is a comma separated list of data members which may be initialized form the parameter list of the function, or any constants, using method or uniform initialization notation (assuming you are compiling with c++11 support). 
 
-### Copy Constructor
+## Operator Overloading
 
-One special form of constructor is the copy constructor. The copy constructor is engaged when you initialize a new instance variable from an existing instance variable. For example:
+In C++ you can define custom behavior for wide variety of operators. Doing so is known as *operator overloading*. Let's take a look at how this works by looking at overloading addition.
 
-```
-Person p("Frank", "Ford");
-Person p2 = p1;
-```
-
-What is really going on here? A bit of syntactic sugar, to be frank. Here is the translation:
+#### Binary  & Unary Operators
+In general, binary operators (operators operating on two items) and unary operators (operators operating on one item) are overloaded by defining class methods which return an instance of the class in question, are named "operator" followed by the actual operator in question, and take a const reference to an instance of the class. So for addition, the declaration looks like this ( assuming we have a Point class):
 
 ```
-Person p("Frank", "Ford");
-Person p2(p);
+class Point {
+    ...
+public:
+    ...
+    Point operator+(const Point& rhs); 
+    Point operator++(const Point& rhs);
+};
 ```
 
-(and by the way, this also calls the copy constructor.)
-
-The copy constructor's signature looks like this. (commit it to memory)
-
+Python would be similar, although python does not have `++` or `--` operators..
 ```
-Person(const Person& p);
-```
-It takes a const reference to a variable of the same type. Its job is to initialize the new variable with the values of the old variable. If you do not create a copy constructor, one will be provided for you by the compiler. But, and this is a big but, it will often not have the intended behavior. Especially when you start getting into managing memory yourself. At this point, with the person class, there is really no need for a custom copy constructor, but here is how you would implement it:
-
-```
-Person(const Person& p) : first_name(p.first_name), last_name(p.last_name) {};
+class Point(object):
+    ...
+    def __add__(self, other):
+        ...
 ```
 
-### Assignment Operator 
-
-The assignment operator is the kissing cousin of the Copy Constructor. It's job is to make a copy of the a variable and assign it to an existing variable of the same type. Catch that? its a subtle distinction. In the copy constructor's case, we are initializing a new variable. In the assignment operator's case, we are assigning the value of an existing variable to another existing variable. Because the variable on the left hand side of the equation already exists, in cases where we have pointer variables, with owned memory, we may need to dispose of existing memory before allocating new memory and copying values. This probably makes no sense at this point, because we have not gotten into dynamic memory allocaiton. So just take it on faith that there is a reason for all of this. Anyway, the assignment operator takes the following form:
+#### Relational Operators 
+Relational operators return a boolean, and take a const reference to the containing class. So, continuing our example of Point:
 
 ```
-Person& operator=(const Person& p) {
-    if (this != &p) {
-        //copy 
-        first_name = p.first_name;
-        last_name = p.last_name;
-    }
-    return *this;
-}
+class Point {
+    ...
+public:
+    ...
+    Point operator+(const Point& rhs); 
+    Point operator++(conts Point& rhs);
+    bool operator==(const Point& rhs);
+};
 ```
-A couple of interesting notes. We dereference the **this** pointer and return a reference to the value ( combination of the signature of the return type(Person&) and the dereferece (*this)).
-Anyway, truthfully, I probably should have not plunged ahead into the Assignment Operator and the Copy Constructor; not until we talked about allocating memory. Because the default implementations which the compiler provides are suitable until we get into managing memory. So, while I cannot take back the last two sections, having already gone over them in class, don't fret if they don't quite make sense yet. 
+
+Once again, Python looks like this (foregoing implementation):
+
+```
+class Point(object):
+    ...
+    def __add__(self, other):
+        ...
+    def __eq__(self, other):
+        ...
+```

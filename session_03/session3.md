@@ -84,7 +84,9 @@ class Person {
     Person(std::string name) : name(name) {};
     std::string name
 };
-
+```
+With Person above, all data is accessible outside of the class.
+```
 //
 class PrivatePerson {
 private:
@@ -92,6 +94,9 @@ private:
 public:
     PrivatePerson(std::string name) : name(name) {};
 };
+```
+However, with PrivatePerson above, name is private, and thus unaccessible from outside of the class.
+```
 //
 class ProtectedPerson {
 protected:
@@ -104,6 +109,11 @@ class Man : public ProtectedPerson {
     public:
     void greet() { std::cout << "Hi, my name is "<< name << std::endl;}
 }
+```
+Likewise , ProtectedPerson above only makes name accessible from descendants. For example, the Man class. 
+
+Trying to use them in main....
+```
 //
 // main funciton
 
@@ -112,14 +122,14 @@ int main() {
     Person dude("The Dude");
     std::cout << dude.name << std::endl;
     
-    // this doesnt
+    // this wont compile
     PrivatePerson privateDude("The Private Dude");
     std::cout << privateDude.name << std::endl;
     
     // protected
     Man theDude("The Dude");
     theDude.greet(); 
-    // this doesnt work
+    // this doesnt work either
     theDude.name = "Shelly";
     
     return 0;
@@ -199,3 +209,160 @@ class Point(object):
     def __eq__(self, other):
         ...
 ```
+
+### Exercise 
+
+Ok, its exercise time. Using all of the knowledge gained thus far, implement a Vector class. It should:
+ 
+ - support addition and subtraction between vectors 
+ - support cross product and dot products between vectors
+ - support scalar multiplication
+ - provide a normalize function
+ 
+ Write unit tests to validate that your class works using google test.
+ 
+ ### Coda - Using Google Test  
+ 
+ Ok, you want to be a good citizen and practice this whole TDD thing right? But how do you go about setting up google test with cmake? 
+ 
+ First, create an appropriate structure for your project.
+ 
+ ```
+ vector_eg/
+    src/
+    lib/
+    tests/
+ ```
+ 
+ - src is where your source code will go.
+ - lib is where your google test framework will go.
+ - tests is where your tests will go.
+ 
+ #### Step 1 - install google test
+ 
+ google test should ship with a googletest directory chock full of goodness, including a CMakeLists.txt file. Go ahead and simply recursively copy googletest into lib.
+ 
+ #### Step 2 - Set Up src
+ 
+ In src, create a CMakeLists.txt file. Set it up to compile the code we will be creating shortly in the same directory. This time around we need to create a shared library output, instead of an executable. The test will be the executable. Our code will be the library. Doing this is every bit as simple as creating an executable. Simply call `add_library` instead of `add_executable`:
+ 
+ ```
+ project(vector)
+ file(GLOB  cpps *.cpp)
+ file(GLOB hpps *.hpp)
+ add_library(vector SHARED ${cpps} ${hpps})
+ ```
+ 
+ Now go ahead and create your Vector.cpp and Vector.h files in src.
+ 
+ #### Step 3 - set up your tests
+ 
+ In tests/ add another CMakeLists.txt file to compile your tests, which we will be adding shortly.
+ 
+ ```
+ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+ 
+ # add files
+ file(GLOB tests_cpp *.cpp)
+ 
+ # add project name
+ add_executable(${PROJECT_NAME} ${tests_cpp})
+ 
+ target_link_libraries(${PROJECT_NAME} gtest gtest_main)
+ target_link_libraries(${PROJECT_NAME} vector)
+ ```
+ 
+ This CMakeLists.txt file is a bit more involved. First, it includes directories from the googletest framework, which we will need.
+ 
+ Then it uses glob to grab all of the cpp files in the tests directory.
+ 
+ Then it creates an executable, adding all of the cpp files from the prior step.
+ 
+ The final two steps are to link in google test, and then link in our own vector library ( which we set up in a previous CMakeLists.txt file)
+ 
+ #### Bringing it all together
+ 
+ Ok, we have our individual CMakeLists.txt files, but we need to set up a top level CMakeLists.txt file to call each of the CMakeLists.txt files we created *in the correct order*.
+ 
+ So, under our project's root directory, create a new CMakeLists.txt file:
+ 
+ ```
+ cmake_minimum_required(VERSION 2.6.2)
+
+ project(unit_tests)
+ add_subdirectory(src)
+ add_subdirectory(lib/googletest)
+ add_subdirectory(tests)
+ ```
+ 
+ We require a minimum cmake version as usual.
+ Then we give the project a name.
+ And finally, we add the subdirectories with our CMakeLists.txt files in the order we want them to be executed. We don't really care if our source or the google test framework is compiled first. We want both of them taken care of before compiling tests....
+ 
+ #### TDD - Test Driven Development 
+ 
+ Ok. Lets give this a go. Test Driven Development is a technique where you create each test and then add just enough to your source code to get it to pass. While I cannot say that I always faithfully practice test driven development, I can say that the more you interleave your testing, the easier it is on you.
+ 
+ Go to your src/ directory. You should have created Vector.cpp and Vector.h by now. If you used an IDE which provides scaffolding, you even have an empty class. Lets add a default constructor to get this rolling.
+ 
+ Vector.h
+ ```
+ class Vector {
+ public:
+    double x, y, z;
+    Person();
+ }
+ ```
+ 
+ Ok. Let's jump into the tests/ directory and create a tests.cpp file.
+ 
+ All google tests need to include gtest to work. Since we are testing Vector, we also need to include Vector.h:
+ 
+ ```
+ #include "gtest/gtest.h"
+ #include "../src/Vector.hpp"
+ ```
+ 
+ Now it is time to write our first actual test. Gtest has a TEST macro which we use for each test.
+ 
+ ```
+ TEST( <name of group>, <name of test>) {
+ ...
+ }
+ ```
+ 
+ So for our Vector class:
+ 
+ ```
+ TEST(vector, default_constructor) {
+ 
+ }
+ ```
+ 
+ Your tests are all going to look the same. You are going to write a bit of code to exercise a single function or method, then you are going to test the results. Gtest has a number of functions that will help you with this. Here are a few of them:
+ 
+ - EXPECT_EQ(rhs, lhs)
+ - EXPECT_DOUBLE_EQ(rhs, lhs)
+ - EXPECT_FLOAT_EQ(rhs, lhs)
+ - EXPECT_TRUE(expression)
+ - EXPECT_FALSE(expression)
+ 
+ Ok. Lets write our first test:
+ 
+ The default constructor. Well, first, what do we expect our vector to get initialized to without any user intervention? It could be anything sensible. I am going to choose a unit vector pointing down the z axis.
+ 
+ 
+ ```
+ TEST(vector, default_constructor) {
+    Vector v{};
+    EXPECT_DOUBLE_EQ(0.0, v.x);
+    EXPECT_DOUBLE_EQ(0.0, v.y);
+    EXPECT_DOUBLE_EQ(1.0, v.z);
+ }
+ ```
+ 
+ And that is it. Well, lets run our unit test. It should fail at this point, because we have not written a constructor. Let's fix that.
+ 
+ Go to src/ and edit your Vector.cpp. Add a default constructor and initialize it to <0,0,1>. Run the test again. It should pass.
+ 
+ 

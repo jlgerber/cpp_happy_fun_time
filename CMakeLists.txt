@@ -19,3 +19,5 @@ add_executable( personBetter
 add_executable( sharedPtrMain
                 session_05/sharedPtrMain.cpp
                 session_05/SharedPtr.hpp)
+
+add_subdirectory(session_03)

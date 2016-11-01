@@ -24,15 +24,14 @@ Great. Lets get going....
  
 #### Python
  
- ```
- # python
- class Person(object):
- ```
+```
+class Person(object):
+```
 #### C++
- ```
- class Person {
- };
- ```
+```
+class Person {
+};
+```
  
 ### Self Reference
 
@@ -42,14 +41,14 @@ C++ has an implicit reference to itself, called *this* which is a pointer to its
 
 For completeness sake ( hopefully this isn't confusing ), consider a greet method defined in a person class in python and c++, which we assume has an instance variable called *myname*:
 
-python
+#### Python
 ```
 ...
 def greet(self, other):
     print "Hello {}, my name is {}".format(other, self.myname )
 ```
 
-c++
+#### C++
 ```
 ...
 void greet(const std::string& other) {
@@ -59,7 +58,7 @@ void greet(const std::string& other) {
 
 ### Access Specifiers - Private, Public, Protected 
 
-One thing you might have fussed with in python a bit is the notion of privacy. You probably have prefixed variables with an underscore as a way of telling the rest of the world that a variable is part of an implementation, and shouldn't be mucked with. You might have even gone so far as to use two underscores in order to invoke name mangling. Well, no offense to python, but its implementation of privacy is second rate and you can get around it. Privacy is kind of like what sexist dinosaurs would have referred to as a "gentlemen's agreement". Phoey!
+One thing you might have fussed with in python a bit is the notion of privacy. You probably have prefixed variables with an underscore as a way of telling the rest of the world that a variable is part of an implementation, and shouldn't be mucked with. You might have even gone so far as to use two underscores in order to invoke name mangling. Well, no offense to python, but its implementation of privacy is second rate and you can get around it. Privacy in Python is what you might call a "gentlemen's agreement". And I don't know about you, but I'm not always a gentleman when I program.
 
 In a c++ class, all of your variables and functions are defined under an access specifier. And there are three of them:
 - public
@@ -286,58 +285,58 @@ Ok, its exercise time. Using all of the knowledge gained thus far, implement a V
  
  So, under our project's root directory, create a new CMakeLists.txt file:
  
- ```
+```
  cmake_minimum_required(VERSION 2.6.2)
 
  project(unit_tests)
  add_subdirectory(src)
  add_subdirectory(lib/googletest)
  add_subdirectory(tests)
- ```
+```
  
- We require a minimum cmake version as usual.
+We require a minimum cmake version as usual.
  Then we give the project a name.
  And finally, we add the subdirectories with our CMakeLists.txt files in the order we want them to be executed. We don't really care if our source or the google test framework is compiled first. We want both of them taken care of before compiling tests....
  
- #### TDD - Test Driven Development 
+#### TDD - Test Driven Development 
  
- Ok. Lets give this a go. Test Driven Development is a technique where you create each test and then add just enough to your source code to get it to pass. While I cannot say that I always faithfully practice test driven development, I can say that the more you interleave your testing, the easier it is on you.
+Ok. Lets give this a go. Test Driven Development is a technique where you create each test and then add just enough to your source code to get it to pass. While I cannot say that I always faithfully practice test driven development, I can say that the more you interleave your testing, the easier it is on you.
  
- Go to your src/ directory. You should have created Vector.cpp and Vector.h by now. If you used an IDE which provides scaffolding, you even have an empty class. Lets add a default constructor to get this rolling.
+Go to your src/ directory. You should have created Vector.cpp and Vector.h by now. If you used an IDE which provides scaffolding, you even have an empty class. Lets add a default constructor to get this rolling.
  
  Vector.h
- ```
+```
  class Vector {
  public:
     double x, y, z;
     Person();
  }
- ```
+```
  
  Ok. Let's jump into the tests/ directory and create a tests.cpp file.
  
  All google tests need to include gtest to work. Since we are testing Vector, we also need to include Vector.h:
  
- ```
+```
  #include "gtest/gtest.h"
  #include "../src/Vector.hpp"
- ```
+```
  
  Now it is time to write our first actual test. Gtest has a TEST macro which we use for each test.
  
- ```
+```
  TEST( <name of group>, <name of test>) {
  ...
  }
- ```
+```
  
- So for our Vector class:
+So for our Vector class:
  
- ```
+```
  TEST(vector, default_constructor) {
  
  }
- ```
+```
  
  Your tests are all going to look the same. You are going to write a bit of code to exercise a single function or method, then you are going to test the results. Gtest has a number of functions that will help you with this. Here are a few of them:
  
@@ -352,17 +351,17 @@ Ok, its exercise time. Using all of the knowledge gained thus far, implement a V
  The default constructor. Well, first, what do we expect our vector to get initialized to without any user intervention? It could be anything sensible. I am going to choose a unit vector pointing down the z axis.
  
  
- ```
+```
  TEST(vector, default_constructor) {
     Vector v{};
     EXPECT_DOUBLE_EQ(0.0, v.x);
     EXPECT_DOUBLE_EQ(0.0, v.y);
     EXPECT_DOUBLE_EQ(1.0, v.z);
  }
- ```
+```
  
- And that is it. Well, lets run our unit test. It should fail at this point, because we have not written a constructor. Let's fix that.
+And that is it. Well, lets run our unit test. It should fail at this point, because we have not written a constructor. Let's fix that.
  
- Go to src/ and edit your Vector.cpp. Add a default constructor and initialize it to <0,0,1>. Run the test again. It should pass.
+Go to src/ and edit your Vector.cpp. Add a default constructor and initialize it to <0,0,1>. Run the test again. It should pass.
  
  

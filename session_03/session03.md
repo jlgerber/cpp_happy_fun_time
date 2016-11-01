@@ -1,6 +1,6 @@
 # Structs and Classes
 
-C++ has two data structures that resemble python classes. They are structs and classes.
+C++ has two data structures which resemble python classes - structs and classes.
 
 They are so similar that, rather than talk about them separately, I will discuss classes and then come back and talk about the trivial differences between classes and structs.
 

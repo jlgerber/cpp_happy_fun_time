@@ -1,233 +1,401 @@
-# Cmake - An aside 
+# Structs and Classes
 
-Today we are going to take a break from studying classes and structs to talk about *cmake*. Cmake is a build system which manages the build process in an os and compiler independent manner. You have probably heard of make; you may have cracked a Makefile open or written one yourself. If so, you are probably aware that the syntax can be a bit strange. Cmake is much more straightforward. And we are going to see that presently.
+C++ has two data structures which resemble python classes - structs and classes.
 
-Ok, so first, make sure that you have cmake. If you don't, jump on the interwebs and download the sucker.
+They are so similar that, rather than talk about them separately, I will discuss classes and then come back and talk about the trivial differences between classes and structs.
 
-Done? Good. If you are running Mac Os (formerly known as OS X), you are going to have to create an alias in your bashrc file, because we are using the terminal. On Mac Os, the actual cmake executable is here:
- 
- ```
- /Applications/CMake.app/Contents/bin/cmake
- ```
- 
- In your .bashrc file, add a line like so:
- 
- ```
- alias cmake="/Applications/CMake.app/Contents/bin/cmake"
- ```
- 
- Open a new shell and type `cmake`. That should work.
- 
- If you are on windows, well, find a bash shell ( I hear that git ships with one ), or hit google, because I don't use windows. I do know that cmake works with windows, but....
+Before we delve into the guts of c++ classes, we should probably talk about what they are about. The goal of the Class construct is to allow a developer to  model a user defined type which behaves like a built in type. In order to achieve this goal, C++ and Python both provide a rich set of operators which may be specialized to achieve parity between custom and built in types. 
 
-## Our simple main.cpp file
+In Python, you can implement a wide variety of [dunder methods](shttp://infohost.nmt.edu/tcc/help/pubs/python/web/special-methods.html) to customize mathematical operations, comparison, and more. (by dunder methods, I mean double underscore methods. `__add__ __sub__ __setattr__` etc)
 
-Ok, let's get going. Create a root project directory. I am calling mine hellocmake. you can call yours whatever.
+In C++, you can customize all of the mathematical operations ( `+ - * / += -= *= /= ++ --`), comparison ( `== < > <= >= !=` ), assignment ( `=` ), and more.
+ 
+Both languages provide these facilities so that you may create data types for yourself which behave just like the built in ones.
 
-Cd into the directory and create a main.cpp file. It should look something like the following:
+Great. Lets get going....
 
-```
-#include <iostream>
+## Classes 
 
-using std::cout; using std::endl;
-
-int main() {
-    cout<< "Hello World...Again...sigh..." << endl;
-    return 0;
-}
-```
-Ok. That should have been a big time review. simple. Laughably simple. That isn't the point. We want to compile this, and we want to use cmake to help us, because we are tired of remembering the g++ incantation. 
-
-## Our first CMakeList.txt file
-
-So let's do this... Cmake uses a file with a very specific name and capitalizaiton to work. So, create a file in the same directory and call it *CMakeLists.txt*. Notice the capitalization; you need to copy this exactly; cmakelists.txt wont do.
-
-Now let's fill it out.
-
-First, we need to set the minimum version for cmake. we do it like so:
-```
-cmake_minimum_required(VERSION 3.6)
-```
-Now, I don't know what version of cmake you are using. Actually, we will be able to get away with specifying an earlier version if you only have an earlier version; nothing we are going to do really leverages any new cmake features, but this should be fine assuming you have just downloaded cmake. Otherwise, specify 3.0 or 2.8 or whatever you have.
-
-Next, we need to give our project a name. This doesn't have to be the same name as the parent directory by the way.
-
-```
-project(hellocmake)
-```
-
-Next we are going to update the compile flags to include the c++ll flag. We are going to use a generic cmake command called *set* to accomplish this. 
-
-```
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-```
-This line should make sense if you have done any shell scripting. We are basically assigning the existing value of CMAKE_CXX_FLAGS plus -std=c++11 back to CMAKE_CXX_FLAGS. The argument directly after *set(* is the variable name being set, and the following quoted string is the value being set. Since the value contains a dereference of the variable name ( the ${} ), as well as a new flag, it takes whatever value it is currently storing and adds the additional flag on the end.
+ Since this is a class for folks who are python savvy, let's compare c++ classes to python classes.
  
+### class Keyword
  
-Next, we need to create a new variable to keep track of our source files. (well file, we only have a single file right now).
+ Like in python, in c++, a class is defined using the class keyword:
+ 
+#### Python
  
 ```
-set(SOURCE_CPPS main.cpp)
+class Person(object):
 ```
- 
- This command works just like before. It takes a space separated list of values. The first value is the variable, and subsequent values are assigned to the variable. If we had more cpp files, we would tack them on to the end.
- 
- Ok. Now the last thing we need to do is tell cmake what we want to generate. In this case, we want to create an executable. By the way, we can also generate a static or dynamic library. But for now, let's just create the executable.
- 
+#### C++
 ```
-add_executable( hello ${SOURCE_CPPS} )
-```
- and that is it. The first parameter to *add_executable* is the executable name. Subsequent parameters are the source file names. 
- 
-## Compiling the executable
- 
- Alright, so the first thing we have to do is actually generate a native build file from the cmake file. We do this by calling *cmake*. But we don't really want to call it in the current directory, because cmake creates a lot of temp files. So, we need to create a build directory. So do that. Create a build directory and cd into it.
- ```
- mkdir build
- cd build
- ```
- 
- Yes, I am 100% percent certain that you know how to do this without me creating the previous code block. But those code blocks break up my tedious instructions so... 
- 
- All right, now, we need to call cmake from this directory but reference the CMakeLists.txt file from the parent directory. Here we go:
- 
-```
-cmake ..
-```
- Cmake dot dot. If all goes well, you will have yourself a shiny Makefile, as well as a bunch of other junk. As long as you followed instructions and got things right, you should be golden. If not, go ahead and fix your issues and repeat the instructions. (you may have to delete the directory contents)
- 
- I am assuming that you have gotten cmake to work by now. The next step is to type ```make```
- This should build the executable (whatever you called it). In my case, it is called hello, and it is sitting right here. I can even run it.
- 
-## So Far
-  
- Ok, if you have gotten this far, you are probably a bit peeved. I mean, we just traded a single line
-
- ```
-g++ main.cpp -o hello
-```
- 
-for five lines in a CMakeLists file,
-```
-cmake_minimum_required(VERSION 3.6)
-
-project(hellocmake)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-set(SOURCE_CPPS main.cpp)
-add_executable( hello ${SOURCE_CPPS} )
-```
-and four commands.
-
-```
-mkdir build
-cd build
-cmake ..
-make
-```
-
-Why would we want to do this? Well, because that simple g++ command gets a whole lot more difficult as we start adding libraries, files, etc. It can quickly get out of hand. Let's add a class into the mix, to increase the complexity a bit. 
- 
-## Adding a Person Class 
- 
- Now it is time to take another step into the wide world of C++ development. Up to this point, we have been cheating. All of our work has been going into a single cpp file. In the real world, code is split up between header files, which contain declarations, and cpp files, which contain implementations. We are going to do this grownup style. Create two files:
- - Person.h
- - Person.cpp 
- 
- Let's start with the header file (Person.h). The first thing we need to do is add what is called a guard. A guard is a preprocess instruction which prevents the header file from being included multiple times into the same compilation unit during compilation. 
- 
- TD;LR. When you compile your code, the first step your compiler takes is to expand all of the preprocessor commands. All of the #include directives in each of the cpp files gets replaced by the text from the files they refer to. A compilation unit is basically a cpp file with all of its #includes replaced by their values, along with all of the rest of the preprocessor junk. This expansion is recursive, as the header files you include may well have includes of their own. The guards exist to prevent the preprocessor from copying the same code in multiple times.
- 
- Anyhoo, that is a ton of explanation for one line. Sorry.
- 
-```
-#pragma once
-```
- 
-Here is the rest of the Person declaration:
- 
-```
-#include <string>
- 
 class Person {
-    std::string first_name;
-    std::string last_name;
- public:
-     Person(const std::string&, const std::string&);
-     void greet(const std::string& ) const;
 };
 ```
  
-Pretty simple. Two private variables (first_name, last_name), and two methods - a constructor, and a greet function. Notice anything odd? The method declarations only contain type information. They don't even have parameter names. You can declare them with names, but you don't have to.
- 
-Allright. Let's jump over to Person.cpp and actually implement these two functions.
- 
+### Self Reference
+
+In python, each instance method has an explicit reference to itself, commonly spelled out as *self*, which all instance methods are passed explicitly as their first parameter.
+
+C++ has an implicit reference to itself, called *this* which is a pointer to itself ( we cover pointers elsewhere ). However, you rarely need to use *this*, as C++ is usually smart enough to recognize references to member functions and data. 
+
+For completeness sake ( hopefully this isn't confusing ), consider a greet method defined in a person class in python and c++, which we assume has an instance variable called *myname*:
+
+#### Python
 ```
-#include "Person.h"
-#include <iostream>
-#include <string>
- 
-using std::cout; 
-using std::endl;
-using std::string;
- 
-Person::Person(const string& fh, const string& ln) :
-            first_name(fn),
-            last_name(ln) {}
- 
-void Person::greet(const string& other) const {
-    cout << "Hello " << other << ". My name is " << 
-        first_name << " " << last_name << endl;
+...
+def greet(self, other):
+    print "Hello {}, my name is {}".format(other, self.myname )
+```
+
+#### C++
+```
+...
+void greet(const std::string& other) {
+    cout << "Hello "<< other << ", my name is " << myname << endl;
 }
 ```
- 
-Main take aways:
- - you need to think of the class name as a namespace and treat it as such once outside of the class declaration. Thus the constructor and the greet function are both prefixed with the class name, followed by double colons. Just like we need to do when addressing things in the std namespace if we don't use the `using` directive.
- - speaking of using, it is generally safe to use `using` to get rid of namespaces in the implementation file (cpp). Mainly this is because all of the header files which will be copied into it during compilation will be using fully qualified namespaces. ( and you should never use `using` in a header file. got it?)
- 
-## Updating main 
- 
-Let's update main to use Person.
- 
-```
-#include <iostream>
-#include "Person.h"
 
-using std::cout; using std::endl;
+### Access Specifiers - Private, Public, Protected 
+
+One thing you might have fussed with in python a bit is the notion of privacy. You probably have prefixed variables with an underscore as a way of telling the rest of the world that a variable is part of an implementation, and shouldn't be mucked with. You might have even gone so far as to use two underscores in order to invoke name mangling. Well, no offense to python, but its implementation of privacy is second rate and you can get around it. Privacy in Python is what you might call a "gentlemen's agreement". And I don't know about you, but I'm not always a gentleman when I program.
+
+In a c++ class, all of your variables and functions are defined under an access specifier. And there are three of them:
+- public
+- private
+- protected 
+
+Public data and functions may be accessed by anyone. Instance methods, external callers, you name it.
+
+Private data and functions may only be accessed internally by other functions within the class.
+
+Lastly, protected data and functions may only be accessed by internal functions / data or by internal mechanisms of classes which inherit from the class in which the protected data lives.
+
+Oh, and access specifiers may be used more than once. Anything following an access specifier belongs to it. And class data is private by default. So if you see data or methods but no specifier, that data and those methods are private....
+
+Example Time:
+
+```
+// person defined with all public methods
+class Person {
+ public:
+    // constructor 
+    Person(std::string name) : name(name) {};
+    std::string name
+};
+```
+With Person above, all data is accessible outside of the class.
+```
+//
+class PrivatePerson {
+private:
+    std::string name;
+public:
+    PrivatePerson(std::string name) : name(name) {};
+};
+```
+However, with PrivatePerson above, name is private, and thus unaccessible from outside of the class.
+```
+//
+class ProtectedPerson {
+protected:
+    std::string name;
+public:
+    ProtectedPerson(std::string nm) : name(nm) {}
+};
+
+class Man : public ProtectedPerson {
+    public:
+    void greet() { std::cout << "Hi, my name is "<< name << std::endl;}
+}
+```
+Likewise , ProtectedPerson above only makes name accessible from descendants. For example, the Man class. 
+
+Trying to use them in main....
+```
+//
+// main funciton
 
 int main() {
-    cout<< "Hello. Bet you didn't think you would still be writing hello world programs." << endl;
-    // who doesn't love alliteration?
-    Person p("Jake", "Johanson");
-    p.greet("Fred Ferdinand");
+    // this works
+    Person dude("The Dude");
+    std::cout << dude.name << std::endl;
+    
+    // this wont compile
+    PrivatePerson privateDude("The Private Dude");
+    std::cout << privateDude.name << std::endl;
+    
+    // protected
+    Man theDude("The Dude");
+    theDude.greet(); 
+    // this doesnt work either
+    theDude.name = "Shelly";
     
     return 0;
+};
+```
+
+### Constructor
+
+Python has the initializer, otherwise known to true geeks as the dunderinit (__init__). Technically, this is an initializer, not a constructor, but let's gloss over that.
+
+In C++, you have one or more constructor member functions. I say one or more, because c++ supports overloaded functions in addition to default parameters. So, for any function, you can redefine it multiple times, as long as the parameters differ in each version. This added flexibility is useful, because c++ is strictly typed... so, getting back to the constructor, let's take a look at how it is formed. 
+
+Adding to our person class:
+
+```
+Person {
+    std::string firstname, lastname;
+public:
+    Person() : firstname(""), lastname("") {}; // default constructor 
+    Person(const std::string& fname, const std::string& lname) const : firstname(fname), lastname(lname) {}; // parameterized constructor
 }
 ```
 
-## Updating our CMakeLists.txt file 
- 
-Ok. Now we need to update our CMakeLists.txt file to be aware of person.
-First, we add Person.cpp like so:
- 
-```
-set(SOURCE_CPPS main.cpp Person.cpp)
-```
-
-We also create a *SOURCE_HEADERS* variable
+So, let's talk about this. There are a couple of interesting things going on here. First, we have something called the *member initializer list*. it appears after the parens and before the brackets. It starts with a colon. See it? 
 
 ```
-set(SOURCE_HEADERS Person.hpp)
+somefunction() : <intializier list> {}
+```
+The initializer list is a comma separated list of data members which may be initialized form the parameter list of the function, or any constants, using method or uniform initialization notation (assuming you are compiling with c++11 support). 
+
+## Operator Overloading
+
+In C++ you can define custom behavior for wide variety of operators. Doing so is known as *operator overloading*. Let's take a look at how this works by looking at overloading addition.
+
+#### Binary  & Unary Operators
+In general, binary operators (operators operating on two items) and unary operators (operators operating on one item) are overloaded by defining class methods which return an instance of the class in question, are named "operator" followed by the actual operator in question, and take a const reference to an instance of the class. So for addition, the declaration looks like this ( assuming we have a Point class):
+
+```
+class Point {
+    ...
+public:
+    ...
+    Point operator+(const Point& rhs); 
+    Point operator++(const Point& rhs);
+};
 ```
 
-And, we go ahead and modify our add_executable like so:
+Python would be similar, although python does not have `++` or `--` operators..
+```
+class Point(object):
+    ...
+    def __add__(self, other):
+        ...
+```
+
+#### Relational Operators 
+Relational operators return a boolean, and take a const reference to the containing class. So, continuing our example of Point:
 
 ```
-add_exectuble(hello ${SOURCE_CPPS} ${SOURCE_HEADERS})
+class Point {
+    ...
+public:
+    ...
+    Point operator+(const Point& rhs); 
+    Point operator++(conts Point& rhs);
+    bool operator==(const Point& rhs);
+};
 ```
 
-Once that is done, we cd back into our build directory (```cd build```), and remove everything (```rm -rf *```). Then we ```cmake ..``` . finally, we type make.
+Once again, Python looks like this (foregoing implementation):
+
+```
+class Point(object):
+    ...
+    def __add__(self, other):
+        ...
+    def __eq__(self, other):
+        ...
+```
+
+### Exercise 
+
+Ok, its exercise time. Using all of the knowledge gained thus far, implement a Vector class. It should:
  
-From now on, we are going to be using **cmake** to set up our builds...
+ - support addition and subtraction between vectors 
+ - support cross product and dot products between vectors
+ - support scalar multiplication
+ - provide a normalize function
+ 
+ Write unit tests to validate that your class works using google test.
+ 
+ ### Coda - Using Google Test  
+ 
+ Ok, you want to be a good citizen and practice this whole TDD thing right? But how do you go about setting up google test with cmake? 
+ 
+ First, create an appropriate structure for your project.
+ 
+ ```
+ vector_eg/
+    src/
+    lib/
+    tests/
+ ```
+ 
+ - src is where your source code will go.
+ - lib is where your google test framework will go.
+ - tests is where your tests will go.
+ 
+ #### Step 1 - install google test
+ 
+ google test should ship with a googletest directory chock full of goodness, including a CMakeLists.txt file. Go ahead and simply recursively copy googletest into lib.
+ 
+ #### Step 2 - Set Up src
+ 
+ In src, create a CMakeLists.txt file. Set it up to compile the code we will be creating shortly in the same directory. This time around we need to create a shared library output, instead of an executable. The test will be the executable. Our code will be the library. Doing this is every bit as simple as creating an executable. Simply call `add_library` instead of `add_executable`:
+ 
+ ```
+ project(vector)
+ file(GLOB  cpps *.cpp)
+ file(GLOB hpps *.hpp)
+ add_library(vector SHARED ${cpps} ${hpps})
+ ```
+ 
+ Now go ahead and create your Vector.cpp and Vector.h files in src.
+ 
+ #### Step 3 - set up your tests
+ 
+ In tests/ add another CMakeLists.txt file to compile your tests, which we will be adding shortly.
+ 
+ ```
+ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+ 
+ # add files
+ file(GLOB tests_cpp *.cpp)
+ 
+ # add project name
+ add_executable(${PROJECT_NAME} ${tests_cpp})
+ 
+ target_link_libraries(${PROJECT_NAME} gtest gtest_main)
+ target_link_libraries(${PROJECT_NAME} vector)
+ ```
+ 
+ This CMakeLists.txt file is a bit more involved. First, it includes directories from the googletest framework, which we will need.
+ 
+ Then it uses glob to grab all of the cpp files in the tests directory.
+ 
+ Then it creates an executable, adding all of the cpp files from the prior step.
+ 
+ The final two steps are to link in google test, and then link in our own vector library ( which we set up in a previous CMakeLists.txt file)
+ 
+ #### Bringing it all together
+ 
+ Ok, we have our individual CMakeLists.txt files, but we need to set up a top level CMakeLists.txt file to call each of the CMakeLists.txt files we created *in the correct order*.
+ 
+ So, under our project's root directory, create a new CMakeLists.txt file:
+ 
+```
+ cmake_minimum_required(VERSION 2.6.2)
+
+ project(unit_tests)
+ add_subdirectory(src)
+ add_subdirectory(lib/googletest)
+ add_subdirectory(tests)
+```
+ 
+We require a minimum cmake version as usual.
+ Then we give the project a name.
+ And finally, we add the subdirectories with our CMakeLists.txt files in the order we want them to be executed. We don't really care if our source or the google test framework is compiled first. We want both of them taken care of before compiling tests....
+ 
+#### TDD - Test Driven Development 
+ 
+Ok. Lets give this a go. Test Driven Development is a technique where you create each test and then add just enough to your source code to get it to pass. While I cannot say that I always faithfully practice test driven development, I can say that the more you interleave your testing, the easier it is on you.
+ 
+Go to your src/ directory. You should have created Vector.cpp and Vector.h by now. If you used an IDE which provides scaffolding, you even have an empty class. Lets add a default constructor to get this rolling.
+ 
+ Vector.h
+```
+ class Vector {
+ public:
+    double x, y, z;
+    Person();
+ }
+```
+ 
+ Ok. Let's jump into the tests/ directory and create a tests.cpp file.
+ 
+ All google tests need to include gtest to work. Since we are testing Vector, we also need to include Vector.h:
+ 
+```
+ #include "gtest/gtest.h"
+ #include "../src/Vector.hpp"
+```
+ 
+ Now it is time to write our first actual test. Gtest has a TEST macro which we use for each test.
+ 
+```
+ TEST( <name of group>, <name of test>) {
+ ...
+ }
+```
+ 
+So for our Vector class:
+ 
+```
+ TEST(vector, default_constructor) {
+ 
+ }
+```
+ 
+ Your tests are all going to look the same. You are going to write a bit of code to exercise a single function or method, then you are going to test the results. Gtest has a number of functions that will help you with this. Here are a few of them:
+ 
+ - EXPECT_EQ(rhs, lhs)
+ - EXPECT_DOUBLE_EQ(rhs, lhs)
+ - EXPECT_FLOAT_EQ(rhs, lhs)
+ - EXPECT_TRUE(expression)
+ - EXPECT_FALSE(expression)
+ 
+Ok. Lets write our first test:
+ 
+#### The default constructor. 
+ 
+ Well, first, what do we expect our vector to get initialized to without any user intervention? It could be anything sensible. I am going to choose a unit vector pointing down the z axis.
  
  
+```
+ TEST(vector, default_constructor) {
+    Vector v{};
+    EXPECT_DOUBLE_EQ(0.0, v.x);
+    EXPECT_DOUBLE_EQ(0.0, v.y);
+    EXPECT_DOUBLE_EQ(1.0, v.z);
+ }
+```
  
+And that is it. Well, lets run our unit test. It should fail at this point, because we have not written a constructor. Let's fix that.
+ 
+Go to src/ and edit your Vector.cpp. Add a default constructor and initialize it to <0,0,1>. Run the test again. It should pass.
+ 
+#### The rest of the Vector class
+ 
+From here, we are going to continue to build out our Vector class. We can add other constructors - one which allows you to initialize the Vector from 3 doubles would make sense. Perhaps one which allow you to initiLize a vector from another vector as well.
+- Vector(double x_, double y_, double z_);
+- Vector(const Vector& rhs);
+
+Next, we should look at overloading operators for addition and subtraction. Go ahead and implement the following operator overloads, being sure to follow the same pattern as outlined above with regard to tests:
+- Vector operator+(const Vector& rhs);
+- Vector& operator+=(const Vector& rhs);
+- Vector operator-(const Vector& rhs);
+- Vector& operator-=(const Vector& rhs);
+
+As a reminder, the `+=` and `-=` operators return a reference to Vector. To achieve this, you have to dereference `this` in your return statement ( `return *this`  ).
+
+What about comparisons? Go ahead and implment the `==` operator, as well as the other comparison operators:
+- bool operator==(const Vector& rhs) const;
+- bool operator<(const Vector& rhs) const;
+- bool operator<=(const Vector& rhs) const;
+- bool operator>(const Vector& rhs) const;
+- bool operator>=(const Vector& rhs) const;
+
+Whew, that is a lot of boilerplate, eh? It takes work to make a class mimic a built in type. How did you implement the comparison operators? I would expect that you would have calculated the length of each vector and used that as a measure. If you haven't written a `length()` method, do it now:
+
+- double length() const;
+
+What else should we implement? Well, what do you remember about vectors? What can you do with them? From the dim recesses of your memory ( or perhaps a quick google'ing ) you should come up with a few things - you can take two vectors' `dot product`, `cross product`, and you can `multiply` a vector by a double. You can `normalize` a vector. Why don't you implement those methods next. Overload multiplication for the dot product and the scalar multiplication. Use `cross` as the method name for cross product, and `normalize` for the method name for normalize. I am going to let you come up with the signatures. Remember to use `const` and references where appropriate...
+
+## Structs
+
+Really? After all that, we are going to tackle another concept? Yes, bause it is so simple. A `struct` is just like a class, except that it defaults to `public` if you don't specify an access modifier. Thats it. So, feel free to use the `struct` keyword in C++ interchangeably with `class` . In C++s precursor language, C, `struct`s were an altogether different beast. You can google it if you are interested.
+
+
+

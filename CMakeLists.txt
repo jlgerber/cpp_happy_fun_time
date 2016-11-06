@@ -6,22 +6,28 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-elide-constructors")
 
 set(SOURCE_FILES session_02/main.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-add_executable(session05 session_05/main.cpp
-        session_05/Person.cpp
-        session_05/Person.hpp
+
+add_subdirectory(session_04)
+
+add_executable(session05_secret
+        session_05/main.cpp
+        session_05/templatesEg.hpp)
+
+add_executable(session06 session_06/main.cpp
+        session_06/Person.cpp
+        session_06/Person.hpp
        )
 
 add_executable( personBetter
-                session_05/mainBetter.cpp
-                session_05/PersonBetter.cpp
-                session_05/PersonBetter.hpp
+                session_06/mainBetter.cpp
+                session_06/PersonBetter.cpp
+                session_06/PersonBetter.hpp
                 )
 
 add_executable( sharedPtrMain
-                session_05/sharedPtrMain.cpp
-                session_05/SharedPtr.hpp)
+                session_06/sharedPtrMain.cpp
+                session_06/SharedPtr.hpp)
 
 add_executable(PersonSharedPtr
-                session_05/personSharedPtrMain.cpp
-                session_05/PersonSharedPtr.hpp )
-add_subdirectory(session_04)
+                session_06/personSharedPtrMain.cpp
+                session_06/PersonSharedPtr.hpp )

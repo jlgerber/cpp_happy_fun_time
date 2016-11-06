@@ -252,73 +252,8 @@ Great *now* everything should work better. Let's try our program with this bette
 
 By the way, I want you to notice one thing above. When we dereference firstname and lastname, we don't use arrow notation. This trips up people, but the reason is that "other" is not a pointer; "firstname" and "lastname" are.
 
-Well, that didn't seem too bad really. And we are finally done right? Not so fast. I want to point out a couple of things which make may trip you up, even following the **rule of three**. 
+Well, that didn't seem too bad really. And we are finally done right? Not so fast. I want to point out a couple of things which may trip you up, even following the **rule of three**. 
 
-This was relatively simple, since we allocated and deallocated the memory. But there are plenty of cases where you can have a pointer to a resource which you dont own, and it can get deleted, leaving you with a dangling pointer. 
+This example was relatively simple, since we allocated and deallocated the memory. But there are plenty of cases where you can have a pointer to a resource which you don't own, and it can get deleted, leaving you with a dangling pointer. In fact, one of the issues you will face when interacting with code written by other folks is about ownership. By ownership, I mean the responsibility for cleaning up memory when done. 
 
-Fortunately, there is a simpler way of doing this thanks to c++11. Actually, there are two simpler ways - shared_ptr and unique_ptr.
-
-## shared_ptr 
-
-**shared_ptr** is a template which  which behaves like a reference counted pointer. However, unlike a pointer, you don't have to worry about copying or destroying it; this is all handled under the hood. Each time you copy or assign a shared_ptr, it increments a reference count. Each time a shared_ptr goes out of scope, it decrements it's reference count. 
-
-Since we have not talked about templates yet, I will give you a quick rundown. A template is a mechanism provided by C++ to allow you to define type variables. Let's say you have a function which has a calling parameter and you want to implement that function for a variety of types. Instead of having to define the function for each type, you can use a template to declare a *type variable*, and then refer to the type variable instead of each concrete type. You have already used templates before actually. Recall that when we employed *vector*, we had to enclose the type of the vector in carots (<>). That is how you use a template. Now we are going to use one. Don't worry if you don't quite get this; we will spend a whole session on templates later...
-
-Getting back to shared_ptr, lets look at an approximate implementation to give you an idea of what its about:
-
-```
-template <classname T>
-class SharedPtr {
-    T* ptr;
-     int* cnt;
-    SharedPtr(T* i_ptr) : ptr(i_ptr) {
-        cnt = new int(1);
-     }
-    SharedPtr(const SharedPtr& p) :
-    ptr(p.ptr) cnt(p.cnt)
-    {
-        (*cnt)++;
-    }
-    SharedPtr* operator=(const SharedPtr& p) {
-        if (this == &p)
-            return *this;
-        
-        // decrement the current count
-        (*cnt)--;
-        // redirect shared_ptr to the new one    
-        ptr = p.ptr;
-        cnt = p.cnt;
-        *cnt++;
-        return *this;
-    }
-    ~SharedPtr() {
-        (*cnt)--;
-        if (*cnt  <= 0) {
-            delete ptr;
-            ptr = nullptr;
-            delete cnt;
-            cnt = nullptr;
-        }
-    }
-}
-```
-
-The cool thing about using shared_ptr in place of a raw pointer within a class is that you no longer have to implement a copy constructor, assignment operator, or destructor, as the memory management is handled by the shared_ptr class. Lets see how this works with Person.
-
-Here is the .h file:
-
-```
-#include <memory>
-class Person{
-    std::shared_ptr<std::string> firstname;
-    std::shared_ptr<std::string> lastname;
- public:
-    Person(const std::string& fn, const std::string& ln) :
-    firstname(std::make_shared<std::string>(fn)), 
-    lastname(std::make_shared<std::string>(ln))
-    {};
-    
-    void greet() const {std::cout << "hi my name is " << *firstname << " " << *lastname << std::endl;};
-    
-};
-```
+This notion has been a concern for C++ authors since the beginning, and Bjarne coined a term to make handling this easer: RAII ( pronounced R A I I )

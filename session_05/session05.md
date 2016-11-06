@@ -1,10 +1,12 @@
 # Memory Management
 
-Two sessions ago, we began exploring classes. We started by talking about constructors, and then delved into operator overloading. We are going to touch on a few of special methods we haven't yet - the copy constructor, the assignment operator, and the destructor. Each of these plays a crucial role in memory management. But that's getting ahead of ourselves. Let's look at them in turn.
-
 ## More Class Methods
 
-### Destructor
+Not so long ago, we began exploring classes. We started by talking about constructors, and then delved into operator overloading. We are going to touch on a few of special methods we haven't seen yet - the copy constructor, the assignment operator, and the destructor. Each of these plays a crucial role in memory management. But that's getting ahead of ourselves. Let's look at them in turn.
+
+
+
+### The Destructor
 When an object is about to get deleted, C++ will call a special method called a destructor. Object destruction happens automatically when said object goes out of scope, in the case of a stack defined variable, or when delete is called, in the case of a heap allocated variable. Either way, the destructor gets called, giving us an oportunity to perform any cleanup necessary. 
   
 In C++, you define a destructor by prefixing the class name with a tilda. So for example:
@@ -21,7 +23,7 @@ pubilc:
 
 By the way, Python also provides a destructor. It goes by the dunder method (`__del__`) and gets called at approximately the same time.
 
-### Copy Constructor
+### The Copy Constructor
 
 The copy constructor is a special form of constructor which takes a const reference to an object of the class in question, and returns a new instance of that class. The copy constructor is engaged when you initialize a new instance variable from an existing instance variable. For example:
 
@@ -50,7 +52,7 @@ It takes a const reference to a variable of the same type. Its job is to initial
 Person(const Person& p) : first_name(p.first_name), last_name(p.last_name) {};
 ```
 
-### Assignment Operator 
+### The Assignment Operator 
 
 The assignment operator is the kissing cousin of the Copy Constructor. It's job is to make a copy of the a variable and assign it to an existing variable of the same type. Catch that? its a subtle distinction. In the copy constructor's case, we are initializing a new variable. In the assignment operator's case, we are assigning the value of an existing variable to another existing variable. Because the variable on the left hand side of the equation already exists, in cases where we have pointer variables, with owned memory, we may need to dispose of existing memory before allocating new memory and copying values. This probably makes no sense at this point, because we have not gotten into dynamic memory allocaiton. So just take it on faith that there is a reason for all of this. Anyway, the assignment operator takes the following form:
 
@@ -117,7 +119,7 @@ class Person{
     lastname(new std::string(ln))
     {};
     
-    void greet() const {std::cout << "hi my name is " << firstname << " " << lastname << std::endl;};
+    void greet() const {std::cout << "hi my name is " << *firstname << " " << *lastname << std::endl;};
     
 }
 
@@ -258,7 +260,11 @@ Fortunately, there is a simpler way of doing this thanks to c++11. Actually, the
 
 ## shared_ptr 
 
-**shared_ptr** is a template which implements a class which behaves like a reference counted pointer. However, unlike a pointer, you don't have to worry about copying or destroying it; this is all handled under the hood. Each time you copy or assign a shared_ptr, it increments a reference count. Each time a shared_ptr goes out of scope, it decrements it's reference count. Lets look at some pseudo code to give you an idea:
+**shared_ptr** is a template which  which behaves like a reference counted pointer. However, unlike a pointer, you don't have to worry about copying or destroying it; this is all handled under the hood. Each time you copy or assign a shared_ptr, it increments a reference count. Each time a shared_ptr goes out of scope, it decrements it's reference count. 
+
+Since we have not talked about templates yet, I will give you a quick rundown. A template is a mechanism provided by C++ to allow you to define type variables. Let's say you have a function which has a calling parameter and you want to implement that function for a variety of types. Instead of having to define the function for each type, you can use a template to declare a *type variable*, and then refer to the type variable instead of each concrete type. You have already used templates before actually. Recall that when we employed *vector*, we had to enclose the type of the vector in carots (<>). That is how you use a template. Now we are going to use one. Don't worry if you don't quite get this; we will spend a whole session on templates later...
+
+Getting back to shared_ptr, lets look at an approximate implementation to give you an idea of what its about:
 
 ```
 template <classname T>
@@ -276,7 +282,10 @@ class SharedPtr {
     SharedPtr* operator=(const SharedPtr& p) {
         if (this == &p)
             return *this;
-            
+        
+        // decrement the current count
+        (*cnt)--;
+        // redirect shared_ptr to the new one    
         ptr = p.ptr;
         cnt = p.cnt;
         *cnt++;
@@ -287,10 +296,29 @@ class SharedPtr {
         if (*cnt  <= 0) {
             delete ptr;
             ptr = nullptr;
-            *cnt = 0;
+            delete cnt;
+            cnt = nullptr;
         }
     }
 }
 ```
 
- 
+The cool thing about using shared_ptr in place of a raw pointer within a class is that you no longer have to implement a copy constructor, assignment operator, or destructor, as the memory management is handled by the shared_ptr class. Lets see how this works with Person.
+
+Here is the .h file:
+
+```
+#include <memory>
+class Person{
+    std::shared_ptr<std::string> firstname;
+    std::shared_ptr<std::string> lastname;
+ public:
+    Person(const std::string& fn, const std::string& ln) :
+    firstname(std::make_shared<std::string>(fn)), 
+    lastname(std::make_shared<std::string>(ln))
+    {};
+    
+    void greet() const {std::cout << "hi my name is " << *firstname << " " << *lastname << std::endl;};
+    
+};
+```

@@ -14,10 +14,14 @@ add_executable(session05 session_05/main.cpp
 add_executable( personBetter
                 session_05/mainBetter.cpp
                 session_05/PersonBetter.cpp
-                session_05/PersonBetter.hpp )
+                session_05/PersonBetter.hpp
+                )
 
 add_executable( sharedPtrMain
                 session_05/sharedPtrMain.cpp
                 session_05/SharedPtr.hpp)
 
-add_subdirectory(session_03)
+add_executable(PersonSharedPtr
+                session_05/personSharedPtrMain.cpp
+                session_05/PersonSharedPtr.hpp )
+add_subdirectory(session_04)

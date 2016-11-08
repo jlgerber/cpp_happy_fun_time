@@ -139,7 +139,7 @@ int main() {
 
 Python has the initializer, otherwise known to true geeks as the dunderinit (__init__). Technically, this is an initializer, not a constructor, but let's gloss over that.
 
-In C++, you have one or more constructor member functions. I say one or more, because c++ supports overloaded functions in addition to default parameters. So, for any function, you can redefine it multiple times, as long as the parameters differ in each version. This added flexibility is useful, because c++ is strictly typed... so, getting back to the constructor, let's take a look at how it is formed. 
+In C++, you have one or more constructor member functions. I say one or more, because C++ supports overloaded functions in addition to default parameters. So, for any function, you can redefine it multiple times, as long as the parameters differ in each version. This added flexibility is useful, because C++ is strictly typed... so, getting back to the constructor, let's take a look at how it is formed. 
 
 Adding to our person class:
 
@@ -157,7 +157,7 @@ So, let's talk about this. There are a couple of interesting things going on her
 ```
 somefunction() : <intializier list> {}
 ```
-The initializer list is a comma separated list of data members which may be initialized form the parameter list of the function, or any constants, using method or uniform initialization notation (assuming you are compiling with c++11 support). 
+The initializer list is a comma separated list of data members which may be initialized form the parameter list of the function, or any constants, using method or uniform initialization notation (assuming you are compiling with C++11 support). 
 
 ## Operator Overloading
 
@@ -348,7 +348,7 @@ So for our Vector class:
  
 Ok. Lets write our first test:
  
-#### The default constructor. 
+#### The Default Constructor. 
  
  Well, first, what do we expect our vector to get initialized to without any user intervention? It could be anything sensible. I am going to choose a unit vector pointing down the z axis.
  

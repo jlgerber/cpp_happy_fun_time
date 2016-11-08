@@ -38,6 +38,8 @@ C++ implements templates to provide generics. Templates provide the ability to d
     void share() const {
         cout << "The secret is " << secret << endl;
     }
+    
+    const T& getSecret() const {return secret;};
  }
  ```
  
@@ -48,10 +50,15 @@ We can use this template with a variety of data types. Lets give it a go:
 cout << "Secret<string>" << endl;
 Secret<string> strSecret("foobar");
 strSecret.share();
-//
+// lets get the secret value
+const auto& str_secret = strSecret.getSecret();
+cout << "fetched secret " << str_secret << endl;
+// this wouldn't compile
+// str_secret += "foo";
 cout << endl << "Secret<int>" << endl;
 Secret<int> intSecret(42);
 intSecret.share();
+
 ```
 
 Likewise, implementing template functions is equally simple. Here is an example `max` which will work with any type that implements a `>` operator. This can be any built in type or user defined type; it doesn't matter as long as it meets the prerequisites. One more thing: the STL provides a much better max function. This is just an example.
@@ -94,7 +101,10 @@ public:
     // notice that we consider employees with smaller ids greater than employees with 
     // larger ids. 
     bool operator>(const Employee& other) { return this->employee_id <= other.employee_id; };
-
+    // getters
+    const std::string& getName() const { return name; }
+    const int& getId() const { return employee_id; }
+    // stream operator to cout class
     friend std::ostream &operator<<(std::ostream &os, const Employee &employee) {
         os << "<" << employee.name << ", id: " << employee.employee_id << ">";
         return os;
@@ -110,3 +120,22 @@ Employee dr("Doug Roble", 4);
 
 cout << max(jg,dr) << endl; // should print out doug rouble
 ```
+
+## Template Specialization
+
+Sometimes a template won't work for a specific type or class. In this case, you can implement a specific version targeting the offending type or class. Certainly, this shouldn't be your first choice. Say, for instance, that the class in question doesn't supply an appropriate operator. If adding the operator, either as an additional method, or as a free function, doesn't make sense, then you can specialize the template. 
+
+The way you go about doing this is simple. First, lead off with `template <>` ( notice the lack of types). Then, you declare your actual class or function with a suffix consisting of open angle bracket, type, and close angle bracket ( eg `max<Person>`). Lastly, it is a simple matter of replacing any reference to the existing type variables with concrete types. So, for example lets say we want to use the actual name to determine the result of max based on the name. Here is how we would do that:
+
+```
+template <>
+const Employee& max( Employee& a,  Employee& b) {
+    return a.getName() > b.getName() ? a : b;
+}
+```
+
+After coding up this specialization, you should notice that the max call with Employee will provide a different result, based on alphanumeric sorting of the names.
+
+## Meta Programming
+
+I am not going too deep here, but you can have a whole lot of fun with templates. The whole Standard Template Library is written as templates, and much of boost is as well. 

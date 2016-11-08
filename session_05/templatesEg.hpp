@@ -16,6 +16,8 @@ public:
         secret = rhs;
     }
 
+    const T& getSecret() const { return secret; }
+
     void share() const {
         std::cout << "The secret is " << secret << std::endl;
     }
@@ -26,9 +28,10 @@ public:
 //
 
 template <class T>
-T& max(T& lhs, T& rhs) {
+ const T& max(  T& lhs,  T& rhs) {
     return lhs > rhs ? lhs : rhs;
 }
+
 
 // simple class to use as an example
 class Employee {
@@ -38,8 +41,21 @@ public:
     Employee(const std::string& name_, int id) : name(name_), employee_id(id) {};
     bool operator>(const Employee& other) { return this->employee_id <= other.employee_id; };
 
+    const std::string& getName() const {return name;}
+    const int& getId() const { return employee_id; }
+
     friend std::ostream &operator<<(std::ostream &os, const Employee &employee) {
         os << "<" << employee.name << ", id: " << employee.employee_id << ">";
         return os;
     }
 };
+
+// max specialization
+
+
+template <>
+const Employee& max<Employee>(Employee & lhs, Employee & rhs) {
+
+    return lhs.getName() > rhs.getName() ? lhs : rhs;
+}
+

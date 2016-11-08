@@ -1,6 +1,6 @@
 # Structs and Classes
 
-C++ has two data structures which resemble python classes - structs and classes.
+C++ has two data structures which resemble Python classes - structs and classes.
 
 They are so similar that, rather than talk about them separately, I will discuss classes and then come back and talk about the trivial differences between classes and structs.
 
@@ -16,11 +16,11 @@ Great. Lets get going....
 
 ## Classes 
 
- Since this is a class for folks who are python savvy, let's compare c++ classes to python classes.
+ Since this is a class for folks who are Python savvy, let's compare c++ classes to Python classes.
  
 ### class Keyword
  
- Like in python, in c++, a class is defined using the class keyword:
+ Like in Python, in C++, a class is defined using the class keyword:
  
 #### Python
  
@@ -35,11 +35,11 @@ class Person {
  
 ### Self Reference
 
-In python, each instance method has an explicit reference to itself, commonly spelled out as *self*, which all instance methods are passed explicitly as their first parameter.
+In Python, each instance method has an explicit reference to itself, commonly spelled out as *self*, which all instance methods are passed explicitly as their first parameter.
 
 C++ has an implicit reference to itself, called *this* which is a pointer to itself ( we cover pointers elsewhere ). However, you rarely need to use *this*, as C++ is usually smart enough to recognize references to member functions and data. 
 
-For completeness sake ( hopefully this isn't confusing ), consider a greet method defined in a person class in python and c++, which we assume has an instance variable called *myname*:
+For completeness sake ( hopefully this isn't confusing ), consider a greet method defined in a person class in Python and C++, which we assume has an instance variable called *myname*:
 
 #### Python
 ```
@@ -58,9 +58,9 @@ void greet(const std::string& other) {
 
 ### Access Specifiers - Private, Public, Protected 
 
-One thing you might have fussed with in python a bit is the notion of privacy. You probably have prefixed variables with an underscore as a way of telling the rest of the world that a variable is part of an implementation, and shouldn't be mucked with. You might have even gone so far as to use two underscores in order to invoke name mangling. Well, no offense to python, but its implementation of privacy is second rate and you can get around it. Privacy in Python is what you might call a "gentlemen's agreement". And I don't know about you, but I'm not always a gentleman when I program.
+One thing you might have fussed with in Python a bit is the notion of privacy. You probably have prefixed variables with an underscore as a way of telling the rest of the world that a variable is part of an implementation, and shouldn't be mucked with. You might have even gone so far as to use two underscores in order to invoke name mangling. Well, no offense to ython, but its implementation of privacy is second rate and you can get around it. Privacy in Python is what you might call a "gentlemen's agreement". And I don't know about you, but I'm not always a gentleman when I program.
 
-In a c++ class, all of your variables and functions are defined under an access specifier. And there are three of them:
+In a C++ class, all of your variables and functions are defined under an access specifier. And there are three of them:
 - public
 - private
 - protected 
@@ -94,7 +94,7 @@ public:
     PrivatePerson(std::string name) : name(name) {};
 };
 ```
-However, with PrivatePerson above, name is private, and thus unaccessible from outside of the class.
+However, with PrivatePerson above, name is private, and thus inaccessible from outside of the class.
 ```
 //
 class ProtectedPerson {
@@ -176,7 +176,7 @@ public:
 };
 ```
 
-Python would be similar, although python does not have `++` or `--` operators..
+Python would be similar, although Python does not have `++` or `--` operators..
 ```
 class Point(object):
     ...
@@ -380,7 +380,7 @@ Next, we should look at overloading operators for addition and subtraction. Go a
 
 As a reminder, the `+=` and `-=` operators return a reference to Vector. To achieve this, you have to dereference `this` in your return statement ( `return *this`  ).
 
-What about comparisons? Go ahead and implment the `==` operator, as well as the other comparison operators:
+What about comparisons? Go ahead and implement the `==` operator, as well as the other comparison operators:
 - bool operator==(const Vector& rhs) const;
 - bool operator<(const Vector& rhs) const;
 - bool operator<=(const Vector& rhs) const;
@@ -395,7 +395,7 @@ What else should we implement? Well, what do you remember about vectors? What ca
 
 ## Structs
 
-Really? After all that, we are going to tackle another concept? Yes, bause it is so simple. A `struct` is just like a class, except that it defaults to `public` if you don't specify an access modifier. Thats it. So, feel free to use the `struct` keyword in C++ interchangeably with `class` . In C++s precursor language, C, `struct`s were an altogether different beast. You can google it if you are interested.
+Really? After all that, we are going to tackle another concept? Yes, because it is so simple. A `struct` is just like a class, except that it defaults to `public` if you don't specify an access modifier. That's it. So, feel free to use the `struct` keyword in C++ interchangeably with `class` . In C++s precursor language, C, `struct`s were an altogether different beast. You can google it if you are interested.
 
 
 

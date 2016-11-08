@@ -137,9 +137,9 @@ int main() {
 
 ### Constructor
 
-Python has the initializer, otherwise known to true geeks as the dunderinit (__init__). Technically, this is an initializer, not a constructor, but let's gloss over that.
+Python has the initializer, otherwise known to true geeks as the dunderinit (`__init__`). Technically, this is an initializer, not a constructor, but let's gloss over that.
 
-In C++, you have one or more constructor member functions. I say one or more, because C++ supports overloaded functions in addition to default parameters. So, for any function, you can redefine it multiple times, as long as the parameters differ in each version. This added flexibility is useful, because C++ is strictly typed... so, getting back to the constructor, let's take a look at how it is formed. 
+In C++, you have one or more constructor member functions. I say one or more, because C++ supports overloaded functions. So, for any function, you can redefine it multiple times, as long as the parameters differ in each version. This added flexibility is useful, because C++ is strictly typed. Oh, and like Python, C++ also supports default parameters... so, getting back to the constructor, let's take a look at how it is formed. 
 
 Adding to our person class:
 

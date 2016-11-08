@@ -58,7 +58,7 @@ void greet(const std::string& other) {
 
 ### Access Specifiers - Private, Public, Protected 
 
-One thing you might have fussed with in Python a bit is the notion of privacy. You probably have prefixed variables with an underscore as a way of telling the rest of the world that a variable is part of an implementation, and shouldn't be mucked with. You might have even gone so far as to use two underscores in order to invoke name mangling. Well, no offense to ython, but its implementation of privacy is second rate and you can get around it. Privacy in Python is what you might call a "gentlemen's agreement". And I don't know about you, but I'm not always a gentleman when I program.
+One thing you might have fussed with in Python a bit is the notion of privacy. You probably have prefixed variables with an underscore as a way of telling the rest of the world that a variable is part of an implementation, and shouldn't be mucked with. You might have even gone so far as to use two underscores in order to invoke name mangling. Well, no offense to Python, but its implementation of privacy is second rate and you can get around it. Privacy in Python is what you might call a "gentlemen's agreement". And I don't know about you, but I'm not always a gentleman when I program.
 
 In a C++ class, all of your variables and functions are defined under an access specifier. And there are three of them:
 - public

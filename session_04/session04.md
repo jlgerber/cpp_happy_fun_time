@@ -35,7 +35,7 @@ class Person {
  
 ### Self Reference
 
-In Python, each instance method has an explicit reference to itself, commonly spelled out as *self*, which all instance methods are passed explicitly as their first parameter.
+In Python, each instance method has an explicit reference to itself, commonly spelled out as *self*, which all instance methods are passed as their first parameter.
 
 C++ has an implicit reference to itself, called *this* which is a pointer to itself ( we cover pointers elsewhere ). However, you rarely need to use *this*, as C++ is usually smart enough to recognize references to member functions and data. 
 

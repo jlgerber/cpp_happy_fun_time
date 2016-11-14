@@ -1,6 +1,6 @@
 # Templates 
 
-C++ implements templates to provide generics. Templates provide the ability to define type variables which are evaluated and expanded out at compile time when used in code. There are two distinct activities associated with templates - authoring and using. We will go over both. You have already used templates a bit in this course. The std::vector is a template which declares a single type variable, which we "fill in" when we use it. For example:
+C++ provides a mechanism to facilitate writing generic functions, classes, and structs - templates. Templates allow the author to define type variables which are evaluated and expanded at compile time. There are two distinct activities associated with templates - authoring and using. We will go over both. You have already used templates a bit in this course. The std::vector is a template which declares a single type variable, which gets "filled in" when used. For example:
  
  ```
  std::vector<int> nums;
@@ -10,7 +10,7 @@ C++ implements templates to provide generics. Templates provide the ability to d
  
  ## Writing Templates 
  
- Templates may not be implemented in cpp files; they must be written in header files. So keep that in mind in your future endeavors. 
+ Before we begin, I want to discuss one limitation of templates, so you don't gt tripped up later: templates may not be implemented in cpp files; they must be written in header files. So keep that in mind in your future endeavors. 
  
  Templates begin with the `template` keyword, followed by an open angle bracket (`<`). For each type variable you want, you add `typename` followed by the variable name. If you provide more than one type variable, each must be separated by a comma. At the tail end, you close the affair with a close angle bracket (`>`).
  

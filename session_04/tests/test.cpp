@@ -104,7 +104,7 @@ TEST(Vector, cross_product) {
     auto result = v1.cross(v2);
 
     Vector expect {v1.y * v2.z - v1.z * v2.y,
-                   v1.x * v2.z - v1.z * v2.x,
+                   v1.z * v2.x - v1.x * v2.z,
                    v1.x * v2.y - v1.y * v2.x };
 
     EXPECT_DOUBLE_EQ(expect.x, result.x);

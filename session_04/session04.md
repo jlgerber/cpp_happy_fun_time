@@ -211,8 +211,13 @@ class Point(object):
 
 ### Exercise 
 
-Ok, its exercise time. Using all of the knowledge gained thus far, implement a Vector class. It should:
+Ok, its exercise time. Using all of the knowledge gained thus far, implement a Vector class. This class will represent a 3 dimensional vector, in the mathematical sense ( not to be confused with std::vector, which is an array-ish construct).
+3 dimensional vectors represent a direction. They have 3 coordinates in x,y,z space which indicate the terminal end of a line segment starting at 0,0,0. In addition to a direction, a vector has a magnitude, or strength, which is simply the length of the vector. 
+
+To model all this, we will need to store the terminal end of the vector, which we will represent with three doubles ( x, y, z). 
+You may or may not remember vectors from your trig class, but you can perform a number of specialized operations between vectors. You can add them together, subtract one from the other, and multiply one by a scalar value. You can also perform a cross product between them, which produces a vector which is orthogonal (perpendicular) to each one, and perform a dot product between them, which produces a scalar value ( equivalent to the length of the first times the length of the second times the cosine of the angle between them.)
  
+ Our vector will need to provide the following capabilities. It should: 
  - support addition and subtraction between vectors 
  - support cross product and dot products between vectors
  - support scalar multiplication
@@ -309,7 +314,7 @@ Go to your src/ directory. You should have created Vector.cpp and Vector.h by no
  class Vector {
  public:
     double x, y, z;
-    Person();
+    Vector();
  }
 ```
  
@@ -391,7 +396,39 @@ Whew, that is a lot of boilerplate, eh? It takes work to make a class mimic a bu
 
 - double length() const;
 
-What else should we implement? Well, what do you remember about vectors? What can you do with them? From the dim recesses of your memory ( or perhaps a quick google'ing ) you should come up with a few things - you can take two vectors' `dot product`, `cross product`, and you can `multiply` a vector by a double. You can `normalize` a vector. Why don't you implement those methods next. Overload multiplication for the dot product and the scalar multiplication. Use `cross` as the method name for cross product, and `normalize` for the method name for normalize. I am going to let you come up with the signatures. Remember to use `const` and references where appropriate...
+What else should we implement? Well, what do you remember about vectors? What can you do with them? From the dim recesses of your memory ( or perhaps a quick google'ing ) you should come up with a few things 
+
+- you can take two vectors' `dot product`
+- you can take two vectors `cross product`
+- you can `multiply` a vector by a double
+- You can `normalize` a vector. 
+
+Why don't you implement those methods next. Overload multiplication for the dot product and the scalar multiplication. Use `cross` as the method name for cross product, and `normalize` for the method name for normalize. I am going to let you come up with the signatures. Remember to use `const` and references where appropriate...
+
+#### A note on operations between heterogeneous types.
+
+When you implement `operator*`, you may come to a realization: this only works when multiplying a vector by a double. It will not work multiplying a double by a vector.
+
+```
+Vector3d v{};
+double d = 22.2;
+
+auto v2 = v * d; //works
+auto v3 = d * v; // fails
+```
+
+Why is the case? Well, let's think about it. `v * d` is simply syntactic sugar for `v1.operator*(d)`. Likewise, `d * v` is syntactic sugar for `d.operator*(v)`. But we don't have access to the double class in order to extend it to support multiplication against a Vector3d. So what do we do? Well, we can define overloaded operators as free friend functions instead of methods. In our case, it would look something like this:
+
+```
+class Vector3d {
+    ...
+    friend Vector3d operator*(const double d, const Vector3d& v);
+};
+...
+operator*(const double d, const Vector3d& v) {
+    return Vector3d{ v.x * d, v.y * d, v.z * d};
+}
+```
 
 ## Structs
 

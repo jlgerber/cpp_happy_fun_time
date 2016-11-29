@@ -2,7 +2,7 @@
 
 Its time for a little break from learning about C++ proper to focus on development practices. About 13 years ago, a new methodology emerged ( or an old methodology was rediscovered ): Test Driven Development or TDD.
 
-In TDD, you build your code, a test at a time, writing as little code as possible to get your tests to pass. Each test should focus on a single unit of code, and avoid external dependencies. Writing in a TDD style tends to produce designs which favor small, purposeful components which are easily testable in isolation. And guess what? That is generally a good practice anyway.
+In TDD, you build your code, a test at a time, writing as little code as possible to get the test to pass. Each test should focus on a single unit of code, and avoid any external dependencies. Writing in a TDD style tends to produce designs which favor small components with focused responsibilities. And, that, in turn, promotes good engineering choices. 
 
 Regardless of whether you practice TDD or just write tests eventually, you need a good framework for doing testing. And there are plenty of them out there. Historically, dynamic languages such as javascript and ruby have been blessed with particularly expressive frameworks, and languages like C++ have lagged behind. However, there are now some pretty decent libraries out there, and we are going to be focusing on one called [Catch](https://github.com/philsquared/Catch).
 
@@ -25,6 +25,9 @@ The `include` directory will hold our includes.
 THe `test` directory will hold our tests.
 
 ### Download Catch
+
+Catch Github Repo:
+https://github.com/philsquared/Catch
 
 Next, we are going to need to do is download Catch. So, follow the link above to the github repo and clone it or download a zip from the page. Then copy `catch.cpp` from the `single_include` directory into a our new project's `include` directory.
 
@@ -88,7 +91,7 @@ In the include directory, create a file called RingBuffer.hpp.
 
 ## RingBuffers
 
-Since our TDD/BDD exercise will focus on creating a ring buffer, we should probably define what that is exactly. A ring buffer is a circular buffer with a fixed size that you can insert data into. If you insert more data that the fixed size of the ring buffer, then you will begin to overwrite the oldest data in the ring. 
+Since our TDD exercise will focus on creating a ring buffer, we should probably define what that is exactly. A ring buffer is a circular buffer with a fixed size that you can insert data into. If you insert more data that the fixed size of the ring buffer, then you will begin to overwrite the oldest data in the ring. 
 
 Our implementation won't be particularly sophisticated. We won't worry about concurrency, for example. And we will develop it using a BDD methodology. We will be using what we have learned in past lessons however. So, lets get started.
 
@@ -106,7 +109,9 @@ class RingBuffer {
 
 Ok, we have a shell of a class. Lets start testing. In TDD you grow your design by adding a failing test for a particular feature, then work to make it pass. Rinse. Repeat. Lets start by adding our first test.
 
-As mentioned before, Catch supports TDD and BDD. Each style uses a different set of macros to describe the tests. We are going to go with BDD for now as it is a bit more descriptive. We start by describing a `SCENARIO`, which is just the name to organize all of the tests underneath it.
+Catch supports two different syntaxes for Test Driven Development: TDD and BDD. Each style uses a different set of macros to describe the tests. We are going to go with BDD for now as it is a bit more descriptive. (BDD stands for Behavior Driven Development. You can google it, but really, I just like the more descriptive macros)
+
+We start by describing a `SCENARIO`, which is just the name to organize all of the tests underneath it.
 
 In test/test.cpp 
 
@@ -161,19 +166,17 @@ When we construct an instance of the class, we are going to need to set a fixed 
 #include <cstddef> 
 
 template <typename T>
-//
-// 
-//
 class RingBuffer {
     size_t m_size;
     std::vector<T> m_storage;
+    
 public:
     // constructor
     RingBuffer(size_t capacity, const T& default_value) 
     : m_size{0},
      m_storage{capacity, default_value }
      {}
-     //
+     
     size_t size() const { return m_size; }
 };
 ```
@@ -221,20 +224,19 @@ Ok, we obviously need to add a `push_back` method to RingBuffer. To get the test
 #include <cstddef> 
 
 template <typename T>
-//
-// 
-//
 class RingBuffer {
     size_t m_size;
     std::vector<T> m_storage;
+    
 public:
     // constructor
     RingBuffer(size_t capacity, const T& default_value) 
     : m_size{0},
      m_storage{capacity, default_value }
      {}
-     //
+     
     size_t size() const { return m_size; }
+   
     // add an element
     void push_back(T const& val) {
         m_size++;

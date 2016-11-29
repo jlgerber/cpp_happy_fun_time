@@ -42,6 +42,11 @@ Vector Vector::operator*(const double d) const {
     return Vector(x*d, y*d, z*d);
 }
 
+
+Vector operator*(const double d, const Vector &v) {
+    return Vector(v.x * d, v.y * d, v.z * d);
+}
+
 // dot product
 double Vector::operator*(const Vector &rhs) const {
     return x*rhs.x + y*rhs.y + z*rhs.z;

@@ -14,3 +14,7 @@ echo "session 6"
 pandoc -f markdown_github -t latex -o pdfs/session06.pdf session_06/session06.md
 echo "session 7"
 pandoc -f markdown_github -t latex -o pdfs/session07.pdf session_07/session07.md
+echo "session 8"
+pandoc -f markdown_github -t latex -o pdfs/session08.pdf session_08/session08.md
+echo "session rvalue ref"
+pandoc -f markdown_github -t latex -o pdfs/rvalue_references_move_semantics.pdf rvalue_references_move_semantics/session.md

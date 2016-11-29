@@ -16,8 +16,12 @@ struct Vector {
 
     Vector operator*(const double d) const;
 
+    //friend Vector operator*(const Vector& v, const double  d);
+    friend Vector operator*(const double d, const Vector& v);
+
     // dot product
     double operator*(const Vector& rhs) const;
+
     // cross product
     Vector cross(const Vector& rhs) const;
 

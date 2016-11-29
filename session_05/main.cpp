@@ -8,6 +8,25 @@
 
 using namespace std;
 
+class Foobar {
+    string* secret;
+public:
+    Foobar(const string& s) {
+        secret = new string(s);
+    }
+
+    void tell() {
+        cout << "my secret " << *secret << endl;
+    }
+
+~Foobar() {
+        cout << " Hey, I am the destructor" << endl;
+        if(secret != nullptr) {
+            delete secret;
+            secret = nullptr;
+        }
+    }
+};
 int main() {
     cout << "Secret<string>" << endl;
     Secret<string> strSecret("foobar");
@@ -33,11 +52,22 @@ int main() {
     string d("World");
     cout << "max of " << c << " and " << d << " is " << max(c,d) << endl;
 
-    /*
-    cout << endl << "max<Employee>" << endl;
-    Employee dougR("Doug Roble", 4);
-    Employee jonathanG("Jonathan Gerber", 1231);
+
+    cout << endl << "max<Employee2>" << endl;
+    Employee2 dougR("Doug Roble", 4);
+    Employee2 jonathanG("Jonathan Gerber", 1231);
     cout << "max of " << dougR << " and " << jonathanG << " is " << max(dougR,jonathanG) << endl;
-     */
+
+    //
+    std::string* foo = new std::string{"foo"};
+    cout << *foo << endl;
+    delete foo;
+
+    {
+        auto myfoobar = Foobar("42");
+        myfoobar.tell();
+    }
+    cout << " I am out of here" << endl;
+
     return 0;
 }

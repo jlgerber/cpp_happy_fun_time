@@ -31,3 +31,16 @@ add_executable( sharedPtrMain
 add_executable(PersonSharedPtr
                 session_06/personSharedPtrMain.cpp
                 session_06/PersonSharedPtr.hpp )
+
+add_executable(moveSemantics_Eg1
+        rvalue_references_move_semantics/main.cpp)
+
+add_executable(moveSemantics_Eg2
+        rvalue_references_move_semantics/moveSemantics_eg2.cpp)
+
+add_executable(secret
+        mem/main.cpp
+        mem/Secret.cpp
+        mem/Secret.hpp)
+
+

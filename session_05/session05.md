@@ -8,7 +8,161 @@ C++ provides a mechanism to facilitate writing generic functions, classes, and s
  
  The `<int>` part provides the vector template with the specific type we are interested in using. The compiler sees this and constructs a vector specific to the `int` type. Using templates is pretty straight forward, as you can see. Templates may be used to define classes, structs, and even free functions. 
  
- ## Writing Templates 
+## Using Templates
+ 
+C++ ships with a very powerful template library, called the STL - the Standard Template Library. We have already seen a couple of templates from that library - vector and string. We are going to look a little more deeply. 
+
+FYI, a good reference site for the stl, and much more is [cplussplus.com](http://www.cplusplus.com/reference)
+
+## A word about the STL 
+The STL introduced a number of important concepts into C++. One of them is the notion of an `iterator`. In C++, an iterator is just an object which has the ability to iterate through the range of a container. 
+
+Using an iterator is very similar to using a pointer. It will feel the same. You use the `*` operator on an iterator to access its value. However, the operations you can perform will be constrained by the type of iterator. However, iterators are more complex beasts which fall into a classification, which describes their functionality:
+
+- input / output (sequential single pass input)
+- forward (input + forward iteration. all containers support forward iteration)
+- bidirectional (like forward iterators but can also iterate backwards)
+- random access (like forward but can access randomly)
+
+### Retrieving and Using an Iterator
+So, how do you get an iterator to begin with? You can call container method(s) to retrieve one. For sequential iteration, supporting containers provide `begin` and `end` methods. `begin` returns an iterator to the first element in a container. `end` returns an iterator to one past the last element of a container. Iterator values are generally accessed using pointer notation:
+```
+string foo= "foo";
+auto ifoo = foo.begin();
+cout << *ifoo << endl;
+```
+You can safely use arithmetic on an iterator to advance it:
+```
+ifoo++;
+cout << *ifoo << endl;
+```
+
+The common idiom for iterating, at least before c++11, was to do this:
+```
+for(auto i=foo.begin(); i != foo.end(); foo++) {
+    cout << foo;
+}
+```
+
+Notice the `i != foo.end()` test. End iterators return the value *after* the last container element. They are *only* useful for testing iteration. You should not access the value of an end iterator. Bad things will happen. You have been warned.
+ Iterators are commonly used in place of ints when iterating through a collection:
+
+```
+#include <vector>
+#include <iostream>
+using namespace std;
+//
+int main() {
+    vector<string> foo = {"this","is","it"};
+    for( auto i = foo.begin(); i != foo.end(); foo++) {
+        cout << *i << endl;
+    }
+
+return 0;
+}
+```
+### String 
+
+Just as in Python, in C++, strings are containers. They are iterable, the support random access, as well as appending to their end. In fact, std::string is actually a typedef. It is defined thusly:
+
+```
+typedef string basic_string<char>
+```
+
+#### String Member Functions
+
+##### Iterators 
+- begin
+- end
+- rbegin
+- rend
+- cbegin  (c++11)
+- cend    (c++11)
+- crbegin (c++11)
+- crend   (c++11)
+
+##### Capacity
+- size
+- length
+- max_size
+- resize
+- capacity
+- reserve 
+- clear
+- empty
+- shrink_to_fit (c++11)
+
+##### Element Access
+- operator[]
+- at
+- back
+- front 
+
+##### Modifiers
+- operator+=
+- append
+- push_back
+- assign
+- insert
+- erase
+- replace
+- swap
+- pop_back
+
+##### String Operations
+- c_str
+- data 
+- get_allocator
+- copy
+- find
+- rfind
+- find_first_of
+- find_last_of 
+- find_first_not_of
+- find_last_not_of 
+- substr
+- compare 
+
+### Vector 
+
+##### Iterators 
+- begin
+- end
+- rbegin
+- rend 
+- cbegin
+- cend
+- crbegin
+- crend
+
+##### Access
+- at
+- operator[]
+- front
+- back
+- data
+
+##### Capacity 
+- empty
+- size
+- max_size 
+- reserve 
+- capacity
+- shrink_to_fit
+
+### Modifiers
+- clear
+- insert 
+- emplace (c++11)
+- erase 
+- push_back
+- emplace_back (c++11)
+- pop_back
+- resize
+- swap
+
+
+## Writing Templates 
  
  Before we begin, I want to discuss one limitation of templates, so you don't gt tripped up later: templates may not be implemented in cpp files; they must be written in header files. So keep that in mind in your future endeavors. 
  
@@ -129,13 +283,16 @@ The way you go about doing this is simple. First, lead off with `template <>` ( 
 
 ```
 template <>
-const Employee& max( Employee& a,  Employee& b) {
+const Employee& max<Employee>( Employee& a,  Employee& b) {
     return a.getName() > b.getName() ? a : b;
 }
 ```
 
 After coding up this specialization, you should notice that the max call with Employee will provide a different result, based on alphanumeric sorting of the names.
 
+## Variadic Templates
+TODO
+ 
 ## Meta Programming
 
 I am not going too deep here, but you can have a whole lot of fun with templates. The whole Standard Template Library is written as templates, and much of boost is as well. 

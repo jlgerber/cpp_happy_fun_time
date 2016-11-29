@@ -50,12 +50,27 @@ public:
     }
 };
 
+class Employee2 {
+    std::string name;
+    int employee_id;
+public:
+    Employee2(const std::string& name_, int id) : name(name_), employee_id(id) {};
+
+    const std::string& getName() const {return name;}
+    const int& getId() const { return employee_id; }
+
+    friend std::ostream &operator<<(std::ostream &os, const Employee2 &employee) {
+        os << "<" << employee.name << ", id: " << employee.employee_id << ">";
+        return os;
+    }
+};
+
 // max specialization
 
 
 template <>
-const Employee& max<Employee>(Employee & lhs, Employee & rhs) {
+const Employee2& max<Employee2>(Employee2 & lhs, Employee2 & rhs) {
 
-    return lhs.getName() > rhs.getName() ? lhs : rhs;
+    return lhs.getId() < rhs.getId() ? lhs : rhs;
 }
 

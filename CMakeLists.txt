@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.6)
 project(cpp_happy_fun_time)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # turn off RVO ( return value optimization ). We want all of the constructors called ( copy, assignment )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-elide-constructors")
 
@@ -33,14 +35,17 @@ add_executable(PersonSharedPtr
                 session_06/PersonSharedPtr.hpp )
 
 add_executable(moveSemantics_Eg1
-        rvalue_references_move_semantics/main.cpp)
+        topics/rvalue_references_move_semantics/main.cpp)
 
 add_executable(moveSemantics_Eg2
-        rvalue_references_move_semantics/moveSemantics_eg2.cpp)
+        topics/rvalue_references_move_semantics/moveSemantics_eg2.cpp)
 
 add_executable(secret
-        mem/main.cpp
-        mem/Secret.cpp
-        mem/Secret.hpp)
+        topics/mem/main.cpp
+        topics/mem/Secret.cpp
+        topics/mem/Secret.hpp)
 
 
+add_subdirectory(topics/cpp11_random)
+add_subdirectory(topics/environ)
+#add_executable(enviro topics/environ/main.cpp)

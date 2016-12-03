@@ -21,14 +21,23 @@ template <typename T>
 class SecretT {
     T _secret;
 public:
-    SecretT(const T& s) : _secret{s._secret} {};
+    SecretT(const T& rhs)
+    : _secret{rhs}
+    {};
+
     void tell() const {
        std::cout << "secret " << _secret << std::endl;
     };
     SecretT(const SecretT& rhs) {
         _secret = rhs._secret;
     };
-    SecretT& operator=(const SecretT& rhs);
+    SecretT& operator=(const SecretT& rhs) {
+        if (this == &rhs)
+            return *this;
+
+        _secret = rhs._secret;
+        return *this;
+    };
 
 };
 #endif //CPP_HAPPY_FUN_TIME_SECRET_HPP

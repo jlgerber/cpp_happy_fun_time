@@ -17,14 +17,13 @@ int main(int argc, char *argv[], char* envp[]) {
     if(argc > 1) {
         search_term = argv[1];
     }
+
     while(*envp) {
         Stringpair ep = toPair(*envp++);
         std::size_t found = ep.first.find(search_term);
         if (found!=std::string::npos) {
             cout << ep.first << endl;
-
-            auto vals = split(ep.second, ':');
-            for(auto&& v : vals) {
+            for(auto&& v : ep.second) {
                 if(v != "")
                     cout << '\t' << v << endl;
             }

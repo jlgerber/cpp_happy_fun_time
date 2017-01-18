@@ -46,6 +46,7 @@ SCENARIO("Strins can be split with a delimiter using the second form of split") 
 
         WHEN("Calling split on the string using '=' as a delimiter") {
             vector<string> ret_vec = split(test_str, '=');
+
             THEN("the returned vector should have two elements: PATH and /usr/local/bin") {
                 REQUIRE(ret_vec.size() == 2);
                 REQUIRE(ret_vec[0] == "PATH");
@@ -78,7 +79,25 @@ SCENARIO("Calling toPair") {
 
             THEN("toPair returns a pair of strings, the first of which is PATH and the second of which is /usr/local/bin"){
                 REQUIRE(env_pair.first == "PATH");
-                REQUIRE(env_pair.second == "/usr/local/bin");
+                REQUIRE(env_pair.second.size() == 1);
+                REQUIRE(env_pair.second[0] == "/usr/local/bin");
+            }
+        }
+    }
+
+    GIVEN("A string representing an environment variable assignment, with multiple paths, separated by a ':'") {
+        const string test_str = "PATH=/usr/local/bin:/usr/bin:~/bin";
+
+        WHEN("Calling toPair on it") {
+            auto env_pair = toPair(test_str);
+
+            THEN("toPair returns a pair, the first item being PATH and the second being a vector of size 3"){
+                REQUIRE(env_pair.first == "PATH");
+                REQUIRE(env_pair.second.size() == 3);
+                REQUIRE(env_pair.second[0] == "/usr/local/bin");
+                REQUIRE(env_pair.second[1] == "/usr/bin");
+                REQUIRE(env_pair.second[2] == "~/bin");
+
             }
         }
     }
@@ -91,7 +110,8 @@ SCENARIO("Calling toPair") {
 
             THEN("The first item should be blank and the second item should be /usr/bin") {
                 REQUIRE(env_pair.first == "");
-                REQUIRE(env_pair.second == "/usr/bin");
+                REQUIRE(env_pair.second.size() == 1);
+                REQUIRE(env_pair.second[0] == "/usr/bin");
             }
         }
     }

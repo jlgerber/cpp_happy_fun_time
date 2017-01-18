@@ -6,8 +6,8 @@
 
 using namespace std;
 
-using Stringpair = pair<string,string>;
 using Stringvec = vector<string>;
+using Stringpair = pair<string,Stringvec>;
 
 
 void split(const string &s, char delim, vector<string> &elems) {
@@ -28,12 +28,15 @@ std::vector<string> split(const string &s, char delim) {
 Stringpair toPair(const string& var) {
     auto sv = split(var, '=');
     if (sv.size() == 0)
-        return Stringpair("","");
+        return Stringpair("", Stringvec{ string("") } );
 
-    if (sv.size() == 1)
-        return Stringpair("", move(sv[0]));
+    if (sv.size() == 1) {
+        Stringvec parts = split(sv[0], ':');
+        return Stringpair("", move(parts));
+    }
 
+    Stringvec parts = split(sv[1], ':');
     // TODO: change return type to a deque and handle the case where there is more than one =
-    return Stringpair(move(sv[0]), move(sv[1]));
+    return Stringpair(move(sv[0]), move(parts));
 
 }

@@ -9,7 +9,7 @@
 #include <vector>
 #include <sstream>
 
-using Stringpair = std::pair<std::string, std::string>;
+using Stringpair = std::pair<std::string, std::vector<std::string> >;
 using Stringvec = std::vector<std::string>;
 
 /*!

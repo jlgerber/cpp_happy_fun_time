@@ -49,3 +49,5 @@ add_executable(secret
 add_subdirectory(topics/cpp11_random)
 add_subdirectory(topics/environ)
 #add_executable(enviro topics/environ/main.cpp)
+
+add_executable(functional topics/functional.cpp)

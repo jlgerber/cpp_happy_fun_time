@@ -120,7 +120,16 @@ Often times, one would like to avoid creating unnecessary copies of data. This c
 The move constructor is similar to the copy constructor, except that it takes a non-const rvalue reference.
 
 ``` 
-Example(Example&& e);
+Example {
+    string* m_name;
+public:
+    Example() : m_name{new string() } {}
+    Example(Example&& rhs) noexcept {
+        m_name = rhs.m_name;
+        rhs.m_name = nullptr;
+    }
+    ...
+}
 ```
 
 Its job is to move data from the instance passed in as an argument to `this` instance, valid state.
@@ -130,6 +139,23 @@ Its job is to move data from the instance passed in as an argument to `this` ins
 The move assignment operator is similar to the assignment operator, except that it takes a non-const rvalue reference as an argument, and it also must move data from the argument to `this` instance, leaving the passed in instance in a valid state.
 
 
+``` 
+Example {
+    string* m_name;
+public:
+    Example() : m_name{new string() } {}
+    ...
+    
+    Example& operator=(Example&& rhs) {
+        if (this != &rhs) {
+            if(m_name) delete m_name;
+            m_name = rhs.m_name;
+            rhs.m_name = nullptr;
+        }
+        return *this;
+    }
+}
+```
 ## STL
 
 The stl has gotten a face lift. There are a number of newish containers that are now part of the stl

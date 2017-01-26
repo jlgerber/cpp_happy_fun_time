@@ -116,8 +116,9 @@ foo(std::move(mystring));
 ## Move Semantics
 
 Often times, one would like to avoid creating unnecessary copies of data. This can happen for a variety of reasons, including returning from functions, aggregation (this+that), etc. Move semantics allow you to move a value from one scope to another cheaply. It is only applicable to types which manage memory internally.  
+
 ### move constructor
-The move constructor is similar to the copy constructor, except that it takes a non-const rvalue reference.
+The move constructor is similar to the copy constructor, except that it takes a non-const rvalue reference. For it to work with stl containers, it also has to be declared as `noexcept`. ( see example). `noexcept` means that if an exception gets thrown in the method, your whole program will shut down immediately. Why does the STL demand this of you? The authors are Jerks. Also, the move constructor makes a strong guarantee that the transaction will result in a complete transfer of state from one object to another; this guarantee cannot be satisfied should an exception be raised during the execution. So, we instruct the compiler, via `noexcept`, to shut down should one occur. 
 
 ``` 
 Example {
@@ -146,7 +147,7 @@ public:
     Example() : m_name{new string() } {}
     ...
     
-    Example& operator=(Example&& rhs) {
+    Example& operator=(Example&& rhs) noexcept {
         if (this != &rhs) {
             if(m_name) delete m_name;
             m_name = rhs.m_name;

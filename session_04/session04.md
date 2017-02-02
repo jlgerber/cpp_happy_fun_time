@@ -1,4 +1,4 @@
-# Structs and Classes
+# Chapter 4 - Structs and Classes
 
 C++ has two data structures which resemble Python classes - structs and classes.
 
@@ -16,7 +16,7 @@ Great. Lets get going....
 
 ## Classes 
 
- Since this is a class for folks who are Python savvy, let's compare c++ classes to Python classes.
+ Since this is targeted at folks who are Python savvy, let's compare c++ classes to Python classes.
  
 ### class Keyword
  
@@ -161,7 +161,7 @@ The initializer list is a comma separated list of data members which may be init
 
 ## Operator Overloading
 
-In C++ you can define custom behavior for wide variety of operators. Doing so is known as *operator overloading*. Let's take a look at how this works by looking at overloading addition.
+In C++ you can define custom behavior for a wide variety of operators. Doing so is known as *operator overloading*. Let's take a look at how this works by looking at overloading addition.
 
 #### Binary  & Unary Operators
 In general, binary operators (operators operating on two items) and unary operators (operators operating on one item) are overloaded by defining class methods which return an instance of the class in question, are named "operator" followed by the actual operator in question, and take a const reference to an instance of the class. So for addition, the declaration looks like this ( assuming we have a Point class):
@@ -217,7 +217,8 @@ Ok, its exercise time. Using all of the knowledge gained thus far, implement a V
 To model all this, we will need to store the terminal end of the vector, which we will represent with three doubles ( x, y, z). 
 You may or may not remember vectors from your trig class, but you can perform a number of specialized operations between vectors. You can add them together, subtract one from the other, and multiply one by a scalar value. You can also perform a cross product between them, which produces a vector which is orthogonal (perpendicular) to each one, and perform a dot product between them, which produces a scalar value ( equivalent to the length of the first times the length of the second times the cosine of the angle between them.)
  
- Our vector will need to provide the following capabilities. It should: 
+ Our vector will need to provide the following capabilities. It should:
+  
  - support addition and subtraction between vectors 
  - support cross product and dot products between vectors
  - support scalar multiplication
@@ -225,70 +226,70 @@ You may or may not remember vectors from your trig class, but you can perform a 
  
  Write unit tests to validate that your class works using google test.
  
- ### Coda - Using Google Test  
+### Coda - Using Google Test  
  
  Ok, you want to be a good citizen and practice this whole TDD thing right? But how do you go about setting up google test with cmake? 
  
  First, create an appropriate structure for your project.
  
- ```
+```
  vector_eg/
     src/
     lib/
     tests/
- ```
+```
  
- - src is where your source code will go.
- - lib is where your google test framework will go.
- - tests is where your tests will go.
+- src is where your source code will go.
+- lib is where your google test framework will go.
+- tests is where your tests will go.
  
- #### Step 1 - install google test
+#### Step 1 - install google test
  
- google test should ship with a googletest directory chock full of goodness, including a CMakeLists.txt file. Go ahead and simply recursively copy googletest into lib.
+google test should ship with a googletest directory chock full of goodness, including a CMakeLists.txt file. Go ahead and simply recursively copy googletest into lib.
  
- #### Step 2 - Set Up src
+#### Step 2 - Set Up src
  
- In src, create a CMakeLists.txt file. Set it up to compile the code we will be creating shortly in the same directory. This time around we need to create a shared library output, instead of an executable. The test will be the executable. Our code will be the library. Doing this is every bit as simple as creating an executable. Simply call `add_library` instead of `add_executable`:
+In src, create a CMakeLists.txt file. Set it up to compile the code we will be creating shortly in the same directory. This time around we need to create a shared library output, instead of an executable. The test will be the executable. Our code will be the library. Doing this is every bit as simple as creating an executable. Simply call `add_library` instead of `add_executable`:
  
- ```
- project(vector)
- file(GLOB  cpps *.cpp)
- file(GLOB hpps *.hpp)
- add_library(vector SHARED ${cpps} ${hpps})
- ```
+```
+project(vector)
+file(GLOB  cpps *.cpp)
+file(GLOB hpps *.hpp)
+add_library(vector SHARED ${cpps} ${hpps})
+```
  
- Now go ahead and create your Vector.cpp and Vector.h files in src.
+Now go ahead and create your Vector.cpp and Vector.h files in src.
  
- #### Step 3 - set up your tests
+#### Step 3 - set up your tests
  
- In tests/ add another CMakeLists.txt file to compile your tests, which we will be adding shortly.
+In tests/ add another CMakeLists.txt file to compile your tests, which we will be adding shortly.
  
- ```
- include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+```
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+
+# add files
+file(GLOB tests_cpp *.cpp)
+
+# add project name
+add_executable(${PROJECT_NAME} ${tests_cpp})
+
+target_link_libraries(${PROJECT_NAME} gtest gtest_main)
+target_link_libraries(${PROJECT_NAME} vector)
+```
  
- # add files
- file(GLOB tests_cpp *.cpp)
+This CMakeLists.txt file is a bit more involved. First, it includes directories from the googletest framework, which we will need.
  
- # add project name
- add_executable(${PROJECT_NAME} ${tests_cpp})
+Then it uses glob to grab all of the cpp files in the tests directory.
  
- target_link_libraries(${PROJECT_NAME} gtest gtest_main)
- target_link_libraries(${PROJECT_NAME} vector)
- ```
+Then it creates an executable, adding all of the cpp files from the prior step.
  
- This CMakeLists.txt file is a bit more involved. First, it includes directories from the googletest framework, which we will need.
+The final two steps are to link in google test, and then link in our own vector library ( which we set up in a previous CMakeLists.txt file)
  
- Then it uses glob to grab all of the cpp files in the tests directory.
+#### Bringing it all together
  
- Then it creates an executable, adding all of the cpp files from the prior step.
+Ok, we have our individual CMakeLists.txt files, but we need to set up a top level CMakeLists.txt file to call each of the CMakeLists.txt files we created *in the correct order*.
  
- The final two steps are to link in google test, and then link in our own vector library ( which we set up in a previous CMakeLists.txt file)
- 
- #### Bringing it all together
- 
- Ok, we have our individual CMakeLists.txt files, but we need to set up a top level CMakeLists.txt file to call each of the CMakeLists.txt files we created *in the correct order*.
- 
- So, under our project's root directory, create a new CMakeLists.txt file:
+So, under our project's root directory, create a new CMakeLists.txt file:
  
 ```
  cmake_minimum_required(VERSION 2.6.2)
@@ -318,16 +319,16 @@ Go to your src/ directory. You should have created Vector.cpp and Vector.h by no
  }
 ```
  
- Ok. Let's jump into the tests/ directory and create a tests.cpp file.
+Ok. Let's jump into the tests/ directory and create a tests.cpp file.
  
- All google tests need to include gtest to work. Since we are testing Vector, we also need to include Vector.h:
+All google tests need to include gtest to work. Since we are testing Vector, we also need to include Vector.h:
  
 ```
  #include "gtest/gtest.h"
  #include "../src/Vector.hpp"
 ```
  
- Now it is time to write our first actual test. Gtest has a TEST macro which we use for each test.
+Now it is time to write our first actual test. Gtest has a TEST macro which we use for each test.
  
 ```
  TEST( <name of group>, <name of test>) {
@@ -343,41 +344,43 @@ So for our Vector class:
  }
 ```
  
- Your tests are all going to look the same. You are going to write a bit of code to exercise a single function or method, then you are going to test the results. Gtest has a number of functions that will help you with this. Here are a few of them:
+Your tests are all going to look the same. You are going to write a bit of code to exercise a single function or method, then you are going to test the results. Gtest has a number of functions that will help you with this. Here are a few of them:
  
- - EXPECT_EQ(rhs, lhs)
- - EXPECT_DOUBLE_EQ(rhs, lhs)
- - EXPECT_FLOAT_EQ(rhs, lhs)
- - EXPECT_TRUE(expression)
- - EXPECT_FALSE(expression)
+- EXPECT_EQ(rhs, lhs)
+- EXPECT_DOUBLE_EQ(rhs, lhs)
+- EXPECT_FLOAT_EQ(rhs, lhs)
+- EXPECT_TRUE(expression)
+- EXPECT_FALSE(expression)
  
 Ok. Lets write our first test:
  
 #### The Default Constructor. 
  
- Well, first, what do we expect our vector to get initialized to without any user intervention? It could be anything sensible. I am going to choose a unit vector pointing down the z axis.
+Well, first, what do we expect our vector to get initialized to without any user intervention? It could be anything sensible. I am going to choose a unit vector pointing down the z axis.
  
  
 ```
- TEST(vector, default_constructor) {
+TEST(vector, default_constructor) {
     Vector v{};
     EXPECT_DOUBLE_EQ(0.0, v.x);
     EXPECT_DOUBLE_EQ(0.0, v.y);
     EXPECT_DOUBLE_EQ(1.0, v.z);
- }
+}
 ```
  
 And that is it. Well, lets run our unit test. It should fail at this point, because we have not written a constructor. Let's fix that.
  
-Go to src/ and edit your Vector.cpp. Add a default constructor and initialize it to <0,0,1>. Run the test again. It should pass.
+Navigate to the src/ directory and edit your Vector.cpp. Add a default constructor and initialize it to <0,0,1>. Run the test again. It should pass.
  
 #### The rest of the Vector class
  
 From here, we are going to continue to build out our Vector class. We can add other constructors - one which allows you to initialize the Vector from 3 doubles would make sense. Perhaps one which allow you to initiLize a vector from another vector as well.
+
 - Vector(double x_, double y_, double z_);
 - Vector(const Vector& rhs);
 
 Next, we should look at overloading operators for addition and subtraction. Go ahead and implement the following operator overloads, being sure to follow the same pattern as outlined above with regard to tests:
+
 - Vector operator+(const Vector& rhs);
 - Vector& operator+=(const Vector& rhs);
 - Vector operator-(const Vector& rhs);
@@ -386,6 +389,7 @@ Next, we should look at overloading operators for addition and subtraction. Go a
 As a reminder, the `+=` and `-=` operators return a reference to Vector. To achieve this, you have to dereference `this` in your return statement ( `return *this`  ).
 
 What about comparisons? Go ahead and implement the `==` operator, as well as the other comparison operators:
+
 - bool operator==(const Vector& rhs) const;
 - bool operator<(const Vector& rhs) const;
 - bool operator<=(const Vector& rhs) const;

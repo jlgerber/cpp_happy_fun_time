@@ -1,10 +1,9 @@
-# Memory Management
+
+# Chapter 6 - Memory Management
 
 ## More Class Methods
 
 Not so long ago, we began exploring classes. We started by talking about constructors, and then delved into operator overloading. We are going to touch on a few of special methods we haven't seen yet - the copy constructor, the assignment operator, and the destructor. Each of these plays a crucial role in memory management. But that's getting ahead of ourselves. Let's look at them in turn.
-
-
 
 ### The Destructor
 When an object is about to get deleted, C++ will call a special method called a destructor. Object destruction happens automatically when said object goes out of scope, in the case of a stack defined variable, or when delete is called, in the case of a heap allocated variable. Either way, the destructor gets called, giving us an oportunity to perform any cleanup necessary. 
@@ -206,7 +205,7 @@ Ouch. So what is going on here? when we assign bob to bob2, the compiler generat
 
 So how do we fix this? Rememeber the copy constructor? This is what it is for. 
 
-# The Rule of 3
+## The Rule of 3
 
 The rule of 3 states that whenever you have to create a destructor to clean up memory, you have to implement a copy constructor and an assignment operator as well. So lets go ahead and do that in Person.
 

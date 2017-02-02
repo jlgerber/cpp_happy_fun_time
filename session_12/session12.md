@@ -1,4 +1,4 @@
-# Command Line Parsers
+# Chapter 12 - Command Line Parsers
 
 You are all most likely familiar with one or more command line parsing libraries for Python. Popular libraries include argparse, optparse, plac and docopt. Argument parsers are vital tools in any developer's kit, allowing us to make short work of complicated user input. 
 

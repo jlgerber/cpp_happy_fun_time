@@ -1,4 +1,4 @@
-# Cmake - An aside 
+# Chapter 3 - Cmake - An aside 
 
 Today we are going to take a break from studying C++ to talk about *cmake*. Cmake is a build system which manages the build process in an operating system and compiler independent manner. You have probably heard of make; you may have cracked a Makefile open or written one yourself. If so, you are probably aware that the syntax can be a bit strange. Cmake is much more straightforward. And we are going to see that presently.
 

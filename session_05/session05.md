@@ -1,4 +1,4 @@
-# Templates 
+# Chapter 5 - Templates 
 
 C++ provides a mechanism to facilitate writing generic functions, classes, and structs - templates. Templates allow the author to define type variables which are evaluated and expanded at compile time. There are two distinct activities associated with templates - authoring and using. We will go over both. You have already used templates a bit in this course. The std::vector is a template which declares a single type variable, which gets "filled in" when used. For example:
  
@@ -180,26 +180,27 @@ typedef string basic_string<char>
  
  The rest of the template is no different than a non-template declaration, except that one uses the variable in lieu of an actual variable. For example, here is a silly class template to store a secret:
  
- ```
- template <typename T>
- class Secret {
+```
+template <typename T>
+class Secret {
     T secret;
- public:
+public:
     Secret(const T& rhs) {
         secret = rhs;
     };
-    
+
     void share() const {
         cout << "The secret is " << secret << endl;
     }
-    
+
     const T& getSecret() const {return secret;};
- }
- ```
+}
+```
  
 We can use this template with a variety of data types. Lets give it a go:
 
 (NOTE: from now on I am not going to bother with providing fully working code. Fragments should do fine. You should be able to apply them appropriately by now.)
+
 ```
 cout << "Secret<string>" << endl;
 Secret<string> strSecret("foobar");
@@ -291,8 +292,9 @@ const Employee& max<Employee>( Employee& a,  Employee& b) {
 After coding up this specialization, you should notice that the max call with Employee will provide a different result, based on alphanumeric sorting of the names.
 
 ## Variadic Templates
-TODO
+
+Ok. I could make your heads explode. But I wont. We can talk about this later.
  
 ## Meta Programming
 
-I am not going too deep here, but you can have a whole lot of fun with templates. The whole Standard Template Library is written as templates, and much of boost is as well. 
+I am not going too deep here, but you can have a whole lot of fun with templates. The whole Standard Template Library is written as templates, and much of boost is as well.

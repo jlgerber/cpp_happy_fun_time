@@ -1,9 +1,9 @@
-# Filesystem
+# Chapter 13 - The Filesystem
 The os module is one of the bread and butter workhorses of python. We are going to cherry pick some functions out of the os module and figure out what their analogs are in c++. Lets get started.
 
 ## Basic Os Goodness
 
-Our cup runneth over. Turns out, there are about 220 symbols exposed in the top os python module. I doubt that you or I have the patience to explore each one. Instead of taking them one by one, lets talk about general classes of functions
+Our cup runneth over. Turns out, there are about 220 symbols exposed in the top os python module alone. I doubt that you or I have the patience to explore each one. So we are going to explore boost based on themes addressed in the os python module, rather than looking for an analog to each function.
 
 ### environment variable access
 

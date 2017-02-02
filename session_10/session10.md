@@ -1,4 +1,4 @@
-# C++ 11
+# Chapter 10 - C++ 11
 
 6 years ago now, the C++ standards body met and ratified a new version of c++, with new features. These features are now in wide use, and offer some real advantages over c++98.  Lets talk about some of the big ones:
 

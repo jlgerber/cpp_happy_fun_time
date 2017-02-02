@@ -1,4 +1,4 @@
-# Testing - Take 2
+# Chapter 7 - Testing 
 
 Its time for a little break from learning about C++ proper to focus on development practices. About 13 years ago, a new methodology emerged ( or an old methodology was rediscovered ): Test Driven Development or TDD.
 

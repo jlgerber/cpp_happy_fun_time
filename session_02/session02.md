@@ -1,110 +1,49 @@
-# Session 2
-## Review
-### main function
-Every executable has an entrant function called main, which is invoked when executing the program. It has two valid forms. The first form is:
+# Chapter 2
 
-```c++
-int main() {
-    // bla bla bla
-    return 0; // 0 indicates that everything is peachy
+## Flow Control
+C++ and Python have very similar flow control mechanisms, however they have different syntax.
+### Conditionals
+In python, conditional are spelled thusly:
+```
+if <expression> :
+    <body>
+elif <expression>:
+    <body>
+else:
+    <body>
+```
+In C++, this translates into:
+```
+if ( <expression> ) {
+    <body>;
+} else if (<expression>) {
+    <body>;
+} else {
+    <body>;
 }
 ```
+Just as in Python, both the *else if* and the *else* are optional. In C++, the body of each conditional consists of one or more statements, each terminated by a semicolon. Because each conditional is wrapped in curly braces, each conditional forms its own *local scope*. If you define variables within the scope, they are not visible outside of it. Much like python.
 
-And the second form is:
-
-```c++
-int main(int argc, char* argv[] ) {
-    // bla bla bla 
-    return 0;
-}
-```
-
-In the second form, as you can see, the main function takes two arguments. They are:
-- int argc: the number of arguments that the executable is called with.
-- char* argv[] : an array of c style strings representing those arguments. ( you might also see the second argument written as `char** arvg`. Its effectively the same thing and we will get into that when we discuss pointers...)
-
-By the way, the type signatures are required, but the names of the two arguments can be anything. By convention, they are *argc* and *argv*. You should probably stick to this naming, because that is what people expect. 
-
-You can use either of the two forms for main, although I recommend using the former, simpler one, unless you need to access the calling parameters.
-
-## Data Types
-
-C++ is a strongly typed language. All variables have an explicit type which cannot be changed at runtime, unlike python. When you declare a variable, you prefix it with its type name. And it *never ever changes*. That is a big change from Python, so soak it in. 
-
-The atomic data types are ( off the top of my head):
-
-* bool
-* char
-* wchar
-* short
-* int
-* long
-* long long 
-* float
-* double
-
-For each of the int types , there exists an unsigned type, which does not allow for negative numbers.
-
-short int, int, long, and long long all belong to the family of integers. They differ in terms of the range of integers which they represent/can hold. They can each be spelled explicitly (ie short int, long int)
-
-float, double belong to the family of real numbers. They too differ in terms of the range that each can hold.
-
-## Namespaces
-C ++ allows you to wrap code in a namespace in order to organize and protect symbols. Namespaces are roughly equivalent to python's nested module definitions.
-
-```python
-import os
-os.path.dirname() 
-
-def dirname(foo): 
-    print "dir dir dir", foo
-    
-os.path.dirname("/foo/bar") 
-
- 
-```
-
-Namspaces are defined like so:
-
-```c
-namespace foo {
-    void bar() {
-        std::cout << "I am in a namespace" << std::endl
-    }
-}
-```
-
-You reference symbols in a namespace by prefixing them with their namespace, followed by `::`
+### ternary
+Python and C++ both have a ternary expression form. In python, it looks like ```<truthy value> if <expression> else <falsy value>```. For example:
 
 ```
-foo::bar();
+12 if a == b else 42
 ```
 
-You can also either selectively import a symbol into the current namespace:
-```
-using foo::bar;
-bar();
-```
-Or import everything in a namespace into the current namespace:
-```
-using namespace foo;
-bar();
-```
+In C++, the ternary is formed like so ```(<condition>) ? <truthy value> : <falsy value>```. For example:
 
-Why am i telling you this now? There are many useful libraries which live in the `std` namespace. We will take a look at a couple of them, but first we need to learn how to include them in our code.
-
-## CPP Preprocessor: including other code
-
-All commands prefixed by a pound symbol are preprocessor directives. The preprocess runs as the first step in compilation. One of the primary roles of the preprocess is to include other files into cpp files. This is generally analogous to python's import statement. We will get into what is going on here a bit more later. 
-
-There are two forms which we are interested in:
 ```
-#include <LIBRARY> 
-#include "myHeader.h"
+int x = 0; int y = 1;
+int z = (x==y) ? 2 : 3;
 ```
-
-The former is used to include headers for compiled libraries and the latter is used to include non-precompiled headers, generally in your own project. The former searches in predefined locations, as well as locations explicitly specified via compiler flags. The latter ("") first searches in the directory in which the directive appears, and then degrades to the former (<>) behavior, in the event that the header file is not found.
-
+## Looping
+### for
+### while
+### do while
+### ++ 11 ism
+## Scope
+TODO
 ## Useful Libraries
 
 There are a ton of useful libraries which ship with c++. Let's look at two of them in an example:
@@ -194,18 +133,7 @@ foo = 12
 
 In the case of functions, classes, and structs, we can differentiate between declaration and definition. If you provide a definition for your function, class, struct, you are providing an implementation...
 
-## Functions
-
-Functions in python and c++ are very similar. In python, to declare a function, you do so using the *def* keyword:
-
-```
-def foo(bar):
-    """
-    do something
-    """
-```
-
-C++ has no such keyword. Instead, the compiler recognizes functions by their *shape". Additionally, when you define a function in C++, you are responsible for defining the explicit type, if any, that the function returns, as well as the types of all of the parameters, if any.
+## More on Functions
 
 ### Basic Function Declaration
 
@@ -230,20 +158,20 @@ So why would you split up the declaration and the definition? There are a couple
  
  Example foo.cpp: 
  
- ```
- #include <iostream>
- 
- using namespace std;
- 
- int main() {
+```
+#include <iostream>
+
+using namespace std;
+
+int main() {
     foo();
     return 0;
- }
- 
- void foo() {
-    cout << "FOOOOOOO" << endl;
- }
- ```
+}
+
+void foo() {
+cout << "FOOOOOOO" << endl;
+}
+```
 
 If you try and compile foo.cpp, you might be surprised, based on your python experience, to learn that the compiler cannot find foo. I mean its right there in the same file, but the compiler is too dumb to find it.
 

@@ -3,7 +3,7 @@ The os module is one of the bread and butter workhorses of python. We are going 
 
 ## Basic Os Goodness
 
-Our cup runneth over. Turns out, there are about 220 symbols exposed in the top os namespace. I doubt that you or I have the patience to explore each one. Instead of taking them one by one, lets talk about general classes of functions
+Our cup runneth over. Turns out, there are about 220 symbols exposed in the top os python module. I doubt that you or I have the patience to explore each one. Instead of taking them one by one, lets talk about general classes of functions
 
 ### environment variable access
 

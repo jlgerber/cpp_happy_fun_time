@@ -245,17 +245,6 @@ void create_symlink(const path& to, const path& new_symlink);
 void create_hard_link(const path& to, const path& new_hard_link);
 ```
 
-### stat
-
-### creating directories
-
-### removing files and directories
-
-### generating temp files & directories
-
-
-### running in a process 
-
 # Homework
 
 1. In the section on environment variables, we presented a function in the standard library to retrieve environemnt variable contents. Unfortunately, the return of said function is of the following form:

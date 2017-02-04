@@ -25,7 +25,8 @@ yell/
 
 ### Step 2 - create the main CMakeLists.txt
 
-We know that we are going to have 
+We know that we are going to have :
+
 - a library for yell
 - an executable for yell
 - a unittest suite for yell

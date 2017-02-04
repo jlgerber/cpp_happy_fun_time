@@ -207,7 +207,7 @@ So how do we fix this? Rememeber the copy constructor? This is what it is for.
 
 ## The Rule of 3
 
-The rule of 3 states that whenever you have to create a destructor to clean up memory, you have to implement a copy constructor and an assignment operator as well. So lets go ahead and do that in Person.
+The rule of 3 states that whenever you have to create one or more of the following methods: copy, assigment, or destructor, you have to implement all of them. So lets go ahead and do that in Person.
 
 Person.h
 ```

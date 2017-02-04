@@ -45,28 +45,7 @@ clang++ hello.cpp -o hello
 
 ### Results
 
-Tada, you should have an executable called hello, which will greet the world when run. Even in this trivial program, we have a lot to talk about. So let's get at it.
-
-## Braces - Lots of Braces
-
-C++ is a descendant of C. As such, it uses braces to define scope. This stands in stark contrast to Python, which uses indentation to differentiate scope. So, you wrap blocks in curly braces to delineate scope. Formatting is strictly for readability. Lke Python, variables defined in inner scopes are not visible to outer scopes. However, variables defined in outer scopes are visible in inner scopes.
-
-## Statements
-
-In python, statements end in newlines. In C++, statements end in semi-colons. That means you can split statements over multiple lines without a problem. 
-
-In Python you would have to do this:
-```
-foo \
-=1
-
-```
-
-But in C++ you simply type this:
-```
-int foo
-= 1;
-```
+Tada, you should have an executable called hello, which will greet the world when run. Even with this trivial program, we have a lot to talk about. So let's get started.
 
 ## Data Types
 
@@ -105,6 +84,42 @@ short int, int, long, and long long all belong to the family of integers. They d
 
 float, double belong to the family of real numbers. They too differ in terms of the range that each can hold.
 
+## Statements
+
+In python, statements end in newlines. In C++, statements end in semi-colons. That means you can split statements over multiple lines without a problem. 
+
+In Python you would have to do this:
+```
+foo \
+=1
+
+```
+
+But in C++ you simply type this:
+```
+int foo
+= 1;
+```
+
+## Braces - Lots of Braces
+
+C++ is a descendant of C. As such, it uses braces to define scope. This stands in stark contrast to Python, which uses indentation to differentiate scope. So, you wrap blocks in curly braces to delineate scope. Formatting is strictly for readability. Lke Python, variables defined in inner scopes are not visible to outer scopes. However, variables defined in outer scopes are visible in inner scopes.
+
+```
+{
+    int f = 1;
+    int g = 2;
+    {
+        f =2;
+        int g = 4;
+        cout << f << " " << g << endl;
+    }
+    cout << f << " " << g << endl;
+}
+```
+In the preceding example, we have an inner and outer scope. In the outer scope, we define two variables, "f" and "g".
+In the inner scope, we assign "f" a new value, and we create a local variable "g" which masks "g" in the outer scope. When we exit the inner scope, "f" retains the assignment from the inner scope, but "g" does not, because the "g" defined in the local scope is a different "g". While you don't quite no enough to verify this yet, you soon will. ( if you are wondering what cout, <<, and endl are about, stay tuned. )
+
 ## Functions
 
 Functions in Python and C++ are very similar. In Python, to declare a function, you do so using the *def* keyword:
@@ -117,7 +132,7 @@ def foo(bar):
     print "foo",bar
 ```
 
-C++ has no such keyword. Instead, the compiler recognizes functions by their *shape". Additionally, when you define a function in C++, you are responsible for defining the explicit type, if any, that the function returns, as well as the types of all of the parameters, if any.
+C++ has no such keyword. Instead, the compiler recognizes functions by their *shape*. When you define a function in C++, you are responsible for defining the explicit type of the value, if any, that the function returns, as well as the types of all of the function's parameters. You do this by prefixing the function name with the name of the return type. If the function does not return a type, you prefix it with *void*. Like Python, C++ function names ar followed by parens enclosing any function parameters. However, in C++ these parameters are also prefixed by their types. Like Python, these parameters may also define default values using the same syntax as Python. For example:
 
 ```
 bool foo(string bar) {
@@ -126,15 +141,13 @@ bool foo(string bar) {
 }
 ```
 
-As you can see, function signatures start with a type (```bool`` in this case), followed by a name, and parens. Within the parens, you may have zero or more parameters. These parameters have to be explicitly typed. Above, you can see that we have one parameter, bar, which is of type string. After the parens, the body of the funciton is delineated with a pair of curly braces. It is considered good form to indent the body of the function, but formatting has no effect of the actual code. 
+As you can see, the above example function returns a boolean value. It is named "foo", and it has a single parameter, named "bar", which is of type *string*. 
 
-Finally, our function must return data, per its signature. It does so using the *return* keyword. 
+## includes, The Modules of the C++ World
 
-## includes, The odules of the C++ world
+In C++, like in Python, you can split your implementation of a program up into multiple files. And like, Python, you can leverage existing libraries to do much of the low level work for you; you are not stuck writing everything from scratch, and much of what is considered modern C++ is actually provided by the Standard Library, not the language itself ( although the standard library is, well standard, and available on all compilers so...)
 
-In C++, like in Python, you can split your implementation of a program up into multiple files. And like, Python, you can leverage existing libraries to do much of the low level work for you; you are not stuck writing everything from scratch, and much of what is considered modern C++ is actually provided by the Standard Library, and not the language itself ( although the standard library is, well standard, and available on all compilers so...)
-
-In Python, you import modules. C++ doesnt have a module system ( yet. its on the way).However, you can include other code using the #include preprocessor directive. There are actually two forms:
+In Python, you import modules. C++ doesnt have a module system ( yet. its on the way). However, you can include other code using the #include preprocessor directive. There are actually two forms:
 
 ```
 #include<>
@@ -143,11 +156,13 @@ and
 ```
 #include ""
 ```
-The <> form is used to include libraries which are provided externally. For instance, C++ ships with a large library, much like the standard library Python ships with. 
+The difference between the two forms is actually implementation dependent technically, but all of the implementations implement the following behavior:
 
-The "" form is used to include other files which are in your project. These are similar to the internal import statements in a Python package.
+The *#include ""* form searches first in the same directory as the file in which the include directive exists, then searches in directories explicitly passed to the compiler by the include flag, and finally in predefined locations specific to each OS. 
 
-The directive ```#include <iostream>``` imports the iostream library which makes a number of functions and classes available to us in the ```std``` namespace. ( we will cover namespaces later ). A namespace is a label used to disambiguate names and avoid clashes. Namespaces prefix lables and are affixed using '::'. For example ```std::cout``` from above references *cout* in the *std* namespace. 
+The *#include <>* form only searches for the target file in any include paths passed to the compiler via the include flag, and then in predefined locations specific to each OS.
+
+As an example, the directive ```#include <iostream>``` imports the iostream library which makes a number of functions and classes available to us in the ```std``` namespace. A namespace is a label used to disambiguate symbol names in an attempt to avoid clashes. Namespaces prefix labels and are joined using '::'. For example ```std::cout``` from above references *cout* in the *std* namespace. 
 
 
 ## The main function
@@ -192,7 +207,7 @@ By the way, the type signatures are required, but the names of the two arguments
 
 You can use either of the two forms for main, although I recommend using the former, simpler one, unless you need to access the calling parameters.
 
-### The Third Form
+### The Third Form of main
 
 The third form adds a third parameter to main which is a c string array of environment variables:
 
@@ -248,12 +263,4 @@ Why am i telling you this now? There are many useful libraries which live in the
 
 ## CPP Preprocessor: Including Other Code
 
-All commands prefixed by a pound symbol are preprocessor directives. The preprocessor runs as the first step in compilation. One of the primary roles of the preprocessor is to include other files into cpp files. This is generally analogous to Python's import statement. We will get into what is going on here a bit more later. 
-
-There are two forms which we are interested in:
-```
-#include <LIBRARY> 
-#include "myHeader.h"
-```
-
-The former is used to include headers for compiled libraries and the latter is used to include non-precompiled headers, generally in your own project. The former searches in predefined locations, as well as locations explicitly specified via compiler flags. The latter ("") first searches in the directory in which the directive appears, and then degrades to the former (<>) behavior, in the event that the header file is not found.
+All commands prefixed by a pound symbol are preprocessor directives. The preprocessor runs as the first step in compilation. We have already encountered the one of the primary roles of the preprocessor - to include other files into cpp files. However, this is far from the only use for the preprocessor. We will encounter more uses as we continue to explore C++. Some of those additional uses are: to define macros; to conditionally define blocks of code; to avoid including the same file multiple times...

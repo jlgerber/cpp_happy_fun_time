@@ -2,8 +2,9 @@
 
 ## Flow Control
 C++ and Python have very similar flow control mechanisms, however they have different syntax.
+
 ### Conditionals
-In python, conditional are spelled thusly:
+In python, conditional are formed thusly:
 ```
 if <expression> :
     <body>
@@ -12,6 +13,17 @@ elif <expression>:
 else:
     <body>
 ```
+For example:
+
+```
+if foo == 1:
+    print "foo is one"
+elif foo ==2 : 
+    print "foo is two"
+else:
+    print "foo is bigger than two:
+```
+
 In C++, this translates into:
 ```
 if ( <expression> ) {
@@ -22,33 +34,117 @@ if ( <expression> ) {
     <body>;
 }
 ```
-Just as in Python, both the *else if* and the *else* are optional. In C++, the body of each conditional consists of one or more statements, each terminated by a semicolon. Because each conditional is wrapped in curly braces, each conditional forms its own *local scope*. If you define variables within the scope, they are not visible outside of it. Much like python.
 
-### ternary
+That Python example looks like this in C++:
+```
+if (foo == 1) {
+    cout << "foo is one" << endl;
+} else if (foo ==2) {
+    cout << "foo is two" << endl;
+} else {
+    cout << "foo is bigger than two" << endl;
+}
+```
+Just as in Python, both the *else if* and the *else* are optional. In C++, the body of each conditional consists of one or more statements, each terminated by a semicolon. Because each conditional is wrapped in curly braces, each conditional forms its own *local scope*. If you define variables within the scope, they are not visible outside of it. Much like Python.
+
+### Ternary Form
+
 Python and C++ both have a ternary expression form. In python, it looks like ```<truthy value> if <expression> else <falsy value>```. For example:
 
 ```
-12 if a == b else 42
+x = 0
+y = 1`
+z = 12 if x == y else 42
 ```
 
 In C++, the ternary is formed like so ```(<condition>) ? <truthy value> : <falsy value>```. For example:
 
 ```
 int x = 0; int y = 1;
-int z = (x==y) ? 2 : 3;
+int z = (x==y) ? 12 : 42;
 ```
 ## Looping
+
+C++ has a number of different looping constructs, which it inherits from C. 
+
 ### for
+
+The ```for``` keyword kicks off the bread and butter looping form in C++. This will seem a bit verbose to Python programmrs. It has three components, separated by semi-colons - a counter variable initialization, a comparison, and a counter increment. For example, to print out the numbers zero to ten:
+
+```
+for(int x=0; x<10; x++) {
+    cout << x << endl;
+}
+```
+This would result in the following:
+```
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+```
+In case it isn't obvious, the initialization portion of the *for* loop is only executed the first time through the loop, the conditional section is applied each iteration, and the counter is applied at the end each of aach iteration. Also note that the counter portion can define any stride it wants; it isn't limited to incrementing by 1, or incrementing at all, however that is the norm.
+
+That same code in Python is much shorter:
+
+```
+for x in xrange(10):
+    print x
+```
+
 ### while
+
+The while form defines a test which it executes upon each iteration through the loop. If this test fails, the loop terminates. for example:
+```
+int x=0;
+while(x < 10) {
+    cout << x << endl;
+    x++;
+}
+```
+
 ### do while
-### ++ 11 ism
-## Scope
-TODO
+
+C++ has yet another syntactic looping form. This differs from the *while* form in that it applies its test at the tail end of each iteration of the loop, as opposed to the beginning. For example:
+
+```
+int x = 0;
+do {
+    cout << x << endl;
+} while(x<1);
+```
+
+### range based for
+
+C++ 11 introduced a new looping syntax for compliant containers ( and all containers in the standard library comply). It will appeal to Python programmers, as it resembles Pythons for..in syntax. It looks like this:
+
+```
+for( <var> : <container var> ) {}
+```
+
+As an example:
+
+```
+vector<int> y = {1,2,3,4,5,6};
+for( int x : y) {
+    cout << x << endl;
+}
+```
+
+I realize that we have not talked about vectors yet, but for now, you can think of the line sarting with "vector" as defining a list of ints. Hopefully, that makes sense.
+
+
 ## Useful Libraries
 
-There are a ton of useful libraries which ship with c++. Let's look at two of them in an example:
+There are a ton of useful libraries which ship with C++. Let's look at two of them in an example:
 
-### iostream and string.
+### iostream
 
 iostream includes a number of useful operators for reading and writing streams. Three common operators are:
 - cout : pronounced, see-out, this operator works in conjunction with the << operator to print streams to stdout. 
@@ -73,7 +169,8 @@ int main() {
 }
 ```
 
-Next up is the string class. You are in luck, because it works a lot like python's string class. Furthermore, it exists, which is a bonus, because it didn't in c. Thanks c++. 
+### string
+Next up is the string class. You are in luck, because it works a lot like python's string class. Furthermore, it exists, which is a bonus, because it didn't in C. Thanks C++. 
 ```
 #include <iostream>
 #include <string>
@@ -99,7 +196,7 @@ Let's talk about terminology, because its fun.
 
 ### Declaration
 
-When you name a variable and define its type, that is a declaration. 
+When you name a variable and define its type, that is a declaration. You can declare a variable without explicitly giving it an initial value.
 
 #### Example 
 
@@ -109,7 +206,7 @@ int foo;
 
 ### Initialization
 
-Assigning an initial value to a variable.
+Assigning an initial value to a variable is known as initialization. It is common to declare and initialize variables at the same time, but it is not required.
 
 #### Example of Declaration and Initialization
 

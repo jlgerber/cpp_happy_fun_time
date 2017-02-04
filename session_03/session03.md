@@ -22,9 +22,9 @@ Done? Good. If you are running Mac Os (formerly known as OS X), you are going to
 
 ## Our simple main.cpp file
 
-Ok, let's get going. Create a root project directory. I am calling mine hellocmake. you can call yours whatever.
+Ok, let's get going. Create a root project directory. I am calling mine *hello_cmake*. you can call yours whatever you like.
 
-Cd into the directory and create a main.cpp file. It should look something like the following:
+Cd into the directory and create a *main.cpp* file. It should look something like the following:
 
 ```
 #include <iostream>
@@ -32,56 +32,74 @@ Cd into the directory and create a main.cpp file. It should look something like 
 using std::cout; using std::endl;
 
 int main() {
-    cout<< "Hello World...Again...sigh..." << endl;
+    cout << "Hello World...Again...sigh..." << endl;
     return 0;
 }
 ```
-Ok. That should have been a big time review. simple. Laughably simple. That isn't the point. We want to compile this, and we want to use cmake to help us, because we are tired of remembering the g++ incantation. 
+Done? That code shouldn't be mysterious to you. It's simple. Laughably simple. But that really isn't the point. We want to compile this, and we want to use cmake to help us do that, because we are tired of remembering the compiler incantation. 
 
 ## Our first CMakeList.txt file
 
-So let's do this... Cmake uses a file with a very specific name and capitalizaiton to work. So, create a file in the same directory and call it *CMakeLists.txt*. Notice the capitalization; you need to copy this exactly; cmakelists.txt wont do.
+So let's do this... Cmake uses a file with a very specific name and capitalization to do its work. Create a file in the current directory and call it *CMakeLists.txt*. Notice the capitalization; you need to copy this exactly. Cmakelists.txt wont do.
 
 Now let's fill it out.
 
-First, we need to set the minimum version for cmake. we do it like so:
+First, we need to set the minimum version for cmake. We do this like so:
 ```
 cmake_minimum_required(VERSION 3.6)
 ```
-Now, I don't know what version of cmake you are using. Actually, we will be able to get away with specifying an earlier version if you only have an earlier version; nothing we are going to do really leverages any new cmake features, but this should be fine assuming you have just downloaded cmake. Otherwise, specify 3.0 or 2.8 or whatever you have.
+Now, I don't know what version of cmake you are using. Don't just copy the version string above and expect everything to work. Type ```cmake --version``` and fill out the requirement accordingly. Fortunately, we will be able to get away with specifying an earlier version if that is what you have; nothing we are going to do really leverages any new cmake features, so type in the version of cmake which you have and let us move on.
 
 Next, we need to give our project a name. This doesn't have to be the same name as the parent directory by the way.
 
 ```
 project(hellocmake)
 ```
+Now that we have given our project a name, we can refer to that name using a cmake variable called *PROJECT_NAME*. In cmake, you reference a variable by wrapping its names in *${}*. To convince ourselves of this, we will learn how to do something else as well - print data to the shell. Cmake has a function called *message* which we will use now to print our project name:
 
-Next we are going to update the compile flags to include the c++ll flag. We are going to use a generic cmake command called *set* to accomplish this. 
+```
+message(STATUS "cmake project name: ${PROJECT_NAME}")
+```
+
+Next we are going to update the compile flags to include the c++ll flag. To do this, we will use one of the most common cmake commands, called *set*. Set's job is to declare and assign or update variables:
 
 ```
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ```
-This line should make sense if you have done any shell scripting. We are basically assigning the existing value of CMAKE_CXX_FLAGS plus -std=c++11 back to CMAKE_CXX_FLAGS. The argument directly after *set(* is the variable name being set, and the following quoted string is the value being set. Since the value contains a dereference of the variable name ( the ${} ), as well as a new flag, it takes whatever value it is currently storing and adds the additional flag on the end.
+
+The previous line should make sense if you have done any shell scripting. We are basically assigning the existing value of CMAKE_CXX_FLAGS plus -std=c++11 back to CMAKE_CXX_FLAGS. The argument directly after *set(* is the variable name being set, and the following quoted string is the value being set. Since the value contains a dereference of the variable name ( the *${}* ), as well as a new flag, it takes whatever value it is currently storing and adds the additional flag on the end.
  
+If, for some reason, we had wanted to reset *CMAKE_CXX_FLAGS* to only contain *-std=c++11*, we could have simply typed ```set(CMAKE_CXX_FLAGS -std=c++11)```. But we didn't want to so there...
+
+Now that we have seen how to add a compiler flag, and you have read that long winded description, we are going to comment that command out. Cmake uses hashes to prefix comments:
+
+```
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+```
+
+We are going to use a different variable to set the version of C++ we are using:
+
+```
+set(CMAKE_CXX_STANDARD 11)
+```
  
-Next, we need to create a new variable to keep track of our source files. (well file, we only have a single file right now).
+Next, we need to create a new variable to keep track of our source files. (well file, we only have a single file right now). We will use the *set* command, whose first argument is the name of the variable we wish to set, and whose subsequent, space delimited arguments, comprise the value. Note that we are only setting one value here, but we could set multiple values if desired.
  
 ```
 set(SOURCE_CPPS main.cpp)
 ```
  
- This command works just like before. It takes a space separated list of values. The first value is the variable, and subsequent values are assigned to the variable. If we had more cpp files, we would tack them on to the end.
- 
- Ok. Now the last thing we need to do is tell cmake what we want to generate. In this case, we want to create an executable. By the way, we can also generate a static or dynamic library. But for now, let's just create the executable.
+Great. Now the last thing we need to do is tell cmake what we want to generate. In this case, we want to create an executable. By the way, we can also generate a static or dynamic library. But for now, let's just create the executable.
  
 ```
 add_executable( hello ${SOURCE_CPPS} )
 ```
- and that is it. The first parameter to *add_executable* is the executable name. Subsequent parameters are the source file names. 
+And that is it. The first parameter to *add_executable* is the executable name. Subsequent parameters are the source file names. Notice that we are de-referencing SOURCE_CPPS by surrounding the variable name with *${}* as we did above.
  
 ## Compiling the executable
  
  Alright, so the first thing we have to do is actually generate a native build file from the cmake file. We do this by calling *cmake*. But we don't really want to call it in the current directory, because cmake creates a lot of temp files. So, we need to create a build directory. So do that. Create a build directory and cd into it.
+ 
  ```
  mkdir build
  cd build
@@ -89,30 +107,43 @@ add_executable( hello ${SOURCE_CPPS} )
  
  Yes, I am 100% percent certain that you know how to do this without me creating the previous code block. But those code blocks break up my tedious instructions so... 
  
- All right, now, we need to call cmake from this directory but reference the CMakeLists.txt file from the parent directory. Here we go:
+ All right, now, we need to call *cmake* from this directory but reference the CMakeLists.txt file in the parent directory. If you are on Linux or Mac, you don't really have to worry about the build system cmake will generate files for; it is going to be Make, plain and simple. If you are on Windows, then Cmake is going to look in the Registry and determine what to generate.  Here we go:
  
 ```
 cmake ..
 ```
  Cmake dot dot. If all goes well, you will have yourself a shiny Makefile, as well as a bunch of other junk. As long as you followed instructions and got things right, you should be golden. If not, go ahead and fix your issues and repeat the instructions. (you may have to delete the directory contents)
  
- I am assuming that you have gotten cmake to work by now. The next step is to type ```make```
- This should build the executable (whatever you called it). In my case, it is called hello, and it is sitting right here. I can even run it.
+ Of course, if you are on windows, or you want to use an alternate generator, you can always get a list of supported generators by running:
+ 
+ ```
+ cmake --help
+ ```
+ 
+ Then, instead of running ```cmake ..```, you would run ```cmake --G "<NAME OF GENERATOR>" ..```.
+ 
+ I am assuming that you have gotten cmake to work by now. The next step is to ask cmake to run your build for you. 
+ 
+ ```
+ cmake --build .
+ ```
+ 
+ This should build the executable (whatever you called it). In my case, it is called *hello*, and it is sitting right here in the build directory. I can even run it.
  
 ## So Far
   
- Ok, if you have gotten this far, you are probably a bit peeved. I mean, we just traded a single line
+ Ok, if you have gotten this far, you are probably a bit peeved. I mean, we just traded a single line:
 
  ```
 g++ main.cpp -o hello
 ```
  
-for five lines in a CMakeLists file,
+for five lines in a CMakeLists file (6 if you count the commented out line),
 ```
 cmake_minimum_required(VERSION 3.6)
 
 project(hellocmake)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_STANDARD 11)
 set(SOURCE_CPPS main.cpp)
 add_executable( hello ${SOURCE_CPPS} )
 ```
@@ -122,28 +153,29 @@ and four commands.
 mkdir build
 cd build
 cmake ..
-make
+cmake --build .
 ```
 
-Why would we want to do this? Well, because that simple g++ command gets a whole lot more difficult as we start adding libraries, files, etc. It can quickly get out of hand. Let's add a class into the mix, to increase the complexity a bit. 
+Why would we want to do this? Well, because that simple g++ command gets a whole lot more verbose as we start adding libraries, files, etc. It can quickly get out of hand. Let's add a class into the mix, to increase the complexity a bit. 
  
 ## Adding a Person Class 
  
- Now it is time to take another step into the wide world of C++ development. Up to this point, we have been cheating. All of our work has been going into a single cpp file. In the real world, code is split up between header files, which contain declarations, and cpp files, which contain implementations. We are going to do this grownup style. Create two files:
- - Person.h
- - Person.cpp 
+Now it is time to take another step into the wide world of C++ development. Up to this point, we have been just playing around. All of our work has been going into a single cpp file. In the real world, code is almost always split up between header files, which contain declarations, and cpp files, which contain implementations. We are going to take this next step grownup style. Create two files:
  
- Let's start with the header file (Person.h). The first thing we need to do is add what is called a guard. A guard is a preprocessor instruction which prevents the header file from being included multiple times into the same compilation unit during compilation. 
+- Person.h
+- Person.cpp 
  
- TD;LR. When you compile your code, the first step your compiler takes is to expand all of the preprocessor commands. All of the #include directives in each of the cpp files gets replaced by the text from the files they refer to. A compilation unit is basically a cpp file with all of its #includes replaced by their values, along with all of the rest of the preprocessor junk. This expansion is recursive, as the header files you include may well have includes of their own. The guards exist to prevent the preprocessor from copying the same code in multiple times.
+Let's start with the header file (Person.h). The first thing we need to do is add what is called a guard. A guard is a preprocessor instruction which prevents the header file from being included multiple times into the same compilation unit during compilation. 
  
- Anyhoo, that is a ton of explanation for one line. Sorry.
+TD;LR. When you compile your code, the first step your compiler takes is to expand all of the preprocessor commands. All of the #include directives in each of the cpp files gets replaced by the text from the files they refer to. A compilation unit is basically a cpp file with all of its #includes replaced by their values, along with all of the rest of the preprocessor junk. This expansion is recursive, as the header files you include may well have includes of their own. The guards exist to prevent the preprocessor from copying the same code in multiple times.
+ 
+Anyhoo, that is a ton of explanation for one line. Sorry.
  
 ```
 #pragma once
 ```
  
-Here is the rest of the Person declaration. We will delve into classes next time, but in the meantime copy this verbatim. For now, the cliff notes are as follows: A method whose declaration bears the same name as the class, and doesn't return anything is a constructor, which is basically like `__init__` in Python, except that you can define multiple constructors in C++ with different signatures. Any variable declared after `public:` may be accessed by users of the class using dot notation, just like in Python. Anyway, we are really looking at cmake here so copy the following:
+Here is the rest of the Person declaration. We will delve into classes later, but in the meantime copy this verbatim. For now, the cliff notes are as follows: A method whose declaration bears the same name as the class, and doesn't return anything is a constructor, which is basically like `__init__` in Python, except that you can define multiple constructors in C++ with different signatures. Any variable declared after `public:` may be accessed by users of the class using dot notation, just like in Python. Anyway, we are really looking at cmake here so copy the following:
  
 ```
 #include <string>
@@ -159,7 +191,7 @@ class Person {
  
 Pretty simple. Two private variables (first_name, last_name), and two methods - a constructor, and a greet function. Notice anything odd? The method declarations only contain type information. They don't even have parameter names. You can declare them with names, but you don't have to.
  
-Allright. Let's jump over to Person.cpp and actually implement these two functions. Notice that inside the cpp file, we have to namespace each method with the name of the class. That is what the `Person::` business is about.
+All right. Let's jump over to Person.cpp and actually implement these two functions. Notice that inside the cpp file, we have to namespace each method with the name of the class. That is what the `Person::` business is about.
  
 ```
 #include "Person.h"
@@ -181,8 +213,9 @@ void Person::greet(const string& other) const {
 ```
  
 Main take aways:
- - you need to think of the class name as a namespace and treat it as such once outside of the class declaration. Thus the constructor and the greet function are both prefixed with the class name, followed by double colons. Just like we need to do when addressing things in the std namespace if we don't use the `using` directive.
- - speaking of using, it is generally safe to use `using` to get rid of namespaces in the implementation file (cpp). Mainly this is because all of the header files which will be copied into it during compilation will be using fully qualified namespaces. ( and you should never use `using` in a header file. got it?)
+
+- you need to think of the class name as a namespace and treat it as such once outside of the class declaration. Thus the constructor and the greet function are both prefixed with the class name, followed by double colons. Just like we need to do when addressing things in the std namespace if we don't use the `using` directive.
+- speaking of using, it is generally safe to use `using` to get rid of namespaces in the implementation file (cpp). Mainly this is because all of the header files which will be copied into it during compilation will be using fully qualified namespaces. ( and you should never use `using` in a header file. got it?)
  
 ## Updating main 
  
@@ -225,9 +258,18 @@ And, we go ahead and modify our add_executable like so:
 add_exectuble(hello ${SOURCE_CPPS} ${SOURCE_HEADERS})
 ```
 
-Once that is done, we cd back into our build directory (```cd build```), and remove everything (```rm -rf *```). Then we ```cmake ..``` . finally, we type make.
+Once that is done, we cd back into our build directory (```cd build```), and remove everything (```rm -rf *```). Then we run: 
+
+```
+cmake ..
+```
+
+Finally, we type:
+```
+cmake --build .
+``` 
  
-From now on, we are going to be using **cmake** to set up our builds...
+From now on, we are going to be using **cmake** to do our bidding.
  
  
  

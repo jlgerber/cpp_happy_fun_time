@@ -11,7 +11,8 @@ class <classname> : <access specifier> <parent class> {
 The access specificier specifies the most accessible level in the derived class. Normally, you make this *public*. That means any *public* members remain *public*. If you set this to *private*, that means any *public* member data in the parent class becomes *private* in the derived class. And, likewise, the same goes for *protected*.
 
 ## Construction
-   When you write your constructor, you have to invoke the parent constructor. This is normally done in the initializer list, as the first entry. For example, say we have a class **Foo** inheriting from **Bar**. Furthermore, say **Foo** has a member variable named **m_parent* and Bar's constructor takes a reference to a string called name. Here is how we would handle this in c++:
+
+When you write your constructor, you have to invoke the parent constructor. This is normally done in the initializer list, as the first entry. For example, say we have a class **Foo** inheriting from **Bar**. Furthermore, say **Foo** has a member variable named **m_parent* and Bar's constructor takes a reference to a string called name. Here is how we would handle this in c++:
      
 ```
 class Foo : public Bar {
@@ -27,6 +28,7 @@ public:
 There is a decent amount to unpack here, so lets go over this:
 
 First, our example Foo class inherits from Bar
+
 ```
 class Foo : public Bar {
 ```
@@ -38,6 +40,7 @@ Foo(const string& name, const string& parent)
 ```
 
 Then, we define our initializer list, beginning with the parent class constructor, followed by the initialization of Foo's data:
+
 ```
 Foo(const string& name, const string& parent) : Bar{name} , m_parent{parent}
 ```
@@ -65,7 +68,7 @@ Hey, what is that *virtual* business? And what is that ```=0``` thing?
 
 ## c++11 override , final keywords
 
-```apple js
+```
 class Foo : public Bar {
     
     int somefunc() override;

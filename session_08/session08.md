@@ -48,6 +48,7 @@ int main() {
     return 0;
 }
 ```
+
 When approaching problems in C++ which require you to dynamically manage memory, you should consider the same approach. 
 
 ## C++11 Memory Management

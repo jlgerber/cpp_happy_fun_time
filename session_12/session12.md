@@ -2,8 +2,8 @@
 
 You are all most likely familiar with one or more command line parsing libraries for Python. Popular libraries include argparse, optparse, plac and docopt. Argument parsers are vital tools in any developer's kit, allowing us to make short work of complicated user input. 
 
-# In Python
-## argparse
+## In Python
+### argparse
 
 Before jumping into C++, lets throw together a simple argparse example to remind ourselves of the common features, shall we ?
 
@@ -76,7 +76,7 @@ This is just scratching the surface. Argparse also handles subparsers, as well a
 
 [argparse docs](https://docs.python.org/2.7/library/argparse.html)
 
-## docopt
+### docopt
 
 Of course, argparse isn't the only game in town. Of particular interest is a relative newcommer to the ecosystem of command line parsers - docopt. Docopt takes a completely novel approach. Rather than have you write commands to build up your parser, Docopt expects you to write posix standard help text, and it parses that help text and generates teh parser. Pretty cool stuff. Here is an example to be clear:
 
@@ -111,7 +111,7 @@ Sweet eh? Here are the docs:
 
 [docopt documentation](https://pypi.python.org/pypi/docopt)
 
-# What about C++?
+## What about C++?
 
 As you can imagine, things aren't quite so simple in C++. However, the good news is, that things are **almost** as simple. We will cover a couple parsers and see how to go about doing this. Here is a non-exhaustive list of command line parsers:
 
@@ -123,23 +123,23 @@ As you can imagine, things aren't quite so simple in C++. However, the good news
 
 I am quite happy with args, so we are going to explore its usage next.
 
-## args
+### args
 
 One of the best things about args is that it is a header only library. That makes it pretty convenient. Simply download it from github, drop the header in your project, and away you go.
 
-### Create a new project
+#### Create a new project
 
 Set up a new project. Download taywee/args from github and place the header file in your project. Be sure to set up your CMakeList.txt file to point to the header file.
 
 We are going to be creating a dummy application which simply parses inputs, for the purpose of illustrating how args works. So, create a ```main.cpp``` file with a main function and lets get started....
 
-### Set up args
+#### Set up args
 
 First include args into your main.cpp. For me, the include line is:
 ```
 #include "args/args.hxx"
 ```
-### Our first flag - the Help flag
+#### Our first flag - the Help flag
 Next, lets jump to our main function. We are going to walk through creating a couple of different types of flags and positional arguments to learn about args.
 
 Lets start off by creating an args parser. The ArgumentParser takes a couple of arguments. The first is the usage string, and the second is a string which is presented after the OPTIONS. 
@@ -160,7 +160,7 @@ To do so, we are going to use the Help class provided by args. It takes a couple
     args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
 ```
 
-### parsing 
+#### parsing 
 
 Ok. Lets add the code to actually parse the inputs. There is a bit of boilerplate here. First, we are going to use a try catch block, as args throws exceptions by design. The first thing you will notice is that args throws an exception if it encounters the help flag. That clears up a mystery that the observant among you might have noticed (like how does args know anything about help? All we did was add a help flag. Well it is special).
 
@@ -190,7 +190,7 @@ try
         return 1;
     }
 ```
-### Adding a boolean flag
+#### Adding a boolean flag
 The simplest flag, short of the Help flag, is the ```args::Flag```. It takes a couple of arguments:
 - a parser instance (or group instance)
 - the flag name as a string
@@ -201,7 +201,7 @@ The simplest flag, short of the Help flag, is the ```args::Flag```. It takes a c
     args::Flag bar(parser, "bar", "are we going to get a bar?", {'b', "bar"});
 ```
 
-### Adding a flag which takes an argument.
+#### Adding a flag which takes an argument.
 
 Ok, lets get adventurous and add a flag that takes a string. The class is almost identical to what we have seen so far. We use a template class to add flags which take values. The class is called ....```args::ValueFlag```.
 
@@ -211,7 +211,7 @@ Ok, lets get adventurous and add a flag that takes a string. The class is almost
 
 Oh, and since we are taking a string, go ahead and add an appropriate #include. I'll wait...
 
-### Adding a flag which takes a list of arguments
+#### Adding a flag which takes a list of arguments
 
 If that isn't cool enough, args has a mechanism for defining a flag which may be used multiple times. The name is, appropriately enough, ```args::ValueFlagList``` and it is also a template function:
 
@@ -219,7 +219,7 @@ If that isn't cool enough, args has a mechanism for defining a flag which may be
     args::ValueFlagList<std::string> friends(parser, "friends", "friends of the dude", {'f',"friends"});
 ```
 
-### Positional arguments
+#### Positional arguments
 
 Lets add a positional argument. Doing so is as simple as using the ```args::Positional``` template class.
 
@@ -227,14 +227,14 @@ Lets add a positional argument. Doing so is as simple as using the ```args::Posi
     args::Positional<std::string> exclamation(parser, "exclamation", "the exclamation uttered by the named one"); 
 ```
 
-### Positional argument List
+#### Positional argument List
 
 There is also a variant of args::Positional which takes a list of arguments. It uses a template class called ```atgs::PositionalList``` which is used thusly:
 ```
      args::PositionalList<double> numbers(parser, "numbers", "The numbers position list");
 ```
 
-### Evaluating the results.
+#### Evaluating the results.
 
 Ok, we know how to define basic flags and positionals, but how do we evaluate the results? Well, this is actually quite straightforward. Lets jump to back to main, after our try catch block, and test for our args:
 
@@ -248,7 +248,7 @@ In general, you simply test the class instance of the flag which you created, an
 
 ```
 
-## Args Groups
+### Args Groups
 
 Ok, now that we have the basics down, lets look at a more sophisticated feature of args - groups. Args allows you to group flags and positional arguments together to create more complex systems. For argument's sake, lets say that we want to accept one of two flags, foo and bar, and/or one of two other flags, baz and bla. How would we go about this? Groups!
 
@@ -264,7 +264,7 @@ Ok, now that we have the basics down, lets look at a more sophisticated feature 
 
 There are many validators provided by args, and you can even write your own. If you are interested, search through the source for Group to see more...
 
-### Extra Credit -  Sup parsers
+#### Extra Credit -  Sup parsers
 
 Admitedly, this is an area of some complication in args. If you want to write the next git, with a large number of sub commands, you are in luck. Arg has you covered. However, I am not going to cover usage here. 
 
@@ -467,7 +467,7 @@ void PluginFn(const std::string &progname,
     }
 }
 ```
-## docopt in C++
+### docopt in C++
 
 Docopt works almost exaclty the same in c++ as it does in python. 
 ```
@@ -526,6 +526,6 @@ There is one caveat with docopt which we need to go over: it needs a pretty rece
 - GCC 4.9
 - Visual C++ 2015 RC
 
-# Homework
+## Homework
 
 Pick one of the c++ option parsers mentioned but not illustrated and get it to work. Parse the shait out a command line by next week!

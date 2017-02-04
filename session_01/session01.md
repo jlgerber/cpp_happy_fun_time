@@ -22,7 +22,7 @@ Now let's compile it on the command line. Unlike Python, which automatically com
 
 ### Linux
 
-In Linux, the default compiler is called gcc. Gcc has support for a wide variety of languages, including C and C++. Gcc has a C++ variety called G++, which we are going to use. In a shell, type the following
+In Linux, the default compiler is called gcc. Gcc has support for a wide variety of languages, including C and C++. Gcc provides a compiler driver called g++, which is pre-configured to work for C++. It is effectively an alias for ```gcc -xc++ -lstdc++ -shared-libgcc```, which won't make complete sense to you for a bit, so don't worry. Anyway, we are going to use g++ to compile our code. In a shell, type the following
 ```
 g++ hello.cpp -o hello
 ```
@@ -45,20 +45,50 @@ clang++ hello.cpp -o hello
 
 ### Results
 
-Tada, you should have an executable called hello, which will greet the world when run. Even with this trivial program, we have a lot to talk about. So let's get started.
+Tada, you should have an executable called hello, which will greet the world when run. Even with this trivial program, we have a lot to talk about. So let's get started. First, we are going to write an analogous Python script to help explain what we just did. So, create the following script, called **hello.py**:
+
+```
+#/usr/bin/env python
+
+if __name__ == '__main__':
+    print "Hello World"
+```
+
+Looks like the Python weighed in a bit lighter, eh? Sorry to say, but that will be a common theme in your C++ career; C++ is a bit more verbose than Python. Anyway, let's move on and take a look at some basics of C++:
 
 ## Data Types
 
-C++ is a strongly typed language. Each and every variable has an explicit type which cannot be changed at runtime, unlike Python. When you declare a variable, you prefix it with its type name. And it *never ever changes*. That is a big change from Python, so soak it in. 
+### Python
 
-The atomic data types are ( off the top of my head):
+As you may recall, Python has a number of built in data types.
+
+* bool
+    * True or False 
+* int
+    * plain integers
+* long
+    * long integers
+* float
+    * floating point numbers    
+* complex
+    * having real and imaginary components
+* str
+    * basic strings
+* unicode
+    * unicode strings
+
+### C++
+
+C++ is a strongly typed language. Each and every variable has an explicit type which cannot be changed at runtime. When you declare a variable, you prefix it with its type name. And it *never ever changes*. That is a big change from Python, so soak it in. 
+
+The atomic data types are listed below. It is important to note that their actual sizes are architecture and sometimes compiler specific. I have listed their common sizes for x86:
 
 * bool 
     * true or false
 * char 
     * single characters, defined using single quotes ('a'). 1 byte
 * wchar 
-    * wide characters. Unicode characters. Can represent the largest character set.
+    * wide characters. Compiler specific and can be as small as 1 byte. For C++11, w have char16_t and char32_t for 16 an 32 bit unicode.
 * short 
     * small integer. 16 bits at a minimum.
 * int   
@@ -68,11 +98,11 @@ The atomic data types are ( off the top of my head):
 * long long
     * very large integer. No smaller than long. At least 64 bits
 * float
-    * real number. 
+    * real number. 32 bits
 * double
-    * real number. Precision not less than float
+    * real number. Precision not less than float. 64 bits .
 * long double
-    * largest real number. Precision not less than double
+    * largest real number. Precision not less than double. 
 * void
     * no storage. represents nothing
 * nullptr
@@ -103,7 +133,7 @@ int foo
 
 ## Braces - Lots of Braces
 
-C++ is a descendant of C. As such, it uses braces to define scope. This stands in stark contrast to Python, which uses indentation to differentiate scope. So, you wrap blocks in curly braces to delineate scope. Formatting is strictly for readability. Lke Python, variables defined in inner scopes are not visible to outer scopes. However, variables defined in outer scopes are visible in inner scopes.
+C++ is a descendant of C. As such, it uses braces to define scope. This stands in stark contrast to Python, which uses indentation to differentiate scope. So, at the risk of repeating myself, you wrap blocks in curly braces to define a scope, instead of indenting. Formatting is strictly for readability. Lke Python, variables defined in inner scopes are not visible to outer scopes. However, variables defined in outer scopes are visible in inner scopes.
 
 ```
 {

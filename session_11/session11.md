@@ -53,6 +53,7 @@ add_subdirectory(test)
 ```
 
 ### Step 3 - setup test
+
 #### Download Catch.hpp
 ```
 https://github.com/philsquared/Catch
@@ -98,7 +99,6 @@ std::string yell::yell(const std::string& input) {
 ```
 
 ### Step 5 - Writes yer Test
-```
 
 In test/unit add a yelling.cpp file. Now lets write some tests:
 
@@ -125,10 +125,11 @@ TEST_CASE("yell chews through mixed cases as well") {
     REQUIRE(result == "THIS IS A TEST");
 
 }
-
+```
 run the tests. They fail. Now lets make them pass:
 
 ### Step 6 - make those tests pass. implement yell.
+
 ```
 
 std::string yell::yell(const std::string& input) {

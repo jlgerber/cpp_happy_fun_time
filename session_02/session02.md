@@ -63,13 +63,51 @@ In C++, the ternary is formed like so ```(<condition>) ? <truthy value> : <falsy
 int x = 0; int y = 1;
 int z = (x==y) ? 12 : 42;
 ```
+
+### Switch
+C++ has an additional flow control statement which Python lacks - The ```switch``` statement. It looks like this: 
+
+```
+switch (<integral expression>) { 
+    case <value>: 
+        statements; 
+        break;
+    case <value...N>:
+        statements;
+        break;
+    default:
+        statement;
+ }
+```
+ 
+Notice that the switch can only deal with expressions that evaluate to integral types ( that means integers and enums ). Also, notice the use of the ```break``` keyword at the end of each case. If you forget the ```break``` statement, C++ will perform a *fall-through*, which just means it will move on to the next case statement body and evaluate it, and so on until it hits a break, or the end of the switch. Many a bug has been introduced by forgetting the ```break``` statement. You have been warned!
+
+For completeness sake, here is a working example:
+
+```
+int foo=2;
+switch(foo) {
+    case 0:
+        cout << "foo is zero" << endl;
+        break;
+    case 1:
+        cout << "foo is one" << endl;
+        break;
+    case 2:
+        cout << "foo is greater than one" << endl;
+        break;
+    default:
+        cout << "unexpected foo" << endl;
+}
+```
+
 ## Looping
 
 C++ has a number of different looping constructs, which it inherits from C. 
 
 ### for
 
-The ```for``` keyword kicks off the bread and butter looping form in C++. This will seem a bit verbose to Python programmrs. It has three components, separated by semi-colons - a counter variable initialization, a comparison, and a counter increment. For example, to print out the numbers zero to ten:
+The ```for``` keyword kicks off the bread and butter looping form in C++. This will seem a bit verbose to Python programmers. ```for``` has three components, separated by semi-colons - a counter variable initialization, a comparison, and a counter increment. For example, to print out the numbers zero to ten:
 
 ```
 for(int x=0; x<10; x++) {
@@ -97,7 +135,6 @@ That same code in Python is much shorter:
 for x in xrange(10):
     print x
 ```
-
 ### while
 
 The while form defines a test which it executes upon each iteration through the loop. If this test fails, the loop terminates. for example:
@@ -122,7 +159,7 @@ do {
 
 ### range based for
 
-C++ 11 introduced a new looping syntax for compliant containers ( and all containers in the standard library comply). It will appeal to Python programmers, as it resembles Pythons for..in syntax. It looks like this:
+C++ 11 introduced a new looping syntax for compliant containers ( and all containers in the standard library are compliant). It will appeal to Python programmers, as it resembles Python's ```for..in``` syntax. It looks like this:
 
 ```
 for( <var> : <container var> ) {}
@@ -137,19 +174,19 @@ for( int x : y) {
 }
 ```
 
-I realize that we have not talked about vectors yet, but for now, you can think of the line sarting with "vector" as defining a list of ints. Hopefully, that makes sense.
+I realize that we have not talked about vectors yet, but for now, you can think of the line starting with ```vector``` as defining a list of ints. Hopefully, that makes sense.
 
 
-## Useful Libraries
+## A Couple of Useful Library Components
 
-There are a ton of useful libraries which ship with C++. Let's look at two of them in an example:
+There are a ton of great library components which ship with C++. Let's look at two of them in an example:
 
 ### iostream
 
 iostream includes a number of useful operators for reading and writing streams. Three common operators are:
-- cout : pronounced, see-out, this operator works in conjunction with the << operator to print streams to stdout. 
-- endl : pronounced just like it looks, this operator is just an os agnostic newline.
-- cin : pronounced see-in, this operator works in conjunction with the >> operator to pipe data from stdin to a variable.
+- **cout** : pronounced, see-out, this operator works in conjunction with the << operator to print streams to stdout. 
+- **endl** : pronounced just like it looks, this operator is just an os agnostic newline.
+- **cin** : pronounced see-in, this operator works in conjunction with the >> operator to pipe data from stdin to a variable.
 
 All of these operators live in the `std` namespace, so you need to prefix them with `std::` when using them.
 
@@ -170,7 +207,7 @@ int main() {
 ```
 
 ### string
-Next up is the string class. You are in luck, because it works a lot like python's string class. Furthermore, it exists, which is a bonus, because it didn't in C. Thanks C++. 
+Next up is the string class. Unlike Python, dynamic strings are not built into the language; they are part of the standard library. C++'s std::string class works a lot like python's string class.  
 ```
 #include <iostream>
 #include <string>
@@ -458,17 +495,17 @@ In the preceding example, we first declare foo as an int and initialize it to th
  
  By the way, we are not limited to having a single indirection. We can have a pointer to a pointer, and a pointer to a pointer to a pointer. Why would we want to do that? There are reasons but they are relatively rare.
  
- ```
- int bar = 2;
- int *foo = &bar;
- int **foof = &foo;
- 
- cout << **foof << endl;
- ```
+```
+int bar = 2;
+int *foo = &bar;
+int **foof = &foo;
+
+cout << **foof << endl;
+```
  
 ### Why all this pointer stuff?
  
- Remember when I told you (like a few sentences ago) that a variable is just a nice name for a memory address? Not all memory address have names. That is the idea behind dynamic memory allocation. You can ask the computer for a certain amound of memory and it will return a starting address to that memory. You store it with a pointer. And, when you are done with it, you tell the computer to clean it up. More on that later....
+ Remember when I told you (like a few sentences ago) that a variable is just a nice name for a memory address? Not all memory address have names. That is the idea behind dynamic memory allocation. You can ask the kernel for a certain amount of memory and it will return a starting address to that memory. You store the memory address with a pointer, and you access the value at that address by *dereferencing* the pointer. And, when you are done with the memory, you tell the computer to clean it up. More on that later....
 
 ### const keyword
 

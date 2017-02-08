@@ -10,7 +10,7 @@ Before jumping into C++, lets throw together a simple argparse example to remind
 First we need to import argparse.
 
 ```
-#!/usr/bin/env argparse
+#!/usr/bin/env python
 
 import argparse
 
@@ -266,9 +266,9 @@ There are many validators provided by args, and you can even write your own. If 
 
 #### Extra Credit -  Sup parsers
 
-Admitedly, this is an area of some complication in args. If you want to write the next git, with a large number of sub commands, you are in luck. Arg has you covered. However, I am not going to cover usage here. 
+Admitedly, this is an area of some complication in args. If you want to write the next git, with a large number of sub commands, you are in luck. Arg has you covered. However, I wouldn't blame you for skipping ahead to the next section. 
 
-First you need to define a function signature via std::function:
+For the intrepid few looking for a challenge, first you need to define a function signature via std::function:
 ```
 
 using commandtype = std::function<void(const std::string &,

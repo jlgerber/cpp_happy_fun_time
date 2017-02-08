@@ -1,4 +1,5 @@
 # Chapter 13 - The Filesystem
+
 The os module is one of the bread and butter workhorses of python. We are going to cherry pick some functions out of the os module and figure out what their analogs are in c++. Lets get started.
 
 ## Basic Os Goodness
@@ -192,23 +193,36 @@ A note on Boost free function error reporting. Boost functions generally have tw
 stat has the number of links for a given file. Boost has ```hard_link_count(const path&)```
 
 ### last modification time
-```std::time_t last_write_time(const path& p);```
+```
+std::time_t last_write_time(const path& p);
+```
 
 ### getting permissions
-```void permissions(const path& p, perms prms)```
+```
+void permissions(const path& p, perms prms)
+```
 
 ### delete file 
-```bool remove(const path& p);```
+
+```
+bool remove(const path& p);
+```
 
 ### delete directory and contents
 The function returns the number of files removed...
-```uintmax_t remove_all(const path& p);
+```
+uintmax_t remove_all(const path& p);
 ```
 ### rename a file or directory
-```void rename(const path& old_p, const path& new_p);
+
+```
+void rename(const path& old_p, const path& new_p);
 ```
 ### create a temp directory
-```path temp_directory_path();```
+
+```
+path temp_directory_path();
+```
 
 ### create a temp directory with control over naming 
 

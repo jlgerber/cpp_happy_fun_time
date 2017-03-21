@@ -282,10 +282,11 @@ So, what is the different between *failbit* and *badbit* ?
 
 According to cplusplus.com:
 
-    failbit is generally set by an input operation when the error was related to the internal logic of the operation itself, 
-    so other operations on the stream may be possible. While badbit is generally set when the error involves the loss of 
-    integrity of the stream, which is likely to persist even if a different operation is performed on the stream. badbit 
-    can be checked independently by calling member function bad.
+    failbit is generally set by an input operation when the error was related to the internal logic of the 
+    operation itself, so other operations on the stream may be possible. While badbit is generally set 
+    when the error involves the loss of integrity of the stream, which is likely to persist even if a 
+    different operation is performed on the stream. badbit can be checked independently by calling member 
+    function bad.
 
 In other words, if you get a number when expecting a letter, that results in a *failbit*. If a serious, non
 recoverable error happens which disrupts the abiltiy to read from the stream at all, that is a *badbit*.

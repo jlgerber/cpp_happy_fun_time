@@ -355,5 +355,113 @@ out | Opens the file in write mode ( default for ofstream )
 trunc | Erases the file if it exists
 
 
-
 ## strings as streams
+
+In addition to the console and file, you can actually interact with strings using the stream api thanks to 
+stringstreams. You can create a stringstream by first including the *sstream* header and then using 
+std::stringstream.
+
+Stringstreams can be used to compose strings using the very same stream api we have been learning. 
+
+```
+stringstream foo;
+string name{"Frank"};
+int age = 22;
+foo << "name:" << name << "age:" << age; 
+```
+They are great when you need to convert between different types and strings, or use stream 
+formatting. And once you have composed a stringsream, you can get a string from it by calling the *str()* method.
+
+```
+string mystring = foo.str();
+```
+
+As a note, you can pass around references to streams in your functions, allowing you to operate on 
+a variety of types of streams. Want to write a function which can read from or write to a file or 
+a string? ( for, say, testing purposes) Take an appropriate stream reference. ( ostream or istream).
+
+ofstream inherits from ostream. ifstream inherits from istream.
+
+# Extra Credit - string formatting
+
+## c-style - what's old is new again ( thanks to C++11 )
+
+One thing missing here in C++ land is good string formatting a la python. There are a couple of approaches to dealing with this.
+The first is to use the c style sprintf in place of streams. This can work, although sprintf returns a char*, not a string. 
+However, with a bit of c++11 magic we can make this happen:
+
+```
+// from http://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
+#include <memory>
+#include <iostream>
+#include <string>
+#include <cstdio>
+
+using namespace std; //Don't if you're in a header-file
+
+template<typename ... Args>
+string string_format( const std::string& format, Args ... args )
+{
+    size_t size = snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+    unique_ptr<char[]> buf( new char[ size ] ); 
+    snprintf( buf.get(), size, format.c_str(), args ... );
+    return string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
+}
+
+// now use the template
+```
+
+This approach uses a variadic template to allow us to pass an arbitrary number of inputs to a function, along with
+*snprintf*, which is c++11's version of c's sprintf. Lets try and understand what is going on here.
+
+The first line, we are simply calculating the size of a buffer big enough to hold the resulting char*. 
+```
+size_t size =snprintf(nullptr, 0, format.c_str(), args ...) +1
+```
+
+The next line we create a char* buffer of the appropriate size on the heap, storing it in a unique pointer so that
+destruction is handled for us.
+
+```
+unique_ptr<char[]> buf( new char[ size ] ); 
+```
+
+The next line, we call snprintf again, this time passing it a pointer to our buffer ( buf is a unique_ptr. calling
+buf.get() returns a pointer to the internal char*). This is the line which is actually doing the formatting for us.
+(ok well, we do it twice. but the first time we do it just to see how big the result will be)
+```
+snprintf( buf.get(), size, format.c_str(), args ... );
+```
+
+Finally, we populate a string with the buffer and return it. This form of string constructor takes pointers to 
+the start and end of the char*.
+
+```
+return string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
+```
+
+We can use this template magic like so:
+```
+cout << format_string("I like %d goldfish in my %s. How about %s?", 3, "soup", "you") << endl;
+```
+
+## New style python formatting
+
+If you are a fan of new style python formatting, or if you just like following the cool kids, then *fmt* is the 
+project for you. It is hosted on github here:
+
+https://github.com/fmtlib/fmt
+
+and has documentation here:
+
+http://fmtlib.net/latest/index.html
+
+And is quite popular. Using it is very simple, as it is, like all cool projects, a header only library (optionally). 
+It is fast, safe, small, speedy, and doesn't really have any dependencies. To use, simply download the source,
+include it in your project, and 
+
+```
+#define FMT_HEADER_ONLY 1
+```
+
+Before #including any of the fmt headers.

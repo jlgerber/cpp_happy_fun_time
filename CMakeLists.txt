@@ -52,4 +52,5 @@ add_subdirectory(topics/environ)
 
 add_executable(functional topics/functional.cpp)
 
+include_directories(session_14/external)
 add_executable(streams session_14/streams.cpp)

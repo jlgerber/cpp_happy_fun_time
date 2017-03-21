@@ -1,10 +1,20 @@
 //
 // Created by jlgerber on 3/20/17.
 //
+
+#define FMT_HEADER_ONLY 1
+
 #include <iostream>
 #include <ios>
 #include <iomanip>
 #include <string>
+#include <fstream>
+#include <ostream>
+#include <memory>
+#include <string>
+#include <cstdio>
+#include "fmt/format.h"
+
 
 void basic_output() {
     std::cout << "this is an example of basic output using streams" << std::endl;
@@ -80,6 +90,47 @@ void getlinefromuser() {
     cout << "so you are feeling like this." << feelings << endl;
 
 }
+
+void writefile() {
+    using namespace std;
+    ofstream fh("/tmp/bla.txt", ios::trunc); // try this with ios::app
+    if(fh) {
+        fh << "this is a test. we are writing to a file." << endl;
+    }
+}
+
+void readfile() {
+    using namespace std;
+    ifstream fh("/tmp/bla.txt");
+    if(fh) {
+        for(std::string line; getline(fh, line);) {
+            cout << line << endl;
+        }
+    }
+}
+
+template<typename ... Args>
+std::string string_format( const std::string& format, Args ... args )
+{
+    size_t size = snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+    std::unique_ptr<char[]> buf( new char[ size ] );
+    snprintf( buf.get(), size, format.c_str(), args ... );
+    return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
+}
+
+
+void sprintfstyle() {
+
+    std::cout << string_format("I lke %d eggs in my soup. And I like %s too.", 3, "you") << std::endl;
+
+}
+
+void fmtstyle() {
+    using namespace std;
+    string message = fmt::format("The answer is {}. That's right, {}", 42, "forty-two");
+    cout << message << endl;
+
+}
 int main() {
     std::cout << std::endl;
     basic_output();
@@ -89,7 +140,11 @@ int main() {
     useful_formatters();
     useful_formatting();
     //getinput();
-    getmultiinput();
-    getlinefromuser();
+    //getmultiinput();
+    //getlinefromuser();
+    writefile();
+    readfile();
+    sprintfstyle();
+    fmtstyle();
     return 0;
 }

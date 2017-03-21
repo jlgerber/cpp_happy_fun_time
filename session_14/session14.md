@@ -233,6 +233,30 @@ cout << "state your age and height";
 cin >> age >> height;
 cout << "well you are " << age <<" with a height of " << height << endl;
 ```
+
+What about reading a whole line of input from the user? Well, you can use std::getline, which takes a stream
+and a string like so:
+
+```
+std::string line;
+std::getline(std::cin, line);
+// proceeed
+```
+
+A word of caution. If you are trying to call getline after calling cin previously, there is a good chance that 
+the getline call will pick up the last carriage return from the user. In order to handle this, you will have to 
+call ignore on the input before calling getline.
+
+```
+int age;
+string quote;
+cout << "please enter your age" ;
+cin >> age;
+cin.ignore();
+cout << "And provide us with a memorable quote";
+getline(cin,quote);
+cout << "really? I am totally going to forget \"" << quote << "\""<< endl;
+```
 ## Error Handling
 
 In the previous example, if you tried it out and entered some bogus answer - say "cow" for your age, you will see 
@@ -240,12 +264,13 @@ something potentially disturbing. Cin doesn't barf or complain. It simply skips 
 the input values were good? You can check the state of the stream. If there was a problem, the state of the stream 
 will be bad and you will actually have to clear it before continuing.
 
-You can check for errors using a couple of methods
+You can check the stream state using a couple of methods. In true C++ fashion, there is some granularity around
+the state itself:
 
 
 Function | Explanation
 --- | ---
-bool good() | True if no error flag is set
+bool good() | true if no error flag is set
 bool eof() | true if eofbit is set
 bool fail() | true if failbit or badbit is set
 bool bad() | true if badbit is set
@@ -253,7 +278,81 @@ bool operator!() | same as fail
 iostate rdstate() | state of stream
 
 
+So, what is the different between *failbit* and *badbit* ?
+
+According to cplusplus.com:
+
+    failbit is generally set by an input operation when the error was related to the internal logic of the operation itself, 
+    so other operations on the stream may be possible. While badbit is generally set when the error involves the loss of 
+    integrity of the stream, which is likely to persist even if a different operation is performed on the stream. badbit 
+    can be checked independently by calling member function bad.
+
+In other words, if you get a number when expecting a letter, that results in a *failbit*. If a serious, non
+recoverable error happens which disrupts the abiltiy to read from the stream at all, that is a *badbit*.
+
+It turns out handling all the cases where the user can screw up is a bit of a pain. Read this article for more info:
+
+https://gehrcke.de/2011/06/reading-files-in-c-using-ifstream-dealing-correctly-with-badbit-failbit-eofbit-and-perror/
+
 
 ## dealing with files
+
+Up to this point, we have been dealing exclusively with the console. However, streams are good for more than this. 
+One common need is to read and/or write to a file. Streams have you covered.
+
+### Reading a file into a string
+
+The header *ifstream* provides a stream class which is capable of reading from a file. If you want to read a 
+file into a string, you can do the following. Create an ifstream instance and use it along with a streambuf iterator
+to populate a string:
+```
+std::ifstream in("file.txt");
+std::string contents((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+```
+
+### reading a file line by line
+
+You can read a file a line at a time using getline in a loop.
+```
+int cnt=0;
+if(std::ifstream in("file.txt")) {
+    for(std::string line; getline(input, line);) {
+        std::cout << cnt << " " << line << endl;
+        cnt++;
+    }
+} else {
+    std::cerr << "unable to open file.txt" << std::endl;
+}
+```
+
+ifstream implements RAII so the file is closed when the instance goes out of scope. You can also call 
+close() on it explicitly if you want.
+
+## Writing to a file
+Writing to a file is quite simple. Given the fact that we already know how to write to a stream, we just need to 
+open a file stream, and close it when we are done.
+
+We use the header *ofstream* to access a file stream class suitable for outputting. 
+
+```
+ofstream fh("/tmp/foo.txt");
+
+fh << "this is a test" << endl;
+fh.close();
+```
+## Modes
+ifstream and ofstream support explicit modes of operation. These are provided via an optional second argument
+which specifies a number of flags. Here are those flags:
+
+Ios file mode | Meaning
+--- | ---
+app | Opens the file in append mode
+ate | Seeks to the end ofthe file before reading/writing
+binary | Opens the file in binary mode instead of text mode
+in | Opens the file in read mode (default for ifstream)
+out | Opens the file in write mode ( default for ofstream )
+trunc | Erases the file if it exists
+
+
 
 ## strings as streams

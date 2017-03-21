@@ -4,6 +4,7 @@
 #include <iostream>
 #include <ios>
 #include <iomanip>
+#include <string>
 
 void basic_output() {
     std::cout << "this is an example of basic output using streams" << std::endl;
@@ -66,7 +67,17 @@ void getmultiinput() {
         return;
     }
     cout << "So you are "<< age <<" years old and " << height << " feet tall "<< endl;
+    cin.ignore(); // need this to deal with user return
+}
 
+void getlinefromuser() {
+
+    using namespace std;
+    string feelings;
+
+    cout << "Tell me how you are feeling" << endl;
+   getline(cin, feelings);
+    cout << "so you are feeling like this." << feelings << endl;
 
 }
 int main() {
@@ -79,5 +90,6 @@ int main() {
     useful_formatting();
     //getinput();
     getmultiinput();
+    getlinefromuser();
     return 0;
 }

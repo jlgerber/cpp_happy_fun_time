@@ -259,7 +259,7 @@ void create_symlink(const path& to, const path& new_symlink);
 void create_hard_link(const path& to, const path& new_hard_link);
 ```
 
-# Homework
+## Homework
 
 1. In the section on environment variables, we presented a function in the standard library to retrieve environemnt variable contents. Unfortunately, the return of said function is of the following form:
 

@@ -9,7 +9,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-elide-constructors")
 set(SOURCE_FILES session_02/main.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-add_subdirectory(session_04)
+#add_subdirectory(session_04)
 
 add_executable(session05_secret
         session_05/main.cpp
@@ -51,3 +51,5 @@ add_subdirectory(topics/environ)
 #add_executable(enviro topics/environ/main.cpp)
 
 add_executable(functional topics/functional.cpp)
+
+add_executable(streams session_14/streams.cpp)

@@ -38,18 +38,16 @@ Likewise, you can write to standard error almost exactly the same way:
 ```
 std::cerr << "Warning Will, an ERRROR has occured. Leave Mission Control immediately" << std::endl;
 ```
-## formatted output
 
-C++ provides a separate library to help you control the formatting of streams. It is called **iomanip**. It provides
-commands which you apply on the stream, and which change all subsequent interaction. There are a couple of ways of
-achieving this. First, you can set flags on the stream object itself. Flags are provided in the *ios* header, which
-may or may not come in when you include *iostream* (it is supposed to as of c++11). 
+### setting flags on cout and cerr
 
-### setting flags on cout
+Of course, you can modify the formatting of the stream output; you are not limitted to how the stream operators handle
+things by default. There are a wealth of options, and two wqys of affecting change. The first method involves invoking
+a method on the stream output classes. 
 
 You can set output stream flags using the ```setf``` method on cout or cerr. 
 
-You cna reset output stream using ```unsetf```.
+You can reset output stream using ```unsetf```.
 
 
 ```
@@ -58,14 +56,22 @@ You cna reset output stream using ```unsetf```.
 using namespace std;
 
 int main() {
-cout.setf(ios::uppercase);
-cout << "i like to yell in emails" << endl;
-cout.unsetf(ios::uppercase);
-cout<< "sometimes" << endl;
+    std::cout.setf(std::ios::hex, std::ios::basefield);
+    std::cout.setf(std::ios::showbase);
+    std::cout.setf(std::ios::uppercase) ;
+    std::cout << "In hex: " << 77 << std::endl;
 
 return 0;
 }
 ```
+
+## formatted output
+
+C++ provides a separate library to help you control the formatting of streams. It is called **iomanip**. It provides
+commands which you apply on the stream, and which change all subsequent interaction. There are a couple of ways of
+achieving this. First, you can set flags on the stream object itself. Flags are provided in the *ios* header, which
+may or may not come in when you include *iostream* (it is supposed to as of c++11). 
+
 
 We use binary OR to select multiple flags. 
 
@@ -101,8 +107,9 @@ cout << 27 << endl;
 
 ### You can drop configuration commands directly into the stream
 
-The previous mechanism tends to be a bit of a pain. Fortunately, C++ provides a better mechanism. You can drop formatting
-directly into the stream and it sticks around until you turn it off.
+The first mechanism presented to change formatting tends to be a bit of a pain. Fortunately, C++ provides a better 
+mechanism - an inline mechansim. You can drop formatting directly into the stream and it sticks around until you turn 
+it off.
 
 ```
 cout << hex << 27 << endl;
@@ -206,7 +213,46 @@ The std::ios module has a number of flags which can be set to change the stream 
 
 ## Input
 
+Of course, printing to the console isn't the whole story here. You can also get input from the user in the console via
+```cin```. Cin grabs a single input value from the user like so:
+
+```
+int age;
+cout << "How old are you?";
+cin >> age;
+cout << "did you say that you are " << age " years old?" << endl;
+
+```
+
+If you want to grab multiple input values from the user, you can do that as well.
+
+```
+int age ;
+int height;
+cout << "state your age and height";
+cin >> age >> height;
+cout << "well you are " << age <<" with a height of " << height << endl;
+```
 ## Error Handling
+
+In the previous example, if you tried it out and entered some bogus answer - say "cow" for your age, you will see 
+something potentially disturbing. Cin doesn't barf or complain. It simply skips the offender. So how do you know if 
+the input values were good? You can check the state of the stream. If there was a problem, the state of the stream 
+will be bad and you will actually have to clear it before continuing.
+
+You can check for errors using a couple of methods
+
+
+Function | Explanation
+--- | ---
+bool good() | True if no error flag is set
+bool eof() | true if eofbit is set
+bool fail() | true if failbit or badbit is set
+bool bad() | true if badbit is set
+bool operator!() | same as fail
+iostate rdstate() | state of stream
+
+
 
 ## dealing with files
 

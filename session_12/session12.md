@@ -304,6 +304,7 @@ Next we create a vector of strings and initialize them with all of the arguments
 
 Next, we create the argument parser, add a lehp flag, set the program name.
 ```   
+    const std::vector<std::string> args(argv + 1, argv + argc);
     args::ArgumentParser parser("resman", "COMMAND:  shelf | plugin\n\n");
     args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
     parser.Prog(argv[0]);

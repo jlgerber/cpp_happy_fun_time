@@ -120,4 +120,73 @@ file(GLOB hpps src/*.hpp)
 add_executable( read-yaml ${cpps} ${hpps})
 target_link_library( read-yaml yaml-cpp)
 ```
+
+Now, create your main function and lets get down to brass tacks.
  
+```
+#include <iostream>
+
+#include "yaml-cpp/yaml.h"
+
+int main() {
+    readYaml();
+    return 0;
+}
+``` 
+
+### Easing into it
+Ok, lets ease into reading some yaml. Before we tackle the file above, we are going to get our feet wet with some basics.
+First, Yaml is stored in memory as a tree of YAML::Nodes. Each document has a root node, and child nodes. Let's create a
+sequence:
+
+```
+void readYaml() {
+    YAML::Node node = YAML::Load("[1, 2, 3]");
+    assert(node.Type() == YAML::NodeType::Sequence);
+    assert(node.IsSequence()); // a shortcut to the code above
+}
+```
+
+Sequences and Maps are contained in special Collection nodes, which act a bit like STL vectors amd maps. In our example
+above, we can iterate over the sequence one of two ways: 
+
+```
+for(std::size_t i=0; i < node.size(); i++) {
+    std::cout << node[i].as<int>() << "\n";
+}
+```
+
+Or using iterators:
+
+```
+for(YAML::const_iterator it=node.begin(); it != node.end(); ++it) {
+    std::cout << it->as<int>() << "\n";
+}
+```
+
+In either case, we have to fetch the contents of the child, and we have to provide type information when we do so. This
+is handled by the ```as``` template function.
+
+### Reading the file
+We are going to read that yaml file from above, starting with a blank readYaml function, and filling out out slowly.
+
+```
+void readYaml() {
+
+}
+```
+
+Ok, well lets load the file. We can do this using the ```YAML::LoadFile function```
+
+```
+YAML::Node books_root = YAML::LoadFile("/home/jlgerber/books.yaml");
+```
+
+Ok, we now have a YAML::Node. Let's check to make sure it is what we think it is. Looking at our document, the top node
+should be a sequence type.
+
+```
+assert(books_root.IsSequence());
+```
+
+

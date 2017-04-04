@@ -4,7 +4,9 @@ There are a couple of formats which we need to learn how to read and write so th
 
 ## YAML in Python
 
-We certainly should be familiar with reading and writing YAML in python. Reading YAML is pretty simple. The library for this is called PyYaml. First, we need to import Yaml. If you are lucky, then your sys admin built PyYaml with libyaml. Because PyYaml can use libyaml to load and write yaml. There is a particular import that we use to grab the faster, c loader and dumper, but fall back to the python in the event that they don't exist:
+We certainly should be familiar with reading and writing YAML in python. Reading YAML is pretty simple. The library for this is called PyYaml. If you are running this at work, chances are, it has already been installed. However, you can always run ```pip install pyyaml``` (you might have to sudo pip install ). Nowe that we have PyYaml, let us use it. 
+
+First, we need to import Yaml. If you are lucky, then your sys admin (or you) built PyYaml with libyaml. Because PyYaml can use libyaml to load and write yaml. There is a particular import that we use to grab the faster, c loader and dumper, but fall back to the python in the event that they don't exist:
 
 ```python
 from yaml import load, dump

@@ -139,7 +139,7 @@ Before we can read a yaml file, we need one. Lets create a dummy file to go over
     author: Marcel Proust
     opening:
         For a long time I used to go to bed early. Sometimes, 
-        when I had put out my candle, my eyes woudl close so
+        when I had put out my candle, my eyes would close so
         quickly that I had not even time to say I'm going to sleep. 
     cost: 36.95
 -

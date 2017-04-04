@@ -88,7 +88,7 @@ I cannot promise that reading and writing yaml in C++ is going to be as simple a
  
 ### Downloading and Building yaml-cpp
  
-As I said, in order to use yaml-cpp, we need to pull it down from github. When you go to the url, you will notice a couple of things. First, this is not a header only library, which means we have to build and install it somewhere. Second, its last major tagged release is dependent upon BOOST. Now, we love boost, but we don't want the hassle of dealing with a boost dependency if we don't need to. Fortunately, the trunk code has attempted to excise boost. It just needs some additional testing. Well, that's what we are going to do. So, click on the *clone or download* button and do as it says. Navigate to the place you want to run the build from ( I do it it ~/src on my machine ) in a shell andtype the following:
+As I said, in order to use yaml-cpp, we need to pull it down from github. When you go to the url, you will notice a couple of things. First, this is not a header only library, which means we have to build and install it somewhere. Second, its last major tagged release is dependent upon BOOST. Now, we love boost, but we don't want the hassle of dealing with a boost dependency if we don't need to. Fortunately, the trunk code has attempted to excise boost. It just needs some additional testing. Well, that's what we are going to do. So, click on the *clone or download* button and do as it says. Navigate to the place you want to run the build from ( I do it it ~/src on my machine ) in a shell and type the following:
 
 ```
 git clone https://github.com/jbeder/yaml-cpp.git

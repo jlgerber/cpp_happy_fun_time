@@ -50,7 +50,7 @@ with open("books.yaml", 'r') as fh: # assume that books.yaml is real
     print myfile
 ```
 
-# Writing to a stream
+### Writing to a stream
 
 We can dump standard python objects using yaml.dump:
 
@@ -219,7 +219,9 @@ int main() {
 }
 ``` 
 
-#### Reading from a String
+### Reading from a String
+
+
 Ok, lets ease into reading some yaml. Before we tackle the file above, we are going to get our feet wet with some basics. First, Yaml is stored in memory as a tree of YAML::Nodes. Each document has a root node, and child nodes. Let's create a sequence:
 
 ```
@@ -248,7 +250,8 @@ for(YAML::const_iterator it=node.begin(); it != node.end(); ++it) {
 
 In either case, we have to fetch the contents of the child, and we have to provide type information when we do so. This is handled by the ```as``` template function. We use this template function to cast a YAML::Node's value into some recognizable type, so that we can consume it. So, if we want a string, we call ```node.as<string>()```, if we want an int, we call ```node.as<int>()```, etc. Of course, this only works out of the box for built in types, as well as maps, vectors, and lists. Later on, we will see how to extend yaml-cpp to handle custom data types. But, lets take some baby steps first.
 
-#### Reading from a File
+### Reading from a File
+
 We are going to read that yaml file from above, starting with a blank readYaml function, and filling out out slowly.
 
 ```
@@ -279,14 +282,15 @@ for(YAML::const_iterator i = boos_root.begin(); i != books_root.end(); ++i) {
     std::cout << std::endl;
 }
 ```
+
 We can also access values using bracket notation. As a bonus, accessing non-extant values does not raise an exception. In fact, a pretty nice pattern is as follows:
+
 ```
 if(books_root[0] && books_root[0]["author"])
-    std::cout << books_root[0]["author}] << std::endl;
-    
+    std::cout << books_root[0]["author}] << std::endl;    
 ```
 
-#### What Type do we have Here?
+### What Type do we have Here?
 
 As mentioned above, there are a couple ways of introspecting node type. The first is by using the method ```type()``` and testing against ```YAML::NodeType```, which provides a set of enums which are appropriate fodder for switch statements, and the like. 
 
@@ -304,7 +308,7 @@ YAML::Emitter out;
 
 Once created, we can use it like any other stream instance ( more or less ).
 
-#### Scalars
+### Scalars
 
 The simplest type of data we can encode is a scalar. We do this trivially, once we have an emitter:
 
@@ -317,7 +321,8 @@ We can always convert to a c string by calling ```c_str()``:
 ```
 std::cout << out.c_str() << std::endl;
 ````
-#### Sequences
+
+### Sequences
 
 Yaml-cpp has special stream manipulators to indicate beginning and ending of sequences. You begin outputting a sequence using ```YAML::BeginSeq``` and end it using ```YAML::EndSeq```. Any output between these two manipulators is treated as elements of the sequence.
 
@@ -332,7 +337,8 @@ out << YAML::EndSeq;
 
 And of course, you can nest sequences, as long as you balance BeginSeq and EndSeq. 
 
-#### Maps
+### Maps
+
 
 Emitting maps is nearly as simple as emitting sequences. Like sequences, maps provide a begin and end manipulator to delineate it. Additionally, yaml-cpp provides a Key and Value stream manipulator to encode key and value:
 
@@ -345,9 +351,11 @@ out << YAML::Value << "South of the Border, West of the Sun";
 out << YAML::EndMap;
 ```
 
-#### Additional Manipulators
+### Additional Manipulators
 
-##### Literal ( | )
+There are a number of additional manipulators that the library provides. 
+
+### Literal ( | )
 
 You can use ```YAML::Literal``` to emit a literal string:
 
@@ -355,7 +363,7 @@ You can use ```YAML::Literal``` to emit a literal string:
 out << YAML::Literal << "A\n B\n  C"
 ```
 
-##### Flow
+### Flow
 
 You can also produce more compact map and sequence output by using the ```YAML::FLow``` manipulator.
 
@@ -364,7 +372,7 @@ out << YAML::FLow;
 out << YAML::BeginSeq << 2 << 3 << 4 << 5 << YAML::EndSeq;
 ```
 
-##### Comments 
+### Comments 
 
 You can embed comments into the document using the ```YAML::Comment``` manipulator like so:
 
@@ -379,7 +387,7 @@ out << YAML::Comment("An oft overlooked Miller Novel");
 out << YAML::EndMap;
 ```
 
-#### Aliases and Anchors
+### Aliases and Anchors
 
 Yaml has the ability to name a section and refer to it later in the document. yaml-cpp supports this through the Anchor and Alias tags.
 
@@ -394,7 +402,7 @@ out << YAML::EndMap;
 out << YAML::Alias("fred");
 out << YAML::EndSeq;
 ```
-#### Manipulator Lifetimes
+### Manipulator Lifetimes
 
 Manipulators affect the **next** output item in the stream. If that item is a ```BeginSeq``` or a ```BeginMap```, the manipulator lasts until the corresponding ```EndSeq``` or ```EndMap```. Of course, nesting works here as well.
 
@@ -409,7 +417,7 @@ out.SetSeqFormat(YAML::FLow);
 ...
 ```
 
-#### Overloaded Conveniences
+### Overloaded Conveniences
 
 Yaml-cpp overloads the ```operator <<``` for ```std::vector```, ```std::list```, and ```std::map```, allowing us to do things like this:
 
@@ -431,7 +439,7 @@ out << YAML::Flow << ages;
 out << YAML::EndSeq;
 ```
 
-#### Custom Overloading 
+### Custom Overloading 
 
 You can support custom data types for encoding and decoding as long as they implement ```operator==```.
 
@@ -505,7 +513,7 @@ out << YAML::Value << Vec3(1, -2, 0);
 out << YAML::EndMap;
 ```
 
-#### Stream State - Detecting Errors
+### Stream State - Detecting Errors
 
 If you happen to screw up the stream ( like if you forget a YAML::EndSeq, or misplace a YAML::Key ), then yaml-cpp will set an error flag on the Emitter. You can check the state using the ```good()``` method.
 

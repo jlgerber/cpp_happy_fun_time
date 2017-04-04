@@ -1,20 +1,98 @@
 # session 15 - Serialization Formats: YAML
 
-There are a couple of formats which we need to learn how to read and write so that we can be productive. The big ones for us are Yaml, Json, Xml. Now that is a healthy list, and we certainly cannot cover it all in one chapter, so lets start with the one we 
+There are a couple of formats which we need to learn how to read and write so that we can be productive. The big ones for us are Yaml, Json, and Xml. Now that is certainly a healthy list, and we cannot cover all those formats in one chapter, so lets start with the one we use the most - YAML. Yaml is a markup language which we have been using for quite some time. It's "clever" title stands for "YAML Ain't Markup Language". It's spec may be found at [yaml.org](http://yaml.org).
 
-## YAML
+## YAML in Python
 
-Yaml is a markup language which we have been using for quite some time. It's "clever" title stands for "YAML Ain't Markup Language". It's spec may be found at [yaml.org](http://yaml.org). In order to read and write yaml, we are going to use a popular library - [yaml-cpp](https://github.com/jbeder/yaml-cpp). So, open your favorite browser, and go over to the yaml-cpp project on github, because the first step is going to be getting the library.
+We certainly should be familiar with reading and writing YAML in python. Reading YAML is pretty simple. The library for this is called PyYaml. First, we need to import Yaml. If you are lucky, then your sys admin built PyYaml with libyaml. Because PyYaml can use libyaml to load and write yaml. There is a particular import that we use to grab the faster, c loader and dumper, but fall back to the python in the event that they don't exist:
+
+```python
+from yaml import load, dump
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
+```
+Now when we load the data, we are going to reference the loader like so:
+
+```python
+data = load(stream, Loader=Loader)
+```
+
+And we are going to write data like so:
+
+```python
+output = dump(data, Dumper=Dumper)
+```
+
+### Loading string rep
+
+You can use the load method from yaml to convert a yaml string to python:
+
+```python
+authors = yaml.load("""
+- Vladimir Nabokov
+- Italo Calvino    
+""", Loader=Loader)
+
+print authors
+```
+
+### Loading from a file
+
+Loading from a file is not much different
+
+```python
+with open("books.yaml", 'r') as fh: # assume that books.yaml is real
+    myfile = yaml.load(fh, Loader=Loader)
+    print myfile
+```
+
+# Writing to a stream
+
+We can dump standard python objects using yaml.dump:
+
+```python
+foo = {}
+foo["bar"] = "bla"
+fool = [1,2,3]
+foo["barlist"] = fool
+
+print yaml.dump(foo, Dumper=dumper)
+```
+
+
+### Writing to a File
+
+Like the reading exercise, we simply pass a file handle to the dump function, and Bob's your Uncle. 
+
+```python
+foo = {}
+foo["bar"] = "bla"
+fool = [1,2,3]
+foo["barlist"] = fool
+
+with  open("/tmp/test.yaml", 'w') as fh:
+    yaml.dump(fh, Dumper=Dumper)
+```
+
+And that is about all she wrote. 
+
+Ok well that is not exactly true. There is a lot more you can do with PyYaml, but this isn't about Python, it is about C++, so read up on the [pyyaml site](http://pyyaml.org/wiki/PyYAMLDocumentation) for more info on python. Meanwhile, we are going to take a look at the C++ story. 
+
+## YAML in C++
+
+I cannot promise that reading and writing yaml in C++ is going to be as simple as Python. That would be a foolish lie. However, it ain't all that hard either. In order to handle yaml, we are going to use a popular library - [yaml-cpp](https://github.com/jbeder/yaml-cpp). So, open your favorite browser, and go over to the yaml-cpp project on github, because we have to download and build the library before we can use it.
  
 ### Downloading and Building yaml-cpp
  
-In order to use yaml-cpp, we need to pull it down. When you go to the url, you will notice a couple of things. First, this is not a header only library, which means we have to build and install it somewhere. Second, its last major tagged release is dependent upon BOOST. Now, we love boost, but we don't want the hassle of dealing with a boost dependency if we don't need to. Fortunately, the trunk code has attempted to excise boost. It just needssome additional testing. Well, that's what we are going to do. So, click on the *clone or download* button and do as it says. Navigate to the place you want to run the build from ( I do it it ~/src on my machine ) in a shell andtype the following:
+As I said, in order to use yaml-cpp, we need to pull it down from github. When you go to the url, you will notice a couple of things. First, this is not a header only library, which means we have to build and install it somewhere. Second, its last major tagged release is dependent upon BOOST. Now, we love boost, but we don't want the hassle of dealing with a boost dependency if we don't need to. Fortunately, the trunk code has attempted to excise boost. It just needssome additional testing. Well, that's what we are going to do. So, click on the *clone or download* button and do as it says. Navigate to the place you want to run the build from ( I do it it ~/src on my machine ) in a shell andtype the following:
 
 ```
 git clone https://github.com/jbeder/yaml-cpp.git
 ```
 
-Now, follow the directions on github for building it. Navigate into the project, create a *build* directory, and gointo it. Then run ```cmake ..``` with appropriate flags to build the library. You might be wondering what those appropriate flags are. Well, there are at least two that I can thing of:
+Next, follow the directions on github for building it. Navigate into the project, create a *build* directory, and gointo it. Then run ```cmake ..``` with appropriate flags to build the library. You might be wondering what those appropriate flags are. Well, there are at least two that I can thing of:
 
 If we want to build a shared library, we need to specify -DBUILD_SHARED_LIBS=ON . Otherwise, we will build a staticlibrary (which is fine by the way).
  

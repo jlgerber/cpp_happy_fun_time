@@ -80,7 +80,7 @@ with  open("/tmp/test.yaml", 'w') as fh:
 
 And that is about all she wrote. 
 
-Ok well that is not exactly true. There is a lot more you can do with PyYaml, but this isn't about using yaml with Python; this *is* about using yaml with C++, so read up on the [pyyaml site](http://pyyaml.org/wiki/PyYAMLDocumentation) for more info on python. Meanwhile, we are going to take a look at the C++ story. 
+Ok well that is not exactly true. You can do a lot more with PyYaml, but this chapter isn't about using yaml with Python; this chapter *is* about using yaml with C++, so read up on the [pyyaml site](http://pyyaml.org/wiki/PyYAMLDocumentation) for more info on python. Meanwhile, we are going to take a look at the C++ story. 
 
 ## YAML in C++
 

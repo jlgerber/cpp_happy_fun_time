@@ -1,6 +1,6 @@
 # session 15 - Serialization Formats: YAML
 
-There are a couple of formats which we need to learn how to read and write so that we can be productive. The big ones for us are Yaml, Json, and Xml. Now that is certainly a healthy list, and we cannot cover all those formats in one chapter, so lets start with the one we use the most - YAML. Yaml is a markup language which we have been using for quite some time. It's "clever" title stands for "YAML Ain't Markup Language". It's spec may be found at [yaml.org](http://yaml.org).
+There are a couple of formats which we need to learn how to read and write so that we can be productive. The big ones for us are Yaml, Json, and Xml. Now that is certainly a healthy list, and we cannot cover all those formats in one chapter, so lets start with the one we use the most - YAML. Yaml is a markup language which we have been using for quite some time. Its "clever" title stands for "YAML Ain't Markup Language". It's spec may be found at [yaml.org](http://yaml.org).
 
 ## YAML in Python
 

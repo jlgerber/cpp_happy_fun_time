@@ -581,3 +581,7 @@ std::cout << "Emitter error: " << out.GetLastError() << "\n";
 4. After delivering the first cut of BookDb to Acme, they have come back to you asking for some improvements. It turns out that they are not particularly happy with the performance of the searches. That's ok you tell them. You just need to implement indexing. For an extra fee. I mean, indexing is an extra cost right?  So, modify the class to keep a map of author name and title to YAML::Node ( hint, you can construct the key as a std::pair of name and title ). How is your class going to have to change to use the map? What happens when you add or remove a book? What other methods need ot change?
 
 Make those changes and prove that the class still works by using the previously created test runner.
+
+5. Boy this BookDb is sure taking off. We might even want to repackage it and sell it to Acme's competitors - BookemDannos. Before we do that, we are going to need to make the construction a wee bit more flexible. Let's add a static method ```CreateFromEnvVar``` which will read an environment variable ( BOOKDB_DB ) to get the path to the yaml file, call the constructor, and return the instance of BookDb. If you have forgotten how to read environment variables, go back and check out the chapter on boost::filesystem.
+
+

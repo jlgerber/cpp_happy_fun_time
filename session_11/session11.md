@@ -6,7 +6,7 @@ Today we are going to develop a simple command to upper case an input string. Al
 
 Lets review what we know already. Given the description, we know that we are going to be producing an executable. We also know that we are responsible developers who test as we go, so we are going to want to produce a static library housing our business logic. We are going to use Catch as our testing framework, because we like Catch, since it is header only. And we are going to be using cmake to put this all together...
  
- ### Step 1 - create a new project
+### Step 1 - create a new project
  
 ```
 yell/

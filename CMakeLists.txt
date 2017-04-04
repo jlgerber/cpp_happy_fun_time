@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.6)
 project(cpp_happy_fun_time)
 
+set(YAMLCPP_PATH /home/jlgerber/lib/yaml-cpp/master)
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # turn off RVO ( return value optimization ). We want all of the constructors called ( copy, assignment )
@@ -54,3 +56,8 @@ add_executable(functional topics/functional.cpp)
 
 include_directories(session_14/external)
 add_executable(streams session_14/streams.cpp)
+
+
+include_directories(${YAMLCPP_PATH}/include)
+add_executable(readWriteYaml session_15/main.cpp)
+target_link_libraries(readWriteYaml ${YAMLCPP_PATH}/lib/libyaml-cpp.a)

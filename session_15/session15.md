@@ -94,11 +94,11 @@ As I said, in order to use yaml-cpp, we need to pull it down from github. When y
 git clone https://github.com/jbeder/yaml-cpp.git
 ```
 
-Next, follow the directions on github for building it. Navigate into the project, create a *build* directory, and gointo it. Then run ```cmake ..``` with appropriate flags to build the library. You might be wondering what those appropriate flags are. Well, there are at least two that I can thing of:
+Next, follow the directions on github for building it. Navigate into the project, create a *build* directory, and go into it. Then run ```cmake ..``` with appropriate flags to build the library. You might be wondering what those appropriate flags are. Well, there are at least two that I can thing of:
 
-If we want to build a shared library, we need to specify -DBUILD_SHARED_LIBS=ON . Otherwise, we will build a staticlibrary (which is fine by the way).
+If we want to build a shared library, we need to specify -DBUILD_SHARED_LIBS=ON . Otherwise, we will build a static library (which is fine by the way).
  
-If we want to control where the install directive puts the results of the build (assuming we are not copying filesout by hand or we are just relying on the default pathing), we need to use the -DCMAKE_INSTALL_PREFIX=<install_path>.This is going to prepend the provided path to the location of the install. So, if the project in question normally installs to */usr/local/bin*, and you use ```-DCMAKE_INSTALL_PREFIX=/home/jlgerber``` ( or better yet your own home directory instead of mine ), then you will end up installing to */home/jlgerber/usr/local/bin*. It is importantto note this, as you will need to subsequently USE these paths to configure our upcoming project. Also, if you are on windows, this **ISN'T** going to work, due to those pesky drive letters. Anyway, I am going to run the following:
+If we want to control where the install directive puts the results of the build (assuming we are not copying files out by hand or we are just relying on the default pathing), we need to use the -DCMAKE_INSTALL_PREFIX=<install_path>.This is going to prepend the provided path to the location of the install. So, if the project in question normally installs to */usr/local/bin*, and you use ```-DCMAKE_INSTALL_PREFIX=/home/jlgerber``` ( or better yet your own home directory instead of mine ), then you will end up installing to */home/jlgerber/usr/local/bin*. It is important to note this, as you will need to subsequently USE these paths to configure our upcoming project. Also, if you are on windows, this **ISN'T** going to work, due to those pesky drive letters. Anyway, I am going to run the following:
  
 ```
 cmake .. -DCMAKE_INSTALL_PREFIX=/home/<your homedir name>
@@ -229,7 +229,7 @@ for(YAML::const_iterator it=node.begin(); it != node.end(); ++it) {
 In either case, we have to fetch the contents of the child, and we have to provide type information when we do so. This is handled by the ```as``` template function.
 
 #### Reading from a File
-We are going to read that yaml file from above, starting with a blank readYaml function, and filling out out slowly.
+We are going to read that yaml file from above, starting with a blank read Yaml function, and filling out out slowly.
 
 ```
 void readYamlFile() {

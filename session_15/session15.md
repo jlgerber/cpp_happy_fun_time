@@ -88,7 +88,7 @@ I cannot promise that reading and writing yaml in C++ is going to be as simple a
  
 ### Downloading and Building yaml-cpp
  
-As I said, in order to use yaml-cpp, we need to pull it down from github. When you go to the url, you will notice a couple of things. First, this is not a header only library, which means we have to build and install it somewhere. Second, its last major tagged release is dependent upon BOOST. Now, we love boost, but we don't want the hassle of dealing with a boost dependency if we don't need to. Fortunately, the trunk code has attempted to excise boost. It just needs some additional testing. Well, that's what we are going to do. So, click on the *clone or download* button and do as it says. Navigate to the place you want to run the build from ( I do it it ~/src on my machine ) in a shell and type the following:
+As I said, in order to use yaml-cpp, we need to pull it down from github. When you go to the url, you will notice a couple of things. First, this is not a header only library, which means we have to build and install it somewhere. Second, its last major tagged release is dependent upon BOOST. Now, we love boost, but we don't want the hassle of dealing with a boost dependency if we don't need to. Fortunately, the trunk code has attempted to excise boost. It just needs some additional testing. Well, that's what we are going to do. So, click on the *clone or download* button and do as it says. Navigate to the place you want to run the build from ( I do it it ~/src on my machine ) in a shell and type
 
 ```
 git clone https://github.com/jbeder/yaml-cpp.git
@@ -96,9 +96,21 @@ git clone https://github.com/jbeder/yaml-cpp.git
 
 Next, follow the directions on github for building it. Navigate into the project, create a *build* directory, and go into it. Then run ```cmake ..``` with appropriate flags to build the library. You might be wondering what those appropriate flags are. Well, there are at least two that I can thing of:
 
-If we want to build a shared library, we need to specify -DBUILD_SHARED_LIBS=ON . Otherwise, we will build a static library (which is fine by the way).
+If we want to build a shared library, we need to specify
  
-If we want to control where the install directive puts the results of the build (assuming we are not copying files out by hand or we are just relying on the default pathing), we need to use the -DCMAKE_INSTALL_PREFIX=<install_path>.This is going to prepend the provided path to the location of the install. So, if the project in question normally installs to */usr/local/bin*, and you use ```-DCMAKE_INSTALL_PREFIX=/home/jlgerber``` ( or better yet your own home directory instead of mine ), then you will end up installing to */home/jlgerber/usr/local/bin*. It is important to note this, as you will need to subsequently USE these paths to configure our upcoming project. Also, if you are on windows, this **ISN'T** going to work, due to those pesky drive letters. Anyway, I am going to run the following:
+```
+ -DBUILD_SHARED_LIBS=ON
+``` 
+
+Otherwise, we will build a static library (which is fine by the way).
+ 
+If we want to control where the install directive puts the results of the build (assuming we are not copying files out by hand or we are just relying on the default pathing), we need to use
+ 
+```
+-DCMAKE_INSTALL_PREFIX=< install_path >
+```
+
+This is going to prepend the provided path to the location of the install. So, if the project in question normally installs to */usr/local/bin*, and you use ```-DCMAKE_INSTALL_PREFIX=/home/jlgerber``` ( or better yet your own home directory instead of mine ), then you will end up installing to */home/jlgerber/usr/local/bin*. It is important to note this, as you will need to subsequently USE these paths to configure our upcoming project. Also, if you are on windows, this **ISN'T** going to work, due to those pesky drive letters. Anyway, I am going to run
  
 ```
 cmake .. -DCMAKE_INSTALL_PREFIX=/home/<your homedir name>
@@ -126,38 +138,46 @@ Before we can read a yaml file, we need one. Lets create a dummy file to go over
     name: Remembrance of Things Past
     author: Marcel Proust
     opening:
-        For a long time I used to go to bed early. Sometimes, when I had put out my candle, my eyes woudl close so
+        For a long time I used to go to bed early. Sometimes, 
+        when I had put out my candle, my eyes woudl close so
         quickly that I had not even time to say I'm going to sleep. 
     cost: 36.95
 -
     name: Look Homeward Angel
     author: Thomas Wolfe 
     opening:
-        A destiny that leads the English to the Dutch is strange enough; but one that leads from Epsom into Pennsylvania,
-        and thence into the hills that shut Altamont over the proud coral cry of the cock, and the soft stone smile of 
-        an angel, is touched by the dark miracle of chance which makes new magic in a dusty world.
+        A destiny that leads the English to the Dutch is strange 
+        enough; but one that leads from Epsom into Pennsylvania,
+        and thence into the hills that shut Altamont over the 
+        proud coral cry of the cock, and the soft stone smile of 
+        an angel, is touched by the dark miracle of chance which 
+        makes new magic in a dusty world.
     cost: 15.00
 -
     name: Clia
     author: Lawrence Durrell
     opening:
-        The oranges were more plentiful than usual that year. They glowed in their arbours of burnished green leaf like 
+        The oranges were more plentiful than usual that year. 
+        They glowed in their arbours of burnished green leaf like 
         lanterns, flickering up there among the sunny woods.
     cost: 4.99
 -
     name: Hunger
     author: Knut Hamsun
     opening:
-        All of this happened while I was walking around starving in Christiania -- that strange city no one escapes from
+        All of this happened while I was walking around starving 
+        in Christiania -- that strange city no one escapes from
         until it has left its mark on him....
     cost: 10.00
 -
     name: Speak, Memory
     author: Vladimir Nabokov
     opening:
-      The cradle rocks above an abyss, and common sense tells us that our existence is but a brief crack of light between
-      two eternities of darkness. Although the two are identical twins, man, as a rule, views the prenatal abyss with
-      more calm than the one he is heading for.
+      The cradle rocks above an abyss, and common sense 
+      tells us that our existence is but a brief crack of light between
+      two eternities of darkness. Although the two are identical twins, 
+      man, as a rule, views the prenatal abyss with more calm than the 
+      one he is heading for.
     cost: 12.00
 ```
 

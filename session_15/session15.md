@@ -351,6 +351,28 @@ out << YAML::Value << "South of the Border, West of the Sun";
 out << YAML::EndMap;
 ```
 
+### Writing to a File
+
+It is just a hop skip and a jump from where we are to writing to an actual file. We can use a file stream to do this 
+for us. 
+
+```
+#include <fstream>
+
+...
+
+std::string outfile = "/tmp/foo.yaml"
+
+std::ofstream fh;
+fh.open(statefile);
+try {
+    fh << out.c_str();
+} catch(...){
+    fh.close();
+    throw;
+}
+fh.close();
+```
 ### Additional Manipulators
 
 There are a number of additional manipulators that the library provides. 
@@ -527,3 +549,34 @@ assert(!out.good());
 std::cout << "Emitter error: " << out.GetLastError() << "\n";
 ```
 
+## Exercises
+
+1. The Acme book company sells books. In order to keep track of their books, they have hired you, an expert c++ programmer, to write a custom database for them. Little do they know that you are going to fleece them by writing a simple yaml backed system in lieu of a full blown database. But first things first, Sneaky Pete. You need to design a yaml file which will allow you to store a list of books. Each record should have:
+
+- The author's name (string )
+- The book's title ( string )
+- The book's cost to Acme ( float )
+- The book's cost to the Customer ( float )
+- The book's ISBN ( an unsigned int for our purposes )
+- The number of copies of the book in the inventory 
+
+2. Design a BookDb class (ie write the BookDb declaration. That's the .h file, remember) whose constructor takes the path to the book.yaml file mentioned above and parses it. If it does not exist, then it should create an empty file. The class should store the root node of the yaml document as an instance variable so that it may operate on it. The BookDb Class should be able to do the following:
+
+- add a book record to the database (make sure that it doesn't already exist in the db).
+- persist the records to disk.
+- find the index of a book in the database by author and title. ( private method )
+- get the number of copies of a book in the database by index.
+- increment the number of copies of a book given its index.
+- decrement the number of copies of a book given its index.
+- generate a report on all of the books in the database.
+- get a vector of book records by supplied author.
+- print the book records in the database for a given author.
+- print the value of the books in the book database ( Acme sells books after all. We want to know ).
+- print the profit margin for the books in the book database. ( Is that a "thing" ? I don't know; I'm a programmer not an accountant. Just add up the difference between the sales price and the cost to acme for all the books in the inventory)
+
+
+3. Implement the BookDb class in a corresponding .cpp file. Be sure to use Catch.cpp to test all of the methods. That is going to require you to implement the BookDb as a library so that it can be linked against. If you don't remember how to do this part, its in an earlier chapter...
+
+4. After delivering the first cut of BookDb to Acme, they have come back to you asking for some improvements. It turns out that they are not particularly happy with the performance of the searches. That's ok you tell them. You just need to implement indexing. For an extra fee. I mean, indexing is an extra cost right?  So, modify the class to keep a map of author name and title to YAML::Node ( hint, you can construct the key as a std::pair of name and title ). How is your class going to have to change to use the map? What happens when you add or remove a book? What other methods need ot change?
+
+Make those changes and prove that the class still works by using the previously created test runner.

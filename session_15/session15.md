@@ -181,7 +181,7 @@ Before we can read a yaml file, we need one. Lets create a dummy file to go over
     cost: 12.00
 ```
 
-So now that you (a) know a least four books sitting on my shelf, and (b) have a suitably complex yaml example, lets learn how to deserialize yaml.
+So now that you (a) know a least five books sitting on my shelf, and (b) have a suitably complex yaml example, lets learn how to deserialize yaml.
 
 ### Reading Yaml
 

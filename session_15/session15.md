@@ -1,43 +1,24 @@
-# session 15 - Serialization Formats
+# session 15 - Serialization Formats: YAML
 
-There are a couple of formats which we need to learn how to read and write so that we can be productive. The big ones
-for us are Yaml, Json, Xml. Lets start with YAML.
+There are a couple of formats which we need to learn how to read and write so that we can be productive. The big ones for us are Yaml, Json, Xml. Now that is a healthy list, and we certainly cannot cover it all in one chapter, so lets start with the one we 
 
 ## YAML
 
-Yaml is a markup language which we have been using for quite some time. It's "clever" title stands for "YAML Ain't 
-Markup Language". It's spec may be found at [yaml.org](http://yaml.org). In order to read and write yaml, we are going
-to use a popular library - [yaml-cpp](https://github.com/jbeder/yaml-cpp). So, open your favorite browser, and go 
-over to the yaml-cpp project on github, because the first step is going to be getting the library.
+Yaml is a markup language which we have been using for quite some time. It's "clever" title stands for "YAML Ain't Markup Language". It's spec may be found at [yaml.org](http://yaml.org). In order to read and write yaml, we are going to use a popular library - [yaml-cpp](https://github.com/jbeder/yaml-cpp). So, open your favorite browser, and go over to the yaml-cpp project on github, because the first step is going to be getting the library.
  
 ### Downloading and Building yaml-cpp
  
-In order to use yaml-cpp, we need to pull it down. When you go to the url, you will notice a couple of 
-things. First, this is not a header only library, which means we have to build and install it somewhere. Second, 
-its last major tagged release is dependent upon BOOST. Now, we love boost, but we don't want the hassle of dealing 
-with a boost dependency if we don't need to. Fortunately, the trunk code has attempted to excise boost. It just needs
-some additional testing. Well, that's what we are going to do. So, click on the *clone or download* button and do 
-as it says. Navigate to the place you want to run the build from ( I do it it ~/src on my machine ) in a shell and
-type the following:
+In order to use yaml-cpp, we need to pull it down. When you go to the url, you will notice a couple of things. First, this is not a header only library, which means we have to build and install it somewhere. Second, its last major tagged release is dependent upon BOOST. Now, we love boost, but we don't want the hassle of dealing with a boost dependency if we don't need to. Fortunately, the trunk code has attempted to excise boost. It just needssome additional testing. Well, that's what we are going to do. So, click on the *clone or download* button and do as it says. Navigate to the place you want to run the build from ( I do it it ~/src on my machine ) in a shell andtype the following:
 
 ```
 git clone https://github.com/jbeder/yaml-cpp.git
 ```
 
-Now, follow the directions on github for building it. Navigate into the project, create a *build* directory, and go
-into it. Then run ```cmake ..``` with appropriate flags to build the library. You might be wondering what those 
-appropriate flags are. Well, there are at least two that I can thing of:
+Now, follow the directions on github for building it. Navigate into the project, create a *build* directory, and gointo it. Then run ```cmake ..``` with appropriate flags to build the library. You might be wondering what those appropriate flags are. Well, there are at least two that I can thing of:
 
-If we want to build a shared library, we need to specify -DBUILD_SHARED_LIBS=ON . Otherwise, we will build a static
-library (which is fine by the way).
+If we want to build a shared library, we need to specify -DBUILD_SHARED_LIBS=ON . Otherwise, we will build a staticlibrary (which is fine by the way).
  
-If we want to control where the install directive puts the results of the build (assuming we are not copying files
-out by hand or we are just relying on the default pathing), we need to use the -DCMAKE_INSTALL_PREFIX=<install_path>.
-This is going to prepend the provided path to the location of the install. So, if the project in question normally 
-installs to */usr/local/bin*, and you use ```-DCMAKE_INSTALL_PREFIX=/home/jlgerber``` ( or better yet your own 
-home directory instead of mine ), then you will end up installing to */home/jlgerber/usr/local/bin*. It is important
-to note this, as you will need to subsequently USE these paths to configure our upcoming project. Also, if you are on 
-windows, this **ISN'T** going to work, due to those pesky drive letters. Anyway, I am going to run the following:
+If we want to control where the install directive puts the results of the build (assuming we are not copying filesout by hand or we are just relying on the default pathing), we need to use the -DCMAKE_INSTALL_PREFIX=<install_path>.This is going to prepend the provided path to the location of the install. So, if the project in question normally installs to */usr/local/bin*, and you use ```-DCMAKE_INSTALL_PREFIX=/home/jlgerber``` ( or better yet your own home directory instead of mine ), then you will end up installing to */home/jlgerber/usr/local/bin*. It is importantto note this, as you will need to subsequently USE these paths to configure our upcoming project. Also, if you are on windows, this **ISN'T** going to work, due to those pesky drive letters. Anyway, I am going to run the following:
  
 ```
 cmake .. -DCMAKE_INSTALL_PREFIX=/home/<your homedir name>
@@ -45,11 +26,9 @@ make
 make install
 ```
  
-If you installed to your home directory, please note the addition of two subdirectories - *include* for all of the 
-headers, and *lib/* where it puts your libyaml-cpp.a file.
+If you installed to your home directory, please note the addition of two subdirectories - *include* for all of the headers, and *lib/* where it puts your libyaml-cpp.a file.
 
-While you are in the build directory, cd into the *test* subdirectory and run the provided tests. You might as well, 
-they took longer to build than the actual library.
+While you are in the build directory, cd into the *test* subdirectory and run the provided tests. You might as well, they took longer to build than the actual library.
  
 ```
 cd test
@@ -58,8 +37,7 @@ cd test
  
 ### Setting up a simple yaml file for reading
  
-Before we can read a yaml file, we need one. Lets create a dummy file to go over the fun things we can do with 
-YAML. Create a books.yaml somewhere with the following contents:
+Before we can read a yaml file, we need one. Lets create a dummy file to go over the fun things we can do with YAML. Create a books.yaml somewhere with the following contents:
  
 ```
 
@@ -103,13 +81,11 @@ YAML. Create a books.yaml somewhere with the following contents:
     cost: 12.00
 ```
 
-So now that you (a) know a least four books sitting on my shelf, and (b) have a suitably complex yaml example, lets 
-learn how to deserialize yaml.
+So now that you (a) know a least four books sitting on my shelf, and (b) have a suitably complex yaml example, lets learn how to deserialize yaml.
 
 ### Reading Yaml
 
-Time to create a new project. Remember to configure the include path and library path to look at the yaml library we 
-just installed. If you are using cmake, your CMakeLists.txt will look something like this:
+Time to create a new project. Remember to configure the include path and library path to look at the yaml library we just installed. If you are using cmake, your CMakeLists.txt will look something like this:
 
 ```
 cmake_minimum_required(VERSION 3.2)
@@ -144,9 +120,7 @@ int main() {
 ``` 
 
 #### Reading from a String
-Ok, lets ease into reading some yaml. Before we tackle the file above, we are going to get our feet wet with some basics.
-First, Yaml is stored in memory as a tree of YAML::Nodes. Each document has a root node, and child nodes. Let's create a
-sequence:
+Ok, lets ease into reading some yaml. Before we tackle the file above, we are going to get our feet wet with some basics. First, Yaml is stored in memory as a tree of YAML::Nodes. Each document has a root node, and child nodes. Let's create a sequence:
 
 ```
 void readYaml() {
@@ -156,8 +130,7 @@ void readYaml() {
 }
 ```
 
-Sequences and Maps are contained in special Collection nodes, which act a bit like STL vectors amd maps. In our example
-above, we can iterate over the sequence one of two ways: 
+Sequences and Maps are contained in special Collection nodes, which act a bit like STL vectors amd maps. In our example above, we can iterate over the sequence one of two ways: 
 
 ```
 for(std::size_t i=0; i < node.size(); i++) {
@@ -173,8 +146,7 @@ for(YAML::const_iterator it=node.begin(); it != node.end(); ++it) {
 }
 ```
 
-In either case, we have to fetch the contents of the child, and we have to provide type information when we do so. This
-is handled by the ```as``` template function.
+In either case, we have to fetch the contents of the child, and we have to provide type information when we do so. This is handled by the ```as``` template function.
 
 #### Reading from a File
 We are going to read that yaml file from above, starting with a blank readYaml function, and filling out out slowly.
@@ -191,16 +163,13 @@ Ok, well lets load the file. We can do this using the ```YAML::LoadFile function
 YAML::Node books_root = YAML::LoadFile("../../chapter_15/books.yaml");
 ```
 
-Ok, we now have a YAML::Node. Let's check to make sure it is what we think it is. Looking at our document, the top node
-should be a sequence type.
+Ok, we now have a YAML::Node. Let's check to make sure it is what we think it is. Looking at our document, the top node should be a sequence type.
 
 ```
 assert(books_root.IsSequence());
 ```
 
-Great, now we have the top node of a yaml file. We can iterate through it using YAML::const_iterator.
-Remember, we are expecting a sequence of maps. Both sequences and maps can be accessed via iterators, 
-so this should be simple.
+Great, now we have the top node of a yaml file. We can iterate through it using YAML::const_iterator. Remember, we are expecting a sequence of maps. Both sequences and maps can be accessed via iterators, so this should be simple.
 ```
 for(YAML::const_iterator i = boos_root.begin(); i != books_root.end(); ++i) {
     for(YAML::const_iterator mit = i->begin(); mit != i->end(); ++mit) {
@@ -210,8 +179,7 @@ for(YAML::const_iterator i = boos_root.begin(); i != books_root.end(); ++i) {
     std::cout << std::endl;
 }
 ```
-We can also access values using bracket notation. As a bonus, accessing non-extant values does not
-raise an exception. In fact, a pretty nice pattern is as follows:
+We can also access values using bracket notation. As a bonus, accessing non-extant values does not raise an exception. In fact, a pretty nice pattern is as follows:
 ```
 if(books_root[0] && books_root[0]["author"])
     std::cout << books_root[0]["author}] << std::endl;
@@ -220,19 +188,13 @@ if(books_root[0] && books_root[0]["author"])
 
 #### What Type do we have Here?
 
-As mentioned above, there are a couple ways of introspecting node type. The first is by using the 
-method ```type()``` and testing against ```YAML::NodeType```, which provides a set of enums which 
-are appropriate fodder for switch statements, and the like. 
+As mentioned above, there are a couple ways of introspecting node type. The first is by using the method ```type()``` and testing against ```YAML::NodeType```, which provides a set of enums which are appropriate fodder for switch statements, and the like. 
 
-Additionally, yaml-cpp provides a number of Is* methods ( IsNull, IsSequence, IsMap, etc) which are 
-more convenient than calling Type().
+Additionally, yaml-cpp provides a number of Is* methods ( IsNull, IsSequence, IsMap, etc) which are more convenient than calling Type().
 
 ### Emitting Yaml
 
-
-
-Of course, it would be nice if we could actually emit yaml as well eh? Well, this is pretty simple 
-too. Yaml-cpp implements a stream style operator for us to use.
+Of course, it would be nice if we could actually emit yaml as well eh? Well, this is pretty simple too. Yaml-cpp implements a stream style operator for us to use.
 
 No matter what data type we want to emit we first need to create an emitter.
 
@@ -257,9 +219,7 @@ std::cout << out.c_str() << std::endl;
 ````
 #### Sequences
 
-Yaml-cpp has special stream manipulators to indicate beginning and ending of sequences. You begin 
-outputting a sequence using ```YAML::BeginSeq``` and end it using ```YAML::EndSeq```. Any output 
-between these two manipulators is treated as elements of the sequence.
+Yaml-cpp has special stream manipulators to indicate beginning and ending of sequences. You begin outputting a sequence using ```YAML::BeginSeq``` and end it using ```YAML::EndSeq```. Any output between these two manipulators is treated as elements of the sequence.
 
 ```
 out << YAML::BeginSeq;
@@ -274,9 +234,7 @@ And of course, you can nest sequences, as long as you balance BeginSeq and EndSe
 
 #### Maps
 
-Emitting maps is nearly as simple as emitting sequences. Like sequences, maps provide a begin and 
-end manipulator to delineate it. Additionally, yaml-cpp provides a Key and Value stream manipulator
-to encode key and value:
+Emitting maps is nearly as simple as emitting sequences. Like sequences, maps provide a begin and end manipulator to delineate it. Additionally, yaml-cpp provides a Key and Value stream manipulator to encode key and value:
 
 ```
 out << YAML::BeginMap;
@@ -323,8 +281,7 @@ out << YAML::EndMap;
 
 #### Aliases and Anchors
 
-Yaml has the ability to name a section and refer to it later in the document. yaml-cpp supports this through the 
-Achor and Alias tags.
+Yaml has the ability to name a section and refer to it later in the document. yaml-cpp supports this through the Anchor and Alias tags.
 
 ```
 YAML::Emitter out;
@@ -339,12 +296,9 @@ out << YAML::EndSeq;
 ```
 #### Manipulator Lifetimes
 
-Manipulators affect the **next** output item in the stream. If that item is a ```BeginSeq``` or a
-```BeginMap```, the manipulator lasts until the corresponding ```EndSeq``` or ```EndMap```. Of course,
-nesting works here as well.
+Manipulators affect the **next** output item in the stream. If that item is a ```BeginSeq``` or a ```BeginMap```, the manipulator lasts until the corresponding ```EndSeq``` or ```EndMap```. Of course, nesting works here as well.
 
-You can perminaently chagne a setting by using a global setter. There are setters corresponding to each 
-manipulator. EG:
+You can perminaently chagne a setting by using a global setter. There are setters corresponding to each manipulator. EG:
 
 ```
 YAML::Emitter out;
@@ -357,8 +311,7 @@ out.SetSeqFormat(YAML::FLow);
 
 #### Overloaded Conveniences
 
-Yaml-cpp overloads the ```operator <<``` for ```std::vector```, ```std::list```, and ```std::map```,
-allowing us to do things like this:
+Yaml-cpp overloads the ```operator <<``` for ```std::vector```, ```std::list```, and ```std::map```, allowing us to do things like this:
 
 ```
 std::vector <int> squares;
@@ -382,8 +335,7 @@ out << YAML::EndSeq;
 
 You can support custom data types for encoding and decoding as long as they implement ```operator==```.
 
-You accomplish this through template specialization. For example, say we have the following Vec3
-struct:
+You accomplish this through template specialization. For example, say we have the following Vec3 struct:
 
 ```
 struct Vec3 {
@@ -455,12 +407,9 @@ out << YAML::EndMap;
 
 #### Stream State - Detecting Errors
 
-If you happen to screw up the stream ( like if you forget a YAML::EndSeq, or misplace a YAML::Key ),
-then yaml-cpp will set an error flag on the Emitter. You can check the state using the ```good()```
-method.
+If you happen to screw up the stream ( like if you forget a YAML::EndSeq, or misplace a YAML::Key ), then yaml-cpp will set an error flag on the Emitter. You can check the state using the ```good()``` method.
 
-If the Emitter's state is not good, then you can outptu the last known error using the ```GetLastError()```
-method.
+If the Emitter's state is not good, then you can outptu the last known error using the ```GetLastError()``` method.
 
 ```
 YAML::Emitter out;

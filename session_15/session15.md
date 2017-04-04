@@ -246,10 +246,10 @@ for(YAML::const_iterator it=node.begin(); it != node.end(); ++it) {
 }
 ```
 
-In either case, we have to fetch the contents of the child, and we have to provide type information when we do so. This is handled by the ```as``` template function.
+In either case, we have to fetch the contents of the child, and we have to provide type information when we do so. This is handled by the ```as``` template function. We use this template function to cast a YAML::Node's value into some recognizable type, so that we can consume it. So, if we want a string, we call ```node.as<string>()```, if we want an int, we call ```node.as<int>()```, etc. Of course, this only works out of the box for built in types, as well as maps, vectors, and lists. Later on, we will see how to extend yaml-cpp to handle custom data types. But, lets take some baby steps first.
 
 #### Reading from a File
-We are going to read that yaml file from above, starting with a blank read Yaml function, and filling out out slowly.
+We are going to read that yaml file from above, starting with a blank readYaml function, and filling out out slowly.
 
 ```
 void readYamlFile() {

@@ -264,7 +264,7 @@ Ok, now that we have the basics down, lets look at a more sophisticated feature 
 
 There are many validators provided by args, and you can even write your own. If you are interested, search through the source for Group to see more...
 
-#### Extra Credit -  Sup parsers
+#### Extra Credit -  Sub parsers
 
 Admitedly, this is an area of some complication in args. If you want to write the next git, with a large number of sub commands, you are in luck. Arg has you covered. However, I wouldn't blame you for skipping ahead to the next section. 
 

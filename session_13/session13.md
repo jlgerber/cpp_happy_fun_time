@@ -261,8 +261,4 @@ void create_hard_link(const path& to, const path& new_hard_link);
 
 ## Homework
 
-1. In the section on environment variables, we presented a function in the standard library to retrieve environemnt variable contents. Unfortunately, the return of said function is of the following form:
-
-    FOO=BAR
-    
-We are usually only interested in the results, not the key. Write a function which accepts the name of a variable as its argument and returns a string as its result. Return only the value ( ie the BAR poriton from above). If the variable does not exist, return "". (You probably don't readily know exactly what to do. Here is a hint: Google splitting std::string or c string )
+1. In the section on environment variables, we presented a function in the standard library to retrieve environment variable contents. Write a program which will retrieve the environment variable supplied as an argument and print its contents to the console. For extra credit, if the value returned is a multi-path , split the returned value on ":" and print each path out on a separate line.

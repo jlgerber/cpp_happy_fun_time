@@ -383,9 +383,9 @@ a string? ( for, say, testing purposes) Take an appropriate stream reference. ( 
 
 ofstream inherits from ostream. ifstream inherits from istream.
 
-# Extra Credit - string formatting
+## Extra Credit - string formatting
 
-## c-style - what's old is new again ( thanks to C++11 )
+### c-style - what's old is new again ( thanks to C++11 )
 
 One thing missing here in C++ land is good string formatting a la python. There are a couple of approaches to dealing with this.
 The first is to use the c style sprintf in place of streams. This can work, although sprintf returns a char*, not a string. 
@@ -446,7 +446,7 @@ We can use this template magic like so:
 cout << format_string("I like %d goldfish in my %s. How about %s?", 3, "soup", "you") << endl;
 ```
 
-## New style python formatting
+### New style python formatting
 
 If you are a fan of new style python formatting, or if you just like following the cool kids, then *fmt* is the 
 project for you. It is hosted on github here:

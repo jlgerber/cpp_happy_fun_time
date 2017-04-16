@@ -369,3 +369,5 @@ int main() {
 Note that you need to make certain that your class truly protects the resource under guard. For instance, if you 
 implement a method which returns a reference to f ( the ofstream). And never allow a user defined function to operate
 on f. Take care! 
+
+This is important.

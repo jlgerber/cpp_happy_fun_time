@@ -625,3 +625,48 @@ int main() {
 
 };
 ```
+
+Ok. Well this works. But... It isn't very efficient. The second thread spends a lot of time in the busy waiting state
+. That is inefficient. It is taking up cycles sleeping, and tuning this can be a pain. Rather than pursue this 
+strategy, C++ provides the ```condition variable```. Let's change it to work with condition variables.
+
+
+```
+std::mutex vc_mu;
+
+std::condition_variable cond;
+
+void cv_func_1() {
+    int count = 10;
+    while(count < 0) {
+        std::unique_lock<mutex> locker(cv_mu);
+        q.push_front(count);
+        locker.unlock();
+        cond.notify_one(); // notify one waiting thread if there is one
+        std::this_thread::sleep_for(std::chrono::seconds(1) );
+        count--;
+    }
+ }
+ 
+ 
+ void cv_func_2() {
+    int data = 0;
+    while(data != 1) {
+        std::unique_lock<std::mutex> locker(cv_mu);
+        cond.wait(locker, [](){ return !q.empty();} );
+        data = q.back();
+        q.pop_back();
+        locker.unlock();
+       
+        std::cout << "T2 got a value from t1: " << data << endl;
+    }
+ }
+ 
+```
+
+With condition variables, we can make sure that threads are running in a specific order. Note that the wait method 
+takes a predicate in addition to the lock. The predicate guards against "spurious wakes", which may happen, at least 
+in via pthreads ( the underlying library). You would think that "spurious wakeups" would be a design flaw, but 
+according to the author (I googled it), they are part of the design. Sounds strange to me, but in any case, enforce 
+your loop invariants via the predicate. 
+

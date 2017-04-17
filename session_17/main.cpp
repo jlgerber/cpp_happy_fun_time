@@ -7,6 +7,7 @@
 #include "uniquelock.hpp"
 #include "stdlock.hpp"
 #include "precondvar.hpp"
+#include "condvar.hpp"
 
 using namespace std;
 
@@ -15,11 +16,12 @@ enum class CallMode {
     Mutex,
     UniqueLock,
     StdLock,
-    PreCondVar
+    PreCondVar,
+    CondVar
 };
 int main() {
 
-    CallMode mode = CallMode::PreCondVar;
+    CallMode mode = CallMode::CondVar;
 
     switch (mode) {
         case CallMode::NoMutex:
@@ -32,5 +34,7 @@ int main() {
             return stdlock();
         case CallMode::PreCondVar:
             return precondvar();
+        case CallMode::CondVar:
+            return condvar();
     }
 }

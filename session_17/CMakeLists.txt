@@ -1,0 +1,5 @@
+SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-pthread")
+find_package(Threads)
+include_directories(.)
+add_executable(threading ./main.cpp)
+target_link_libraries (threading ${CMAKE_THREAD_LIBS_INIT})

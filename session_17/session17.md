@@ -670,3 +670,6 @@ in via pthreads ( the underlying library). You would think that "spurious wakeup
 according to the author (I googled it), they are part of the design. Sounds strange to me, but in any case, enforce 
 your loop invariants via the predicate. 
 
+## Promises, Futures, and Async
+
+C++11 has introduced a couple of new primitives for concurrency. 

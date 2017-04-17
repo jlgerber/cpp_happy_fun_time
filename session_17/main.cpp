@@ -8,6 +8,7 @@
 #include "stdlock.hpp"
 #include "precondvar.hpp"
 #include "condvar.hpp"
+#include "futurestart.hpp"
 
 using namespace std;
 
@@ -17,11 +18,14 @@ enum class CallMode {
     UniqueLock,
     StdLock,
     PreCondVar,
-    CondVar
+    CondVar,
+    Future,
+    Promise,
+    SharedFuture
 };
 int main() {
 
-    CallMode mode = CallMode::CondVar;
+    CallMode mode = CallMode::SharedFuture;
 
     switch (mode) {
         case CallMode::NoMutex:
@@ -36,5 +40,11 @@ int main() {
             return precondvar();
         case CallMode::CondVar:
             return condvar();
+        case CallMode::Future:
+            return usefuture();
+        case CallMode::Promise:
+            return usepromise();
+        case CallMode:: SharedFuture:
+            return usesharedfuture();
     }
 }

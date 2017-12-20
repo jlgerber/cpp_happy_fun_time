@@ -5,12 +5,12 @@ C++ is a strongly typed, compiled, high performance language, which evolved from
 
 ## structure of a C++ program
 
-Like a python program, a C++ program can consist of one or more files. And like a python program, a C++ executable ultimately has a single entry point. In C++'s case that entry point is a function named **main**, of which there can be only one. But before we get much further, let's jump right in and write our first C++ program. 
+Like a python program, a C++ program can consist of one or more files. And like a python program, a C++ executable ultimately has a single entry point. In C++'s case that entry point is a function named **main**, of which there can be only one. But before we get much further, let's jump right in and write our first C++ program.
 
 Create a file called *hello.cpp* with the following text in it:
 
 ```
-#include <iostream> 
+#include <iostream>
 
 int main() {
     std::cout << "hello world" << std::endl;
@@ -35,7 +35,7 @@ cl /EHsc hello.cpp /out:hello.exe
 ```
 Here, cl is the name of the compiler. /EHsc is a flag instructing the compiler on how to handle exceptions. And /Out:hello.exe is a flag instructing the compiler on what to name the executable (Technically this isnt necessary for this example, as cl takes the name from the first cpp file supplied.)
 
-### Mac 
+### Mac
 
 Assuming that you have XCode installed, along with the developer command line tools, you should be able to use clang from the command line.
 
@@ -63,13 +63,13 @@ Looks like the Python weighed in a bit lighter, eh? Sorry to say, but that will 
 As you may recall, Python has a number of built in data types.
 
 * bool
-    * True or False 
+    * True or False
 * int
     * plain integers
 * long
     * long integers
 * float
-    * floating point numbers    
+    * floating point numbers
 * complex
     * having real and imaginary components
 * str
@@ -79,22 +79,22 @@ As you may recall, Python has a number of built in data types.
 
 ### C++
 
-C++ is a strongly typed language. Each and every variable has an explicit type which cannot be changed at runtime. When you declare a variable, you prefix it with its type name. And it *never ever changes*. That is a big change from Python, so soak it in. 
+C++ is a strongly typed language. Each and every variable has an explicit type which cannot be changed at runtime. When you declare a variable, you prefix it with its type name. And it *never ever changes*. That is a big change from Python, so soak it in.
 
 The atomic data types are listed below. It is important to note that their actual sizes are architecture and sometimes compiler specific. I have listed their common sizes for x86:
 
-* bool 
+* bool
     * true or false
-* char 
+* char
     * single characters, defined using single quotes ('a'). 1 byte
-* wchar 
+* wchar
     * wide characters. Compiler specific and can be as small as 1 byte. For C++11, w have char16_t and char32_t for 16 an 32 bit unicode.
-* short 
+* short
     * small integer. 16 bits at a minimum.
-* int   
+* int
     * normal integer 16 bits at minimum. Usually larger than short, and definitely no smaller.
-* long  
-    * large integer. No smaller than int. At least 32 bits 
+* long
+    * large integer. No smaller than int. At least 32 bits
 * long long
     * very large integer. No smaller than long. At least 64 bits
 * float
@@ -102,7 +102,7 @@ The atomic data types are listed below. It is important to note that their actua
 * double
     * real number. Precision not less than float. 64 bits .
 * long double
-    * largest real number. Precision not less than double. 
+    * largest real number. Precision not less than double.
 * void
     * no storage. represents nothing
 * nullptr
@@ -116,7 +116,7 @@ float, double belong to the family of real numbers. They too differ in terms of 
 
 ## Statements
 
-In python, statements end in newlines. In C++, statements end in semi-colons. That means you can split statements over multiple lines without a problem. 
+In python, statements end in newlines. In C++, statements end in semi-colons. That means you can split statements over multiple lines without a problem.
 
 In Python you would have to do this:
 ```
@@ -171,7 +171,7 @@ bool foo(string bar) {
 }
 ```
 
-As you can see, the above example function returns a boolean value. It is named "foo", and it has a single parameter, named "bar", which is of type *string*. 
+As you can see, the above example function returns a boolean value. It is named "foo", and it has a single parameter, named "bar", which is of type *string*.
 
 ## includes, The Modules of the C++ World
 
@@ -182,17 +182,17 @@ In Python, you import modules. C++ doesnt have a module system ( yet. its on the
 ```
 #include<>
 ```
-and 
+and
 ```
 #include ""
 ```
 The difference between the two forms is actually implementation dependent technically, but all of the implementations implement the following behavior:
 
-The *#include ""* form searches first in the same directory as the file in which the include directive exists, then searches in directories explicitly passed to the compiler by the include flag, and finally in predefined locations specific to each OS. 
+The *#include ""* form searches first in the same directory as the file in which the include directive exists, then searches in directories explicitly passed to the compiler by the include flag, and finally in predefined locations specific to each OS.
 
 The *#include <>* form only searches for the target file in any include paths passed to the compiler via the include flag, and then in predefined locations specific to each OS.
 
-As an example, the directive ```#include <iostream>``` imports the iostream library which makes a number of functions and classes available to us in the ```std``` namespace. A namespace is a label used to disambiguate symbol names in an attempt to avoid clashes. Namespaces prefix labels and are joined using '::'. For example ```std::cout``` from above references *cout* in the *std* namespace. 
+As an example, the directive ```#include <iostream>``` imports the iostream library which makes a number of functions and classes available to us in the ```std``` namespace. A namespace is a label used to disambiguate variable names in an attempt to avoid clashes. Namespaces prefix labels and are joined using '::'. For example ```std::cout``` from above references *cout* in the *std* namespace.
 
 
 ## The main function
@@ -203,7 +203,7 @@ if __name__ == "__main__":
     from sys import argv
 ```
 
-In C++, the main function has three valid forms. All the forms have one thing in common: they each must return an integer representing success or failure. Under normal circumstances, you return "0". If there are issues, you can return an error code, which is os specific. 
+In C++, the main function has three valid forms. All the forms have one thing in common: they each must return an integer representing success or failure. Under normal circumstances, you return "0". If there are issues, you can return an error code, which is os specific.
 
 ### The first Form of main
 The first form is:
@@ -223,7 +223,7 @@ The second form is:
 
 ```
 int main(int argc, char* argv[] ) {
-    // bla bla bla 
+    // bla bla bla
     return 0;
 }
 ```
@@ -233,7 +233,7 @@ In the second form, as you can see, the main function takes two arguments. They 
 - int argc: the number of arguments that the executable is called with.
 - char* argv[] : an array of c style strings representing those arguments. ( you might also see the second argument written as `char** arvg`. Its effectively the same thing and we will get into that when we discuss pointers...)
 
-By the way, the type signatures are required, but the names of the two arguments can be anything. By convention, they are *argc* and *argv*. You should probably stick to this naming, because that is what people expect. 
+By the way, the type signatures are required, but the names of the two arguments can be anything. By convention, they are *argc* and *argv*. You should probably stick to this naming, because that is what people expect.
 
 You can use either of the two forms for main, although I recommend using the former, simpler one, unless you need to access the calling parameters.
 
@@ -250,16 +250,16 @@ int main(int argc, char* argv[], char* env[] ) {
 Each string in the env array takes the form *VAR=Value*. We will learn later how to separate the VAR from the Value in order to make use of this information.
 
 ## Namespaces
-C ++ allows you to wrap code in a namespace in order to organize and protect symbols. Namespaces are roughly equivalent to Python's package definitions. However, unlike packages, which rely on the directory structure to form the shape, C++'s namespaces are explicitly defined with the *namespace* keyword.
+C ++ allows you to wrap code in a namespace in order to organize and protect variables. Namespaces are roughly equivalent to Python's package definitions. However, unlike packages, which rely on the directory structure to form the shape, C++'s namespaces are explicitly defined with the *namespace* keyword.
 
 ```
 import os
-os.path.dirname() 
+os.path.dirname()
 
-def dirname(foo): 
+def dirname(foo):
     print "dir dir dir", foo
-    
-os.path.dirname("/foo/bar")  
+
+os.path.dirname("/foo/bar")
 ```
 
 Namspaces are defined thusly in C++:
@@ -272,13 +272,13 @@ namespace foo {
 }
 ```
 
-You reference symbols in a namespace by prefixing them with their namespace, followed by `::`
+You reference variables in a namespace by prefixing them with their namespace, followed by `::`
 
 ```
 foo::bar();
 ```
 
-You can also either selectively import a symbol into the current namespace:
+You can also either selectively import a variable into the current namespace:
 ```
 using foo::bar;
 bar();

@@ -1,31 +1,29 @@
 # session  17 - multi-threading
 
-We are going to look at multi-threading in c++. Historically, multi-threading capabilities were provided by 
-os-specific libraries. However, with c++11, we now have the ```threading``` library. We are going to take a look at 
-how to use this library presently. But first, lets talk about threading in general.
+We are going to look at multi-threading in c++. Historically, multi-threading capabilities were provided by os-specific libraries, with divergent interfaces. However, with c++11, we now have the ```threading``` library which provides a uniform interface for threading. We are going to take a look at how to use this library presently. But first, lets talk about threading in general. The interface still relies on os specific libraries, so, at least in the case of linux, you are still going to have to include pthreads..
 
-Concurrency is the ability of a process to make progress on more than one task; this could happen in parallel, as is 
-the case when running multiple threads on multiple cores. Or, this could happen by switching repeatedly between 
-tasks,  providing forward progress on all of them, regardless of their complexity. 
+Concurrency is the ability of a process to make progress on more than one task; this could happen in parallel, as is the case when running multiple threads on multiple cores. Or, this could happen by switching repeatedly between tasks,  providing forward progress on all of them, regardless of their complexity.
 
-A couple of things to note. In python, we don't typically make use of threading, as Python has something called the 
-GIL, which should make a bit more sense after this session. Instead, Python provides a multi-processing model via 
-pyprocessing. 
+A couple of things to note. In python, we don't typically make use of threading, as Python has something called the GIL, which should make a bit more sense after this session. Instead, Python provides a multi-processing model via pyprocessing.
 
 ## Threads vs Processes in Concurrent Programming
 
-A process is an execution context with its own environment, memory, processor state, etc. Communication between 
-processes is handled via message passing, as is synchronization. A process is a heavy weight entity which takes a 
-long time to create in relation to a thread. 
+A process is an execution context with its own environment, memory, processor state, etc. Communication between processes is handled via message passing, as is synchronization. A process is a heavy weight entity which takes a long time to create in relation to a thread.
 
-A thread is a light weight sequence of instructions which can be executed concurrently with other sequences in a 
-multi threading environment, while sharing the same address space. Because threads share the same address space, much 
-more care must be taken when programming them, lest they stomp on each other. However, due to their light weight 
-nature, threads are very cheep to create compared to processes. And because they share a unified address space, one 
-does not have to employ complicated messaging frameworks to communicate between them.
+A thread is a light weight sequence of instructions which can be executed concurrently with other sequences in a multi threading environment, while sharing the same address space. Because threads share the same address space, much more care must be taken when programming them, lest they stomp on each other. However, due to their light weight nature, threads are very cheep to create compared to processes. And because they share a unified address space, one does not have to employ complicated messaging frameworks to communicate between them.
 
 But enough babbling. Lets jump in and take a look at threads in action. Starting with some boilerplate...
- 
+
+First, in CMake, you are going to have to add the following:
+
+```
+SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-pthread")
+find_package(Threads)
+...
+add_executable(<executable name> <source files>)
+target_link_libraries (<executable name> ${CMAKE_THREAD_LIBS_INIT})
+```
+Remember to replace "<executabl "
 ```
 #include <iostream>
 #include <thread>
@@ -36,8 +34,7 @@ int main() {
 }
 ``` 
 
-As you can see, we need to include ```thread```. This will become important when we implement the ```simple_thread```
- function. Lets do that now. 
+As you can see, we need to include ```thread```. This will become important when we implement the ```simple_thread```function. Lets do that now.
  
 ```
 void simple_thread() {
@@ -47,15 +44,9 @@ void simple_thread() {
 
 And lets use this function in main.
 
-First we are going to need to create a thread. We do this with the ```std::thread``` constructor, which can take a 
-function. Once we create a thread, its payload starts running. Next, we need to get the main thread to wait for t1 to
-finish. We do this by calling ```join``` on the thread. You may only call join once on a thread. Otherwise, you will
-crash your program. This isn't a problem in our trivial examples, but it can be in longer programs. In order to 
-help you out, threads provide the  ```joinable``` method to test for this.
+First we are going to need to create a thread. We do this with the ```std::thread``` constructor, which can take a function. Once we create a thread, its payload starts running. Next, we need to get the main thread to wait for t1 tofinish. We do this by calling ```join``` on the thread. You may only call join once on a thread. Otherwise, you willcrash your program. This isn't a problem in our trivial examples, but it can be in longer programs. In order to help you out, threads provide the  ```joinable``` method to test for this.
 
-A thread may also be ```detatched``` instead of joined, if you have no need to synchronize execution. However, if 
-your main thread finishes before your detatched thread, your program will terminate.  
-
+A thread may also be ```detatched``` instead of joined, if you have no need to synchronize execution. However, if your main thread finishes before your detatched thread, your program will terminate.
 ```
 
 int main() {
@@ -69,8 +60,7 @@ int main() {
 }
 ```
 
-Our example is incredibly simple. The main thread doesn't do anything but wait. Clearly, there is no reason to even 
-use threading with a problem this simple. Let's add some work in the main thread. 
+Our example is incredibly simple. The main thread doesn't do anything but wait. Clearly, there is no reason to even use threading with a problem this simple. Let's add some work in the main thread.
 
 ```
 int main() {
@@ -85,11 +75,9 @@ int main() {
 }
 ```
 
-Believe it or not, even in this trivial program, we already have a potential problem. What happens if an exception 
-gets thrown from main before we call t1.join ? This could spell trouble as we wont be able to clean up. Let's fix this.
+Believe it or not, even in this trivial program, we already have a potential problem. What happens if an exception gets thrown from main before we call t1.join ? This could spell trouble as we wont be able to clean up. Let's fix this.
 
-We are going to catch any thrown errors in our main thread, and, if we do catch an error, we are going to call join on 
-t1, and then re-throw the caught error.
+We are going to catch any thrown errors in our main thread, and, if we do catch an error, we are going to call join on t1, and then re-throw the caught error.
 
 ```
 int main() {
@@ -109,11 +97,9 @@ int main() {
     return 0;
 }
 ```
-Of course, we could avoid this by using RAII to create a class which wraps t1, and which calls join if necessary when
-the wrapper instance is destroyed. However, I am going to leave that for an exercise...
+Of course, we could avoid this by using RAII to create a class which wraps t1, and which calls join if necessary whenthe wrapper instance is destroyed. However, I am going to leave that for an exercise...
 
-The thread constructor can take any callable as a parameter. That means we can pass it a functor. Lets define a 
-simple functor and play a bit.
+The thread constructor can take any callable as a parameter. That means we can pass it a functor. Lets define a simple functor and play a bit.
 
 ```
 class Fctor {
@@ -147,8 +133,7 @@ int main() {
 }
 ```
 
-When we run this, we get quite a mess. But before we look at cleaning this up, lets take a look at how to pass 
-parameters to the wrapped function.
+When we run this, we get quite a mess. But before we look at cleaning this up, lets take a look at how to pass parameters to the wrapped function.
 
 ```
 class Fctor {
@@ -184,8 +169,7 @@ int main() {
 }
 ```
 
-What if we want to pass that string by reference in order to be a bit more efficient? Well, threads pass data by 
-value. If we simply do the following, it won't behave as expected:
+What if we want to pass that string by reference in order to be a bit more efficient? Well, threads pass data by value. If we simply do the following, it won't behave as expected:
 
 ```
 void operator()(std::string& msg){
@@ -199,8 +183,7 @@ If we really want to do this, we have to use a reference wrapper when passing th
 std::thread t1(fct, std::ref(s) );
 ```
 
-Another thing to be aware of. If we try and get a bit more terse and construct the functor in the thread constructor,
- we will run into "c++'s most vexing parse". Basically , the following will not do what we want:
+Another thing to be aware of. If we try and get a bit more terse and construct the functor in the thread constructor,we will run into "c++'s most vexing parse". Basically , the following will not do what we want:
  
 ```
 std::thread t1(Fctor(), s);
@@ -215,13 +198,11 @@ std::thread t1((Fctor()), s);
 Threads cannot be copied. If you need to transfer ownership of a thread, you must ```std::move``` it. 
 
 ### thread ids
-Threads all have unique ids. You can call ```get_id()``` on a thread to retrieve it's id. You can retrieve the id of 
-the parent thread using ```std::this_thread::get_id()```.
+Threads all have unique ids. You can call ```get_id()``` on a thread to retrieve it's id. You can retrieve the id of the parent thread using ```std::this_thread::get_id()```.
 
 ### cpu availability
 
-Under normal circumstances, you should avoid creating more threads than you have processors to handle them. In order 
-to determine what that number is programmatically, you can call ``` std::thread::hardware_concurrency()```.
+Under normal circumstances, you should avoid creating more threads than you have processors to handle them. In order to determine what that number is programmatically, you can call ``` std::thread::hardware_concurrency()```.
  
 ### Example - putting it all together
 ```
@@ -260,9 +241,7 @@ int main() {
 
 ## Data Races and What to Do About Them 
 
-In our previous example, you undoubtedly noticed that the output between the t1 thread and the main thread was 
-interleaved. Why did this happen? Both threads were competing for a common resource - cout. We can fix this by using 
-a *mutex*. 
+In our previous example, you undoubtedly noticed that the output between the t1 thread and the main thread was interleaved. Why did this happen? Both threads were competing for a common resource - cout. We can fix this by using a *mutex*.
 
 Mutex stands for **mu**tual **ex**clusion object. A mutex is an os primitive which is used to protect a resource.
 
@@ -311,31 +290,22 @@ void shared_print(string msg, int id) {
 }
 ```
 
-Now ```cout``` in shared_print is protected. Lets run this. It is really important to understand what is going on 
-here. 
+Now ```cout``` in shared_print is protected. Lets run this. It is really important to understand what is going on here.
 
 ### Mutex.... Mutex?
-So what is a mutex? Well, essentially, a mutex is simply a special class which acts like an integer in memory, but 
-with a couple of special methods. 
+So what is a mutex? Well, essentially, a mutex is simply a special class which acts like an integer in memory, but with a couple of special methods.
 
 #### mutex.unlock
 
-Unlock is quite simple. It essentially decrements the value of the mutex by one, if it has been locked. If the value 
-of the mutex is zero, it is available for another bit of code to call lock on.
+Unlock is quite simple. It essentially decrements the value of the mutex by one, if it has been locked. If the value of the mutex is zero, it is available for another bit of code to call lock on.
 
 #### mutex.lock
 
-Locking is a bit trickier. There can only be one lock owner of a mutex at a given time. If another thread wishes to 
-lock the mutex while it is already locked, then the other thread must wait for the owning thread to unlock it. Until 
-the mutex is unlocked, the thread calling lock will be unable to make progress. Attempting to lock an already locked 
-mutex is called *contention*. Locking is a bit magic. In fact, it cannot be implemented without hardware support, 
-because testing and setting the value has to be an atomic operation. Fortunately, all modern hardware provide 
-appropriate implementations.
+Locking is a bit trickier. There can only be one lock owner of a mutex at a given time. If another thread wishes to lock the mutex while it is already locked, then the other thread must wait for the owning thread to unlock it. Until the mutex is unlocked, the thread calling lock will be unable to make progress. Attempting to lock an already locked mutex is called *contention*. Locking is a bit magic. In fact, it cannot be implemented without hardware support, because testing and setting the value has to be an atomic operation. Fortunately, all modern hardware provide appropriate implementations.
 
 ### Problem - exceptions
 
-As before, we have an issue if the code between mu.lock and mu.unlock throws an exception. We could add a try catch 
-block or implement a wrapper via RAII, but the library does this for us already. 
+As before, we have an issue if the code between mu.lock and mu.unlock throws an exception. We could add a try catch block or implement a wrapper via RAII, but the library does this for us already.
 
 ```
 std::mutex mu;
@@ -348,8 +318,7 @@ void shared_print(string msg, int i) {
 
 ### Problem - cout still callable
 
-We generally want to package the mutex with the resource we are trying to protect in order to make it impossible to 
-access the resource directly. Here is an example class which handles this:
+We generally want to package the mutex with the resource we are trying to protect in order to make it impossible to access the resource directly. Here is an example class which handles this:
 
 ```
 class LogFile {
@@ -385,17 +354,12 @@ int main() {
 }
 ```
 
-Note that you need to make certain that your class truly protects the resource under guard. For instance, if you 
-implement a method which returns a reference to f ( the ofstream). And never allow a user defined function to operate
-on f. 
+Note that you need to make certain that your class truly protects the resource under guard. For instance, if you implement a method which returns a reference to f ( the ofstream). And never allow a user defined function to operateon f.
 
 ### Problem - Deadlock
-Deadlock happens when no threads can make progress. You can get yourself into trouble if you are managing multiple 
-mutexes and you lock them by hand. If, for instance, you lock them in different orders in different threads, you can 
-end up with deadlock. In order to help manage locking in appropriate order, C++ has the std::lock() call.
+Deadlock happens when no threads can make progress. You can get yourself into trouble if you are managing multiple mutexes and you lock them by hand. If, for instance, you lock them in different orders in different threads, you can end up with deadlock. In order to help manage locking in appropriate order, C++ has the std::lock() call.
 
-Lets look at an example. Lets say we have a class representing a shipping container which contains things, and which 
-provides a mutex. 
+Lets look at an example. Lets say we have a class representing a shipping container which contains things, and which provides a mutex.
 
 ```
 
@@ -407,8 +371,7 @@ struct ShippingContainer {
 };
 ```
 
-Furthermore, lets say we have a transfer function which transfers things form one container to the other. We certainly
- don't want our things to go missing, so we need to handle this appropriately. Here is our function:
+Furthermore, lets say we have a transfer function which transfers things form one container to the other. We certainly don't want our things to go missing, so we need to handle this appropriately. Here is our function:
  
 ```
 void transfer(ShippingContainer &from, ShippingContainer &to, int num) {
@@ -456,9 +419,7 @@ int main(){
 
 ## Unique_lock and Lazy Initialization 
 
-The unique_lock class behaves like our lock_guard, but it adds some additional capabilities. For one, it provides 
-lazy initialization. You can instantiate it but lock it at a later date. You can also lock and unlock it, which you 
-cannot do with the lock_guard, which locks when constructed, and unlocks when destroyed.
+The unique_lock class behaves like our lock_guard, but it adds some additional capabilities. For one, it provides lazy initialization. You can instantiate it but lock it at a later date. You can also lock and unlock it, which you cannot do with the lock_guard, which locks when constructed, and unlocks when destroyed.
 
 ```
 class LogFile {
@@ -482,14 +443,11 @@ public:
 };
 ```
 
-So why use a lock_guard at all? A unique_lock is a bit more expensive. So, if you don't need to use its capabilities,
-it is better to stick with the lock_guard.
+So why use a lock_guard at all? A unique_lock is a bit more expensive. So, if you don't need to use its capabilities, it is better to stick with the lock_guard.
 
 ### More work
  
-Looking back at our LogFile class, what if we decide that we want to move the file open call into the shared_print 
-method? We will certainly need a lock around opening the file. Otherwise, multiple callers will be able to lock the 
-file. Lets try and make some modifications to support this.
+Looking back at our LogFile class, what if we decide that we want to move the file open call into the shared_print method? We will certainly need a lock around opening the file. Otherwise, multiple callers will be able to lock the file. Lets try and make some modifications to support this.
 
 ```
 class LogFile {
@@ -521,9 +479,7 @@ public:
 
 Great. But... Is this code threadsafe?
 
-No, not really. Since locker_fo is instantiated in the ```if block```, it also goes out of scope at the end of the if
-block. It is possible for two threads to open the same file. What can be done. Well, we can move locker_fo out into 
-the surrounding scope.
+No, not really. Since locker_fo is instantiated in the ```if block```, it also goes out of scope at the end of the if block. It is possible for two threads to open the same file. What can be done. Well, we can move locker_fo out into the surrounding scope.
  
 ```
     void shared_print(int id, std::string& msg)  {
@@ -537,9 +493,7 @@ the surrounding scope.
     }
 ```
 
-Great. Now this is threadsafe. But is it efficient? We are locking around the file open test each time we call 
-shared_print. We are hindering the program from running concurrently. Fortunately, the standard library provides a 
-primitive for just such an occasion... The std::once_flag.
+Great. Now this is threadsafe. But is it efficient? We are locking around the file open test each time we call shared_print. We are hindering the program from running concurrently. Fortunately, the standard library provides a primitive for just such an occasion... The std::once_flag.
 
 ```
 class LogFile{
@@ -569,8 +523,7 @@ public:
 
 ## Condition Variables 
 
-Up to this point, we have been using the mutex to synchronize access to objects. But we are going to go beyond 
-mutexes today. Lets say we have the following functions:
+Up to this point, we have been using the mutex to synchronize access to objects. But we are going to go beyond mutexes today. Lets say we have the following functions:
 
 ```
 #include <mutex>
@@ -626,9 +579,7 @@ int main() {
 };
 ```
 
-Ok. Well this works. But... It isn't very efficient. The second thread spends a lot of time in the busy waiting state
-. That is inefficient. It is taking up cycles sleeping, and tuning this can be a pain. Rather than pursue this 
-strategy, C++ provides the ```condition variable```. Let's change it to work with condition variables.
+Ok. Well this works. But... It isn't very efficient. The second thread spends a lot of time in the busy waiting state. That is inefficient. It is taking up cycles sleeping, and tuning this can be a pain. Rather than pursue this strategy, C++ provides the ```condition variable```. Let's change it to work with condition variables.
 
 
 ```
@@ -664,11 +615,7 @@ void cv_func_1() {
  
 ```
 
-With condition variables, we can make sure that threads are running in a specific order. Note that the wait method 
-takes a predicate in addition to the lock. The predicate guards against "spurious wakes", which may happen, at least 
-in via pthreads ( the underlying library). You would think that "spurious wakeups" would be a design flaw, but 
-according to the author (I googled it), they are part of the design. Sounds strange to me, but in any case, enforce 
-your loop invariants via the predicate. 
+With condition variables, we can make sure that threads are running in a specific order. Note that the wait method takes a predicate in addition to the lock. The predicate guards against "spurious wakes", which may happen, at least in via pthreads ( the underlying library). You would think that "spurious wakeups" would be a design flaw, but according to the author (I googled it), they are part of the design. Sounds strange to me, but in any case, enforce your loop invariants via the predicate.
 
 ## Promises, Futures, and Async
 

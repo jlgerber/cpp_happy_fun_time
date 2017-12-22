@@ -165,9 +165,31 @@ Now it is time to take another step into the wide world of C++ development. Up t
 - Person.h
 - Person.cpp
 
-Let's start with the header file (Person.h). The first thing we need to do is add what is called a guard. A guard is a preprocessor instruction which prevents the header file from being included multiple times into the same compilation unit during compilation.
+Let's start with the header file (Person.h). The first thing we need to do is add prerocessor directive called a guard. There are two forms which a guard may take. The "classic" form, and the "new" form.
 
-TD;LR. When you compile your code, the first step your compiler takes is to expand all of the preprocessor commands. All of the #include directives in each of the cpp files gets replaced by the text from the files they refer to. A compilation unit is basically a cpp file with all of its #includes replaced by their values, along with all of the rest of the preprocessor junk. This expansion is recursive, as the header files you include may well have includes of their own. The guards exist to prevent the preprocessor from copying the same code in multiple times.
+### Classic Guard
+The classic form consists of three prerocessor directives - two at the top of the file, and one at the end.
+
+The top of the guard looks like this:
+```
+#ifndef __PERSON_H__
+#define __PERSON_H__
+
+// all your code here
+
+#endif
+```
+### New Guard
+That is a bit of noise, eh? Most compilers support an alternative guard these days, and it replaces all of that rubbish with a single preprocess directive -- ```#pragma once```. Just put ```#pragma once``` at the top of your header file, and you are good to go.
+
+### What is a Guard Though?
+
+To understand what a guard is, you have to know a bit more about the compilation process.
+When you compile your code, the first step your compiler takes is to execute the preprocessor, which steps through your code and expands the preprocessor directives, creating **compilation units** out of each of your cpp files.
+
+A **compilation unit** is basically a file which has had all of its ```#include``` directives replaced by the contents of the files which they point to, along with all of the rest of the preprocessor commands replaced / expanded in place. This expansion is recursive, as the header files you include may well have ```#include```s of their own.
+
+This preprocessor is not particularly smart, however. It doesn't really know anything about c++ semantics. It doesn't even keep track of the files which it has already processed. So, the guards exist to prevent the preprocessor from copying the same code into a compilation unit multiple times, and potentially recursing forever.
 
 Anyhoo, that is a ton of explanation for one line. Sorry.
 

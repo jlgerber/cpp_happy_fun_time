@@ -44,16 +44,143 @@ For completeness sake ( hopefully this isn't confusing ), consider a greet metho
 #### Python
 ```
 ...
-def greet(self, other):
-    print "Hello {}, my name is {}".format(other, self.myname )
+class Person(object):
+    # ...
+    # init code etc here
+    def greet(self, other):
+        print "Hello {}, my name is {}".format(other, self.myname )
 ```
 
 #### C++
+Here is the c++ implementation. Notice that we define the greet method "inline".
 ```
-...
-void greet(const std::string& other) {
-    cout << "Hello "<< other << ", my name is " << myname << endl;
+class Person {
+    // ...
+    // other implementation here
+    void greet(const std::string& other) {
+        cout << "Hello "<< other << ", my name is " << myname << endl;
+    }
+};
+```
+
+### Constructor
+
+Python has the initializer, otherwise known to true geeks as the dunderinit (`__init__`). Technically, this is an initializer, not a constructor, but let's gloss over that.
+
+In C++, you have one or more constructor member functions. I say one or more, because C++ supports overloaded functions. So, for any function, you can redefine it multiple times, as long as the parameters differ in each version. This added flexibility is useful, because C++ is strictly typed. Oh, and like Python, C++ also supports default parameters... so, getting back to the constructor, let's take a look at how it is formed.
+
+Adding to our person class:
+
+```
+Person {
+    std::string firstname, lastname;
+public:
+    Person() : firstname(""), lastname("") {}; // default constructor
+    Person(const std::string& fname, const std::string& lname) const : firstname(fname), lastname(lname) {}; // parameterized constructor
 }
+```
+
+So, let's talk about this. There are a couple of interesting things going on here. First, we have something called the *member initializer list*. it appears after the parens and before the brackets. It starts with a colon. See it?
+
+```
+somefunction() : <intializier list> {}
+```
+The initializer list is a comma separated list of data members which may be initialized from the parameter list of the function, or any constants, using method or uniform initialization notation [1][] (assuming you are compiling with C++11 support).
+
+## Operator Overloading
+
+In C++ you can define custom behavior for a wide variety of operators. Doing so is known as *operator overloading*. Let's take a look at how this works by looking at overloading addition.
+
+#### Binary  & Unary Operators
+In general, binary operators (operators operating on two items) and unary operators (operators operating on one item) are overloaded by defining class methods which return an instance of the class in question, are named "operator" followed by the actual operator in question, and take a const reference to an instance of the class. So for addition, the declaration looks like this ( assuming we have a Point class):
+
+```
+class Point {
+    ...
+public:
+    ...
+    Point operator+(const Point& rhs);
+    Point operator++(const Point& rhs);
+};
+```
+
+Python would be similar, although Python does not have `++` or `--` operators..
+```
+class Point(object):
+    ...
+    def __add__(self, other):
+        ...
+```
+
+#### Relational Operators
+Relational operators return a boolean, and take a const reference to the containing class. So, continuing our example of Point:
+
+```
+class Point {
+    ...
+public:
+    ...
+    Point operator+(const Point& rhs);
+    Point operator++(conts Point& rhs);
+    bool operator==(const Point& rhs);
+};
+```
+
+Once again, Python looks like this (foregoing implementation):
+
+```
+class Point(object):
+    ...
+    def __add__(self, other):
+        ...
+    def __eq__(self, other):
+        ...
+```
+### Inheritance
+
+Specifying one or more superclasses in C++ is pretty simple. After the **class** keywork and class name, add a colon, followed by a comma separated list of the super classes.
+
+Here we are in C++:
+```
+class Man : BaseMan {
+...
+}
+```
+
+And Python:
+```
+class Man(BaseMan):
+    ...
+```
+There are, however, some key differences between how inheritance works in C++ and Python which you need to be aware of. For one, **constructors are not inherited**. That is a big one. You need to define your constructors instead of relying on your superclass's constructors.
+
+#### Initializing superclass
+In C++, you initialize your superclass by calling its constructor in your initializer list, or in the body of your constructor.
+
+The following c++ code:
+```
+class BasePerson {
+    string m_name;
+public:
+    BasePerson(std::string name) : m_name{name} {}
+};
+
+class Person : BasePerson {
+    int m_age;
+    public:
+    Person(std::string name, int age) : BasePerson{name}, m_age{age} {}
+};
+```
+Looks like this in python:
+```
+class BasePerson:
+    def __init__(self, name):
+        self.m_name = name
+
+class Person(BasePerson):
+    def __init__(name, age):
+        super(Person, self).__init__(name)
+        self.m_age = age
 ```
 
 ### Access Specifiers - Private, Public, Protected
@@ -70,7 +197,7 @@ Public data and functions may be accessed by anyone. Instance methods, external 
 
 Private data and functions may only be accessed internally by other functions within the class.
 
-Lastly, protected data and functions may only be accessed by internal functions / data or by internal mechanisms of classes which inherit from the class in which the protected data lives.
+Lastly, protected data and functions may only be accessed by internal functions / data or by classes which inherit from the class in whith the protected data.
 
 Oh, and access specifiers may be used more than once. Anything following an access specifier belongs to it. And class data is private by default. So if you see data or methods but no specifier, that data and those methods are private....
 
@@ -134,80 +261,6 @@ int main() {
 
     return 0;
 };
-```
-
-### Constructor
-
-Python has the initializer, otherwise known to true geeks as the dunderinit (`__init__`). Technically, this is an initializer, not a constructor, but let's gloss over that.
-
-In C++, you have one or more constructor member functions. I say one or more, because C++ supports overloaded functions. So, for any function, you can redefine it multiple times, as long as the parameters differ in each version. This added flexibility is useful, because C++ is strictly typed. Oh, and like Python, C++ also supports default parameters... so, getting back to the constructor, let's take a look at how it is formed.
-
-Adding to our person class:
-
-```
-Person {
-    std::string firstname, lastname;
-public:
-    Person() : firstname(""), lastname("") {}; // default constructor
-    Person(const std::string& fname, const std::string& lname) const : firstname(fname), lastname(lname) {}; // parameterized constructor
-}
-```
-
-So, let's talk about this. There are a couple of interesting things going on here. First, we have something called the *member initializer list*. it appears after the parens and before the brackets. It starts with a colon. See it?
-
-```
-somefunction() : <intializier list> {}
-```
-The initializer list is a comma separated list of data members which may be initialized form the parameter list of the function, or any constants, using method or uniform initialization notation (assuming you are compiling with C++11 support).
-
-## Operator Overloading
-
-In C++ you can define custom behavior for a wide variety of operators. Doing so is known as *operator overloading*. Let's take a look at how this works by looking at overloading addition.
-
-#### Binary  & Unary Operators
-In general, binary operators (operators operating on two items) and unary operators (operators operating on one item) are overloaded by defining class methods which return an instance of the class in question, are named "operator" followed by the actual operator in question, and take a const reference to an instance of the class. So for addition, the declaration looks like this ( assuming we have a Point class):
-
-```
-class Point {
-    ...
-public:
-    ...
-    Point operator+(const Point& rhs);
-    Point operator++(const Point& rhs);
-};
-```
-
-Python would be similar, although Python does not have `++` or `--` operators..
-```
-class Point(object):
-    ...
-    def __add__(self, other):
-        ...
-```
-
-#### Relational Operators
-Relational operators return a boolean, and take a const reference to the containing class. So, continuing our example of Point:
-
-```
-class Point {
-    ...
-public:
-    ...
-    Point operator+(const Point& rhs);
-    Point operator++(conts Point& rhs);
-    bool operator==(const Point& rhs);
-};
-```
-
-Once again, Python looks like this (foregoing implementation):
-
-```
-class Point(object):
-    ...
-    def __add__(self, other):
-        ...
-    def __eq__(self, other):
-        ...
 ```
 
 ### Exercise
@@ -439,6 +492,6 @@ operator*(const double d, const Vector3d& v) {
 
 Really? After all that, we are going to tackle another concept? Yes, because it is so simple. A `struct` is just like a class, except that it defaults to `public` if you don't specify an access modifier. That's it. So, feel free to use the `struct` keyword in C++ interchangeably with `class` . In C++s precursor language, C, `struct`s were an altogether different beast. You can google it if you are interested.
 
-
+[1]: Method initialization uses parens, (eg age(1) ), whereas uniform initialization uses braces (eg age{1} ). C++11 allows you to initialize everything using braces, whereas before c++11, initialization notation was a mixed bag.
 
 
